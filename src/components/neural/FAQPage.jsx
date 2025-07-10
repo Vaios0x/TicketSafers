@@ -84,14 +84,14 @@ answer: "TicketSafer es la primera plataforma multichain de tickets NFT, diseña
   };
 
   return (
-    <div className="neural-faq-container">
+    <div className="faq-page">
       <motion.div 
         className="faq-header"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
       >
-        <h1>Preguntas Frecuentes</h1>
+        <h1 className="neural-gradient-title">Preguntas Frecuentes</h1>
         <p>Todo lo que necesitas saber sobre TicketSafer</p>
       </motion.div>
 

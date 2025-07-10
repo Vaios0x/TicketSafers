@@ -153,6 +153,18 @@
   font-size: 1rem;
 }
 
+/* Estilo de título con gradiente reutilizable */
+.neural-gradient-title {
+  font-size: 3rem;
+  font-weight: 700;
+  background: linear-gradient(45deg, #c084fc, #a855f7);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+}
+
 /* Responsive Design */
 @media (max-width: 1024px) {
   .neural-hero-title {
@@ -161,6 +173,10 @@
 
   .neural-hero-subtitle {
     font-size: 1.25rem;
+  }
+
+  .neural-gradient-title {
+    font-size: 2.5rem;
   }
 
   .neural-stats {
@@ -175,6 +191,10 @@
 
   .neural-hero-subtitle {
     font-size: 1rem;
+  }
+
+  .neural-gradient-title {
+    font-size: 2rem;
   }
 
   .neural-stats {
