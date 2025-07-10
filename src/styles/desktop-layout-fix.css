@@ -1,0 +1,160 @@
+/* Optimizaciones de layout para evitar superposición en desktop */
+
+/* Asegurar que badges y botones no se superpongan en cualquier resolución */
+.event-badges {
+  max-width: calc(100% - 180px) !important;
+  flex-wrap: wrap !important;
+  align-items: flex-start !important;
+}
+
+/* Desktop ultra grande - más espacio disponible */
+@media (min-width: 1600px) {
+  .event-badges {
+    max-width: calc(100% - 220px) !important;
+    gap: 14px !important;
+  }
+  
+  .badge {
+    padding: 12px 20px !important;
+    font-size: 14px !important;
+  }
+  
+  .action-button {
+    width: 46px !important;
+    height: 46px !important;
+  }
+  
+  .action-button svg {
+    font-size: 19px !important;
+  }
+}
+
+/* Desktop grande - equilibrio entre espacio y compacidad */
+@media (min-width: 1200px) and (max-width: 1599px) {
+  .event-badges {
+    max-width: calc(100% - 200px) !important;
+    gap: 12px !important;
+  }
+  
+  .badge {
+    padding: 10px 18px !important;
+    font-size: 13px !important;
+  }
+  
+  .action-button {
+    width: 44px !important;
+    height: 44px !important;
+  }
+  
+  .action-button svg {
+    font-size: 18px !important;
+  }
+}
+
+/* Desktop mediano - ajustes para tarjetas más pequeñas */
+@media (min-width: 1024px) and (max-width: 1199px) {
+  .event-badges {
+    max-width: calc(100% - 185px) !important;
+    gap: 10px !important;
+  }
+  
+  .badge {
+    padding: 8px 16px !important;
+    font-size: 12px !important;
+  }
+  
+  .action-button {
+    width: 42px !important;
+    height: 42px !important;
+  }
+  
+  .action-button svg {
+    font-size: 17px !important;
+  }
+}
+
+/* Tablet y desktop pequeño */
+@media (min-width: 769px) and (max-width: 1023px) {
+  .event-badges {
+    max-width: calc(100% - 170px) !important;
+    gap: 8px !important;
+  }
+  
+  .badge {
+    padding: 6px 14px !important;
+    font-size: 11px !important;
+  }
+  
+  .action-button {
+    width: 40px !important;
+    height: 40px !important;
+  }
+  
+  .action-button svg {
+    font-size: 16px !important;
+  }
+}
+
+/* Manejar casos especiales con muchos badges */
+.event-badges:has(.badge:nth-child(3)) {
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: 6px !important;
+}
+
+@media (min-width: 1400px) {
+  .event-badges:has(.badge:nth-child(3)) {
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+  }
+}
+
+/* Asegurar z-index correcto para todos los tamaños */
+.event-badges {
+  z-index: 5 !important;
+}
+
+.event-actions {
+  z-index: 15 !important;
+}
+
+/* Prevenir overflow horizontal */
+.event-image-container {
+  overflow: hidden !important;
+  position: relative !important;
+}
+
+/* Ajustes para badges largos */
+.badge {
+  max-width: 100% !important;
+  text-overflow: ellipsis !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+}
+
+/* Solo en desktop, permitir que badges muy largos se truncen */
+@media (min-width: 1024px) {
+  .badge {
+    max-width: 150px !important;
+  }
+}
+
+@media (min-width: 1400px) {
+  .badge {
+    max-width: 180px !important;
+  }
+}
+
+/* Animaciones suaves para reposicionamiento */
+.event-badges,
+.event-actions {
+  transition: all 0.3s ease !important;
+}
+
+.badge {
+  transition: all 0.2s ease !important;
+}
+
+.action-button {
+  transition: all 0.2s ease !important;
+} 

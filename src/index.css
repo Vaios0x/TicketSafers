@@ -4,6 +4,7 @@
 @import './styles/events-page.css';
 @import './styles/events-grid.css';
 @import './styles/mobile-animations-fix.css';
+@import './styles/desktop-layout-fix.css';
 
 * {
   margin: 0;

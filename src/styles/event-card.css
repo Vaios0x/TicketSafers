@@ -120,6 +120,8 @@
   display: flex;
   gap: 10px;
   z-index: 1;
+  max-width: calc(100% - 180px); /* Reservar espacio para botones de acción */
+  flex-wrap: wrap;
 }
 
 .badge {
@@ -443,6 +445,21 @@
   .events-hero h1 {
     font-size: 4rem;
   }
+  
+  /* Más espacio para badges en pantallas ultra grandes */
+  .event-badges {
+    max-width: calc(100% - 200px);
+    gap: 12px;
+  }
+  
+  .action-button {
+    width: 44px;
+    height: 44px;
+  }
+  
+  .action-button svg {
+    font-size: 18px;
+  }
 }
 
 /* RESPONSIVE DESIGN */
@@ -453,6 +470,11 @@
     padding: 28px 16px;
     max-width: 1400px;
   }
+  
+  /* Ajustar espacio para badges en pantallas grandes */
+  .event-badges {
+    max-width: calc(100% - 190px);
+  }
 }
 
 @media (max-width: 1200px) {
@@ -462,6 +484,12 @@
     padding: 24px 16px;
     max-width: 1200px;
   }
+  
+  /* Espacio reducido para badges en pantallas medianas */
+  .event-badges {
+    max-width: calc(100% - 185px);
+    gap: 8px;
+  }
 }
 
 @media (max-width: 1024px) {
@@ -470,6 +498,21 @@
     gap: 20px;
     padding: 20px;
     max-width: 1000px;
+  }
+  
+  /* Ajuste para tablets y pantallas pequeñas de desktop */
+  .event-badges {
+    max-width: calc(100% - 175px);
+    gap: 8px;
+  }
+  
+  .action-button {
+    width: 42px;
+    height: 42px;
+  }
+  
+  .action-button svg {
+    font-size: 17px;
   }
 }
 
