@@ -64,12 +64,14 @@
 .create-event-header h1 {
   font-size: 2.5rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #ffffff 0%, #a78bfa 100%);
+  background: linear-gradient(135deg, #a855f7 0%, #8b5cf6 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   margin-bottom: 0.5rem;
   letter-spacing: -0.02em;
+  text-shadow: 0 0 10px rgba(136, 85, 247, 0.4);
+  filter: drop-shadow(0 0 15px rgba(136, 85, 247, 0.3));
 }
 
 .create-event-header p {
@@ -777,6 +779,7 @@
 
   .create-event-header h1 {
     font-size: 2rem;
+    text-shadow: 0 0 8px rgba(136, 85, 247, 0.3);
   }
 
   .form-grid {
@@ -830,7 +833,8 @@
   }
 
   .create-event-header h1 {
-    font-size: 1.8rem;
+    font-size: 1.7rem;
+    text-shadow: 0 0 6px rgba(136, 85, 247, 0.2);
   }
 
   .step-header h2 {
