@@ -1,0 +1,60 @@
+{
+  "name": "ticketsafer-site",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "dev": "vite --port 3000",
+    "dev:debug": "cross-env DEBUG=vite:* NODE_OPTIONS='--max-http-header-size=24576' vite --debug --port 3005",
+    "dev:network": "cross-env NODE_OPTIONS='--max-http-header-size=24576' vite --host --port 3005",
+    "build": "vite build",
+    "vercel-build": "vite build",
+    "preview": "vite preview --port 24680",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
+    "type-check": "tsc --noEmit",
+    "clean": "rimraf dist node_modules/.vite"
+  },
+  "dependencies": {
+    "@rainbow-me/rainbowkit": "^2.2.8",
+    "@tanstack/react-query": "^5.82.0",
+    "@types/mapbox-gl": "^3.4.1",
+    "framer-motion": "^12.18.1",
+    "ipfs-http-client": "^60.0.1",
+    "mapbox-gl": "^2.15.0",
+    "react": "^18.2.0",
+    "react-big-calendar": "^1.19.4",
+    "react-dom": "^18.2.0",
+    "react-icons": "^5.5.0",
+    "react-map-gl": "^7.1.6",
+    "react-router-dom": "^7.6.3",
+    "viem": "^2.31.7",
+    "wagmi": "^2.15.6"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "cross-env": "^7.0.3",
+    "rimraf": "^5.0.1",
+    "vite": "^5.0.0",
+    "vite-plugin-node-polyfills": "^0.24.0"
+  },
+  "browserslist": {
+    "production": [
+      "chrome >= 67",
+      "edge >= 79",
+      "firefox >= 68",
+      "opera >= 54",
+      "safari >= 14"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
