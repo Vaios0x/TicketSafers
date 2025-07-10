@@ -155,7 +155,7 @@
    =========================== */
 
 .footer-content {
-  padding: 2rem 0;
+  padding: 3rem 0;
   position: relative;
   z-index: 2;
   flex: 1;
@@ -165,11 +165,11 @@
 
 .footer-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2.5rem;
   max-width: 1400px;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0 2rem;
   justify-items: center;
   align-items: start;
   width: 100%;
@@ -180,7 +180,6 @@
   min-width: 0;
   word-break: break-word;
   text-align: center;
-  margin-bottom: 0.5rem;
 }
 
 .section-links {
@@ -762,9 +761,9 @@
   
   .footer-grid {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1.2rem;
+    gap: 2rem;
     max-width: 1200px;
-    padding: 0 0.75rem;
+    padding: 0 1.5rem;
   }
   
   .footer-brand {
@@ -784,8 +783,8 @@
 @media (max-width: 1024px) {
   .footer-grid {
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 1rem;
-    padding: 0 0.5rem;
+    gap: 1.5rem;
+    padding: 0 1rem;
   }
   
   .section-title {
@@ -801,7 +800,7 @@
   
   .footer-grid {
     grid-template-columns: 1fr;
-    gap: 0.8rem;
+    gap: 2rem;
     text-align: center;
   }
   

@@ -1019,7 +1019,6 @@ const CreateEventPage = () => {
 
   return (
     <div className="create-event-page">
-      <h1 className="neural-gradient-title">Crear Nuevo Evento</h1>
       <div className="create-event-container">
         <motion.div
           className="create-event-card"

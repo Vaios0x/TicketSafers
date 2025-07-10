@@ -142,8 +142,7 @@ const ProfilePage = () => {
   const currentDashboard = dashboardData[userType];
 
   return (
-    <div className="profile-page">
-      <h1 className="neural-gradient-title">Usuario Demo</h1>
+    <div className="profile-container">
       {/* Header del Perfil */}
       <div className="profile-header">
         <div className="profile-header-content">

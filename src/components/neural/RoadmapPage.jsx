@@ -73,23 +73,30 @@ const RoadmapPage = () => {
   ];
 
   return (
-    <div className="roadmap-page">
-      <h1 className="neural-gradient-title">Roadmap</h1>
-      <p>Nuestra visión para revolucionar la industria de tickets</p>
-      <div className="roadmap-legend">
-        <span className="legend-item completed">
-          <span className="legend-dot"></span>
-          Completado
-        </span>
-        <span className="legend-item in-progress">
-          <span className="legend-dot"></span>
-          En Progreso
-        </span>
-        <span className="legend-item pending">
-          <span className="legend-dot"></span>
-          Próximamente
-        </span>
-      </div>
+    <div className="neural-roadmap-container">
+      <motion.div 
+        className="roadmap-header"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+      >
+        <h1>Roadmap</h1>
+        <p>Nuestra visión para revolucionar la industria de tickets</p>
+        <div className="roadmap-legend">
+          <span className="legend-item completed">
+            <span className="legend-dot"></span>
+            Completado
+          </span>
+          <span className="legend-item in-progress">
+            <span className="legend-dot"></span>
+            En Progreso
+          </span>
+          <span className="legend-item pending">
+            <span className="legend-dot"></span>
+            Próximamente
+          </span>
+        </div>
+      </motion.div>
 
       <div className="roadmap-timeline">
         {milestones.map((milestone, index) => (
