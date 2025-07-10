@@ -3,6 +3,7 @@
 @import './styles/event-card.css';
 @import './styles/events-page.css';
 @import './styles/events-grid.css';
+@import './styles/mobile-animations-fix.css';
 
 * {
   margin: 0;

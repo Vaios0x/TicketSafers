@@ -1,0 +1,206 @@
+/* ===== OPTIMIZACIONES DE ANIMACIONES PARA MOBILE ===== */
+
+/* Reducir la intensidad de animaciones en dispositivos móviles */
+@media (max-width: 768px) {
+  /* Deshabilitar animaciones complejas en mobile */
+  .neon-hero-title {
+    animation: none !important;
+    text-shadow: 
+      0 0 2px #fff,
+      0 0 6px #fff,
+      0 0 12px #fff,
+      0 0 20px #8A2BE2,
+      0 0 35px #8A2BE2 !important;
+  }
+
+  .neon-hero-title:hover {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  /* Simplificar animaciones de subtítulo */
+  .neural-hero-subtitle {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .neural-hero-subtitle:hover {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  /* Reducir efectos de partículas */
+  .particle-field-neural::before {
+    animation: none !important;
+    opacity: 0.3 !important;
+  }
+
+  /* Simplificar efectos de stats */
+  .stat-item {
+    animation: none !important;
+  }
+
+  .stat-item:hover {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  /* Optimizar animaciones de Framer Motion */
+  [data-framer-motion] {
+    will-change: auto !important;
+  }
+
+  /* Reducir efectos de glassmorphism */
+  .neural-glass {
+    backdrop-filter: blur(5px) !important;
+  }
+
+  /* Simplificar efectos de botones */
+  .neural-button {
+    transition: opacity 0.2s ease !important;
+  }
+
+  .neural-button:hover {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+
+  .neural-button:active {
+    transform: scale(0.98) !important;
+  }
+}
+
+/* Optimizaciones específicas para dispositivos de baja potencia */
+@media (max-width: 480px) {
+  /* Deshabilitar completamente animaciones complejas */
+  * {
+    animation-duration: 0.1s !important;
+    transition-duration: 0.1s !important;
+  }
+
+  /* Reducir efectos de sombra */
+  .neon-hero-title,
+  .neural-hero-subtitle,
+  .stat-value {
+    text-shadow: 
+      0 0 2px #fff,
+      0 0 4px #8A2BE2 !important;
+  }
+
+  /* Simplificar fondos */
+  .neural-card,
+  .stat-item {
+    background: rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: none !important;
+  }
+
+  /* Reducir efectos de hover */
+  .neural-card:hover,
+  .stat-item:hover {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+}
+
+/* Optimizaciones para dispositivos con preferencia de movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .neon-hero-title,
+  .neural-hero-subtitle,
+  .stat-item,
+  .neural-card {
+    animation: none !important;
+  }
+}
+
+/* Optimizaciones para dispositivos con poca memoria */
+@media (max-width: 320px) {
+  /* Deshabilitar completamente todas las animaciones */
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  /* Simplificar al máximo los estilos */
+  .neon-hero-title {
+    text-shadow: 0 0 2px #fff !important;
+  }
+
+  .neural-hero-subtitle {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  }
+}
+
+/* Optimizaciones para dispositivos con pantallas de alta densidad */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  /* Reducir la intensidad de efectos en pantallas retina */
+  .neon-hero-title,
+  .neural-hero-subtitle {
+    text-shadow: 
+      0 0 1px #fff,
+      0 0 2px #8A2BE2 !important;
+  }
+}
+
+/* Optimizaciones para dispositivos con GPU limitada */
+@media (max-width: 768px) and (orientation: landscape) {
+  /* Reducir efectos en orientación landscape */
+  .particle-field-neural::before {
+    display: none !important;
+  }
+
+  .ai-scan-line {
+    animation: none !important;
+  }
+}
+
+/* Optimizaciones para dispositivos con conexión lenta */
+@media (max-width: 768px) {
+  /* Reducir carga de imágenes y efectos */
+  .neural-card,
+  .stat-item {
+    background-image: none !important;
+  }
+
+  /* Simplificar gradientes */
+  .gradient-text-neural {
+    background: linear-gradient(45deg, #667eea, #764ba2) !important;
+    animation: none !important;
+  }
+}
+
+/* Optimizaciones específicas para Safari en iOS */
+@supports (-webkit-touch-callout: none) {
+  @media (max-width: 768px) {
+    /* Optimizaciones específicas para Safari */
+    .neural-card,
+    .stat-item {
+      -webkit-transform: translateZ(0) !important;
+      transform: translateZ(0) !important;
+    }
+
+    /* Reducir efectos de blur en Safari */
+    .neural-glass {
+      -webkit-backdrop-filter: blur(5px) !important;
+      backdrop-filter: blur(5px) !important;
+    }
+  }
+}
+
+/* Optimizaciones para Chrome en Android */
+@media (max-width: 768px) {
+  /* Optimizaciones específicas para Chrome */
+  .neural-card,
+  .stat-item {
+    transform: translate3d(0, 0, 0) !important;
+  }
+} 

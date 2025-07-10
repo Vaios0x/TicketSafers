@@ -14,6 +14,7 @@ import {
 import HeroSearch from './HeroSearch';
 import BlockchainIcons from './BlockchainIcons';
 import AnimatedSubtitle from './AnimatedSubtitle';
+import useMobileOptimization from '../../hooks/useMobileOptimization';
 import '../../styles/event-card.css';
 import { eventsData } from '../../data/events.js';
 import TicketModal from './TicketModal';
@@ -99,6 +100,9 @@ const testimonials = [
 
 const NeuralHome = () => {
   const navigate = useNavigate();
+  const { getMotionConfig } = useMobileOptimization();
+  const motionConfig = getMotionConfig();
+  
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState({
     category: 'all',
@@ -150,18 +154,15 @@ const NeuralHome = () => {
         <div className="neural-hero-content">
           <motion.h1 
             className="neon-hero-title"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            {...motionConfig}
           >
             Encuentra tu <span className="neon-highlight-word highlight-multichain">próxima</span> <span className="neon-highlight-word highlight-tickets">experiencia</span>
           </motion.h1>
           
           <motion.p 
             className="neural-hero-subtitle-enhanced"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            {...motionConfig}
+            transition={{ ...motionConfig.transition, delay: 0.2 }}
           >
             Descubre eventos únicos, artistas increíbles y momentos inolvidables
           </motion.p>
@@ -170,15 +171,14 @@ const NeuralHome = () => {
           
           <motion.div 
             className="neural-hero-cta"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
+            {...motionConfig}
+            transition={{ ...motionConfig.transition, delay: 0.4 }}
           >
             <motion.button 
               className="neural-button primary"
               onClick={() => navigate('/eventos')}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={motionConfig.whileHover}
+              whileTap={motionConfig.whileTap}
             >
               Explorar Eventos
               <div className="button-glow" />
@@ -186,8 +186,8 @@ const NeuralHome = () => {
             <motion.button 
               className="neural-button secondary"
               onClick={() => navigate('/crear-evento')}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={motionConfig.whileHover}
+              whileTap={motionConfig.whileTap}
             >
               Crear Evento
               <div className="button-glow" />
@@ -201,10 +201,9 @@ const NeuralHome = () => {
       <section className="hero-search-section">
         <div className="neural-container">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            {...motionConfig}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
           >
             <HeroSearch onSearch={handleSearch} />
           </motion.div>
