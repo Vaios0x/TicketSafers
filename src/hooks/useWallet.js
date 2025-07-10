@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAccount, useConnect, useDisconnect, useBalance, useEnsName, useEnsAvatar, useChainId } from 'wagmi';
 import { useConnectModal, useAccountModal, useChainModal } from '@rainbow-me/rainbowkit';
-import { trackWalletEvent, getChainById, isChainSupported } from '../utils/rainbowkit-config.js';
 
 /**
  * Hook personalizado para gestionar la conexión de wallet
@@ -41,40 +40,30 @@ export const useWallet = () => {
   // ========================================
 
   /**
-   * Conectar wallet con tracking de eventos
+   * Conectar wallet
    */
   const connectWallet = async (connectorId) => {
     try {
-      trackWalletEvent('connect_attempt', { connector: connectorId });
-      
       const connector = connectors.find(c => c.id === connectorId);
       if (!connector) {
         throw new Error(`Connector ${connectorId} no encontrado`);
       }
 
       await connect({ connector });
-      trackWalletEvent('connect_success', { connector: connectorId });
     } catch (error) {
       console.error('Error conectando wallet:', error);
-      trackWalletEvent('connect_error', { 
-        connector: connectorId, 
-        error: error.message 
-      });
       throw error;
     }
   };
 
   /**
-   * Desconectar wallet con tracking
+   * Desconectar wallet
    */
   const disconnectWallet = async () => {
     try {
-      trackWalletEvent('disconnect_attempt');
       await disconnect();
-      trackWalletEvent('disconnect_success');
     } catch (error) {
       console.error('Error desconectando wallet:', error);
-      trackWalletEvent('disconnect_error', { error: error.message });
       throw error;
     }
   };
@@ -97,22 +86,6 @@ export const useWallet = () => {
   const formatBalance = (bal = balance, decimals = 4) => {
     if (!bal) return '0';
     return parseFloat(bal.formatted).toFixed(decimals);
-  };
-
-  /**
-   * Verificar si la chain actual está soportada
-   */
-  const isCurrentChainSupported = () => {
-    if (!address) return true; // Si no está conectado, no hay problema
-    return isChainSupported(chainId);
-  };
-
-  /**
-   * Obtener información de la chain actual
-   */
-  const getCurrentChainInfo = () => {
-    if (!chainId) return null;
-    return getChainById(chainId);
   };
 
   // ========================================
@@ -142,8 +115,8 @@ export const useWallet = () => {
   };
 
   const chainInfo = {
-    isSupported: isCurrentChainSupported(),
-    current: getCurrentChainInfo(),
+    isSupported: true, // Simplificado por ahora
+    current: null,
   };
 
   // ========================================
@@ -152,15 +125,12 @@ export const useWallet = () => {
 
   const modals = {
     openConnect: () => {
-      trackWalletEvent('modal_open', { type: 'connect' });
       openConnectModal?.();
     },
     openAccount: () => {
-      trackWalletEvent('modal_open', { type: 'account' });
       openAccountModal?.();
     },
     openChain: () => {
-      trackWalletEvent('modal_open', { type: 'chain' });
       openChainModal?.();
     },
   };
@@ -204,18 +174,11 @@ export const useWalletEvents = () => {
   useEffect(() => {
     // Detectar cambio de cuenta
     if (address !== previousAddress) {
-      if (address) {
-        trackWalletEvent('account_changed', { 
-          from: previousAddress, 
-          to: address 
-        });
-      }
       setPreviousAddress(address);
     }
 
     // Detectar cambio de conexión
     if (isConnected !== previousConnection) {
-      trackWalletEvent(isConnected ? 'connected' : 'disconnected');
       setPreviousConnection(isConnected);
     }
   }, [address, isConnected, previousAddress, previousConnection]);
@@ -238,7 +201,6 @@ export const useTransactionState = () => {
       { ...tx, timestamp: Date.now() },
       ...prev.slice(0, 9) // Mantener solo las últimas 10
     ]);
-    trackWalletEvent('transaction_started', { hash: tx.hash });
   };
 
   const updateTransaction = (hash, updates) => {
