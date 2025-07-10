@@ -82,6 +82,109 @@
   }
 }
 
+/* Optimizaciones específicas para botones de acción en mobile */
+@media (max-width: 768px) {
+  .event-actions {
+    position: absolute !important;
+    top: 12px !important;
+    right: 12px !important;
+    display: flex !important;
+    gap: 8px !important;
+    z-index: 15 !important;
+  }
+  
+  .action-button {
+    width: 44px !important;
+    height: 44px !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+    border: 2px solid rgba(255, 255, 255, 0.3) !important;
+    backdrop-filter: blur(15px) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+    transition: all 0.2s ease !important;
+  }
+  
+  .action-button svg {
+    font-size: 16px !important;
+    color: #ffffff !important;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+  }
+  
+  .action-button:hover,
+  .action-button:active,
+  .action-button:focus {
+    background: rgba(255, 255, 255, 0.35) !important;
+    border-color: rgba(255, 255, 255, 0.5) !important;
+    transform: scale(1.08) !important;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .event-actions {
+    top: 10px !important;
+    right: 10px !important;
+    gap: 6px !important;
+  }
+  
+  .action-button {
+    width: 46px !important;
+    height: 46px !important;
+    background: rgba(255, 255, 255, 0.25) !important;
+    border: 2px solid rgba(255, 255, 255, 0.4) !important;
+    backdrop-filter: blur(20px) !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5) !important;
+  }
+  
+  .action-button svg {
+    font-size: 18px !important;
+    filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.7));
+  }
+  
+  .action-button:hover,
+  .action-button:active,
+  .action-button:focus {
+    background: rgba(255, 255, 255, 0.4) !important;
+    border-color: rgba(255, 255, 255, 0.6) !important;
+    transform: scale(1.1) !important;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6) !important;
+  }
+}
+
+/* Mejorar área de toque para dispositivos táctiles */
+@media (pointer: coarse) {
+  .action-button {
+    min-width: 48px !important;
+    min-height: 48px !important;
+    touch-action: manipulation;
+  }
+  
+  .action-button::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    border-radius: 50%;
+    background: transparent;
+  }
+}
+
+/* Asegurar visibilidad sobre cualquier fondo */
+.action-button {
+  backdrop-filter: blur(15px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(15px) saturate(180%) !important;
+}
+
+/* Animaciones suaves para interacciones táctiles */
+.action-button {
+  will-change: transform, background, border-color;
+}
+
+.action-button:active {
+  transition: transform 0.1s ease !important;
+}
+
 /* Optimizaciones específicas para dispositivos de baja potencia */
 @media (max-width: 480px) {
   /* Reducir duración de animaciones pero mantenerlas */
