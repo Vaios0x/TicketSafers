@@ -2,9 +2,11 @@
 
 /* Reducir la intensidad de animaciones en dispositivos móviles */
 @media (max-width: 768px) {
-  /* Deshabilitar animaciones complejas en mobile */
+  /* Mantener animaciones pero optimizadas */
   .neon-hero-title {
-    animation: none !important;
+    animation: 
+      neon-color-cycle 8s ease-in-out infinite,
+      neon-pulse 2.5s ease-in-out infinite alternate !important;
     text-shadow: 
       0 0 2px #fff,
       0 0 6px #fff,
@@ -14,55 +16,65 @@
   }
 
   .neon-hero-title:hover {
-    animation: none !important;
-    transform: none !important;
+    animation: 
+      neon-color-cycle 6s ease-in-out infinite,
+      neon-wave 1.8s ease-in-out infinite !important;
+    transform: scale(1.01) !important;
   }
 
-  /* Simplificar animaciones de subtítulo */
+  /* Mantener animaciones de subtítulo pero optimizadas */
   .neural-hero-subtitle {
-    animation: none !important;
-    transform: none !important;
+    animation: 
+      subtitle-glow-pulse 6s ease-in-out infinite,
+      float-gentle 4s ease-in-out infinite,
+      energy-wave 8s ease-in-out infinite !important;
   }
 
   .neural-hero-subtitle:hover {
-    animation: none !important;
-    transform: none !important;
+    animation: 
+      subtitle-glow-pulse 4s ease-in-out infinite,
+      float-gentle 3s ease-in-out infinite !important;
+    transform: translateY(-3px) scale(1.01) !important;
   }
 
-  /* Reducir efectos de partículas */
+  /* Reducir efectos de partículas pero mantenerlos */
   .particle-field-neural::before {
-    animation: none !important;
-    opacity: 0.3 !important;
+    animation: neuralParticleFloat 20s linear infinite !important;
+    opacity: 0.4 !important;
   }
 
-  /* Simplificar efectos de stats */
+  /* Mantener efectos de stats pero optimizados */
   .stat-item {
-    animation: none !important;
+    animation: 
+      stats-pulse-subtle 3s ease-in-out infinite,
+      stats-float 4s ease-in-out infinite !important;
   }
 
   .stat-item:hover {
-    animation: none !important;
-    transform: none !important;
+    animation: 
+      stats-pulse-subtle 2s ease-in-out infinite,
+      stats-float 3s ease-in-out infinite !important;
+    transform: translateY(-2px) scale(1.02) !important;
   }
 
   /* Optimizar animaciones de Framer Motion */
   [data-framer-motion] {
-    will-change: auto !important;
+    will-change: transform, opacity !important;
   }
 
-  /* Reducir efectos de glassmorphism */
+  /* Reducir efectos de glassmorphism ligeramente */
   .neural-glass {
-    backdrop-filter: blur(5px) !important;
+    backdrop-filter: blur(10px) !important;
   }
 
-  /* Simplificar efectos de botones */
+  /* Mantener efectos de botones pero optimizados */
   .neural-button {
-    transition: opacity 0.2s ease !important;
+    transition: all 0.3s ease !important;
   }
 
   .neural-button:hover {
-    transform: none !important;
-    box-shadow: none !important;
+    transform: translateY(-1px) scale(1.02) !important;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3) !important;
   }
 
   .neural-button:active {
@@ -72,33 +84,34 @@
 
 /* Optimizaciones específicas para dispositivos de baja potencia */
 @media (max-width: 480px) {
-  /* Deshabilitar completamente animaciones complejas */
+  /* Reducir duración de animaciones pero mantenerlas */
   * {
-    animation-duration: 0.1s !important;
-    transition-duration: 0.1s !important;
+    animation-duration: 0.8s !important;
+    transition-duration: 0.3s !important;
   }
 
-  /* Reducir efectos de sombra */
+  /* Mantener efectos de sombra pero reducidos */
   .neon-hero-title,
   .neural-hero-subtitle,
   .stat-value {
     text-shadow: 
       0 0 2px #fff,
-      0 0 4px #8A2BE2 !important;
+      0 0 6px #8A2BE2,
+      0 0 12px #8A2BE2 !important;
   }
 
-  /* Simplificar fondos */
+  /* Mantener fondos pero simplificados */
   .neural-card,
   .stat-item {
-    background: rgba(255, 255, 255, 0.05) !important;
-    backdrop-filter: none !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    backdrop-filter: blur(8px) !important;
   }
 
-  /* Reducir efectos de hover */
+  /* Mantener efectos de hover pero reducidos */
   .neural-card:hover,
   .stat-item:hover {
-    transform: none !important;
-    box-shadow: none !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 2px 10px rgba(102, 126, 234, 0.2) !important;
   }
 }
 
@@ -123,58 +136,58 @@
 
 /* Optimizaciones para dispositivos con poca memoria */
 @media (max-width: 320px) {
-  /* Deshabilitar completamente todas las animaciones */
-  * {
-    animation: none !important;
-    transition: none !important;
-  }
-
-  /* Simplificar al máximo los estilos */
+  /* Mantener animaciones básicas */
   .neon-hero-title {
-    text-shadow: 0 0 2px #fff !important;
+    animation: neon-pulse 3s ease-in-out infinite alternate !important;
+    text-shadow: 
+      0 0 2px #fff,
+      0 0 6px #8A2BE2 !important;
   }
 
   .neural-hero-subtitle {
-    background: rgba(255, 255, 255, 0.05) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    animation: float-gentle 4s ease-in-out infinite !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
   }
 }
 
 /* Optimizaciones para dispositivos con pantallas de alta densidad */
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  /* Reducir la intensidad de efectos en pantallas retina */
+  /* Mantener efectos en pantallas retina pero optimizados */
   .neon-hero-title,
   .neural-hero-subtitle {
     text-shadow: 
-      0 0 1px #fff,
-      0 0 2px #8A2BE2 !important;
+      0 0 2px #fff,
+      0 0 4px #8A2BE2,
+      0 0 8px #8A2BE2 !important;
   }
 }
 
 /* Optimizaciones para dispositivos con GPU limitada */
 @media (max-width: 768px) and (orientation: landscape) {
-  /* Reducir efectos en orientación landscape */
+  /* Mantener efectos en orientación landscape pero reducidos */
   .particle-field-neural::before {
-    display: none !important;
+    animation: neuralParticleFloat 15s linear infinite !important;
+    opacity: 0.3 !important;
   }
 
   .ai-scan-line {
-    animation: none !important;
+    animation: neuralScan 4s ease-in-out infinite !important;
   }
 }
 
 /* Optimizaciones para dispositivos con conexión lenta */
 @media (max-width: 768px) {
-  /* Reducir carga de imágenes y efectos */
+  /* Mantener efectos pero optimizados */
   .neural-card,
   .stat-item {
-    background-image: none !important;
+    background-image: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.05) 100%) !important;
   }
 
-  /* Simplificar gradientes */
+  /* Mantener gradientes pero simplificados */
   .gradient-text-neural {
-    background: linear-gradient(45deg, #667eea, #764ba2) !important;
-    animation: none !important;
+    background: linear-gradient(45deg, #667eea, #764ba2, #f093fb) !important;
+    animation: neuralGradientShift 6s ease infinite !important;
   }
 }
 
@@ -188,10 +201,10 @@
       transform: translateZ(0) !important;
     }
 
-    /* Reducir efectos de blur en Safari */
+    /* Mantener efectos de blur en Safari */
     .neural-glass {
-      -webkit-backdrop-filter: blur(5px) !important;
-      backdrop-filter: blur(5px) !important;
+      -webkit-backdrop-filter: blur(10px) !important;
+      backdrop-filter: blur(10px) !important;
     }
   }
 }

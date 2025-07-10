@@ -69,7 +69,7 @@ export const useMobileOptimization = () => {
 
     if (isLowPower) {
       return {
-        duration: 0.3,
+        duration: 0.6,
         ease: 'easeOut',
         disableAnimations: false
       };
@@ -77,7 +77,7 @@ export const useMobileOptimization = () => {
 
     if (isMobile) {
       return {
-        duration: 0.5,
+        duration: 0.7,
         ease: 'easeOut',
         disableAnimations: false
       };
@@ -101,8 +101,8 @@ export const useMobileOptimization = () => {
         duration: config.duration,
         ease: config.ease
       },
-      whileHover: config.disableAnimations ? {} : { scale: 1.02 },
-      whileTap: config.disableAnimations ? {} : { scale: 0.98 }
+      whileHover: config.disableAnimations ? {} : { scale: 1.03 },
+      whileTap: config.disableAnimations ? {} : { scale: 0.97 }
     };
   };
 
