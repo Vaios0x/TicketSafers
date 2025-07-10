@@ -10,13 +10,13 @@
   flex-direction: column;
   width: 100%;
   min-height: 600px;
-  height: auto;
+  height: 100%;
   background: linear-gradient(145deg, 
     rgba(30, 41, 59, 0.95) 0%, 
     rgba(15, 23, 42, 0.98) 50%,
     rgba(8, 15, 30, 0.99) 100%);
   border-radius: 32px;
-  overflow: hidden;
+  overflow: visible;
   border: 1px solid rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(25px);
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
@@ -199,10 +199,11 @@
 /* CONTENIDO PRINCIPAL */
 .event-content {
   padding: 24px;
-  flex: 1;
+  flex: 1 1 auto;
+  min-height: 0;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
 }
 
 /* SECCIÓN DE TÍTULO */
@@ -316,6 +317,7 @@
 
 /* BOTÓN DE COMPRA MODERNO */
 .buy-button {
+  margin-top: auto;
   padding: 8px 16px;
   background: rgba(59, 130, 246, 0.2);
   border: 1px solid rgba(59, 130, 246, 0.4);
@@ -660,6 +662,7 @@
   text-align: center;
   background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   font-weight: 800;
   position: relative;
@@ -798,6 +801,7 @@
   margin-bottom: 16px;
   background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   line-height: 1.2;
 }
@@ -981,10 +985,12 @@
   line-height: 1.2;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   background: linear-gradient(135deg, #fff 0%, #e2e8f0 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -994,6 +1000,7 @@
   margin-top: 8px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }

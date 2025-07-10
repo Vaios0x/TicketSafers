@@ -87,16 +87,21 @@ const EventCard = ({ event, onClick }) => {
               Destacado
             </div>
           )}
-          {event.allowResale && (
+          {/* Solo una etiqueta: subasta > reventa > venta oficial */}
+          {event.allowAuction ? (
+            <div className="badge auction">
+              <FaGavel className="badge-icon" />
+              Subasta
+            </div>
+          ) : event.allowResale ? (
             <div className="badge resale">
               <FaExchangeAlt className="badge-icon" />
               Reventa
             </div>
-          )}
-          {event.allowAuction && (
-            <div className="badge auction">
-              <FaGavel className="badge-icon" />
-              Subasta
+          ) : (
+            <div className="badge official">
+              <FaTicketAlt className="badge-icon" />
+              Venta Oficial
             </div>
           )}
         </div>
@@ -170,38 +175,8 @@ const EventCard = ({ event, onClick }) => {
         </div>
 
         <div className="prices-section">
-          {/* Precio principal */}
-          <div className="price-main">
-            <div className="price-row">
-              <span className="price-label">Precio desde</span>
-              <div className="price-value">
-                <span className="currency-icon">
-                  {event.currency === 'ETH' && <FaEthereum />}
-                  {event.currency === 'MATIC' && <SiPolygon />}
-                </span>
-                <span className="price-amount">{formatPrice(event.price, event.currency)}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Precio de reventa */}
-          {event.allowResale && (
-            <div className="price-resale">
-              <div className="price-row">
-                <span className="price-label">Reventa desde</span>
-                <div className="price-value">
-                  <span className="currency-icon">
-                    {event.resaleCurrency === 'ETH' && <FaEthereum />}
-                    {event.resaleCurrency === 'MATIC' && <SiPolygon />}
-                  </span>
-                  <span className="price-amount">{formatPrice(event.resalePrice, event.resaleCurrency)}</span>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Precio de subasta */}
-          {event.allowAuction && (
+          {/* Mostrar solo uno: subasta > reventa > venta */}
+          {event.allowAuction ? (
             <div className="price-auction">
               <div className="price-row">
                 <span className="price-label">Puja actual</span>
@@ -214,6 +189,32 @@ const EventCard = ({ event, onClick }) => {
                 </div>
               </div>
               <div className="auction-time">Termina en {event.auctionTimeLeft}</div>
+            </div>
+          ) : event.allowResale ? (
+            <div className="price-resale">
+              <div className="price-row">
+                <span className="price-label">Reventa desde</span>
+                <div className="price-value">
+                  <span className="currency-icon">
+                    {event.resaleCurrency === 'ETH' && <FaEthereum />}
+                    {event.resaleCurrency === 'MATIC' && <SiPolygon />}
+                  </span>
+                  <span className="price-amount">{formatPrice(event.resalePrice, event.resaleCurrency)}</span>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="price-main">
+              <div className="price-row">
+                <span className="price-label">Precio desde</span>
+                <div className="price-value">
+                  <span className="currency-icon">
+                    {event.currency === 'ETH' && <FaEthereum />}
+                    {event.currency === 'MATIC' && <SiPolygon />}
+                  </span>
+                  <span className="price-amount">{formatPrice(event.price, event.currency)}</span>
+                </div>
+              </div>
             </div>
           )}
         </div>

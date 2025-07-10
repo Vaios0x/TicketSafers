@@ -216,30 +216,15 @@ body {
   }
 }
 
-/* Sobrescribir cualquier estilo anterior que pueda causar conflictos */
-.events-grid {
-  display: grid !important;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)) !important;
-  gap: 24px !important;
-  max-width: 1600px !important;
-  margin: 0 auto !important;
-  padding: 32px 20px !important;
-}
+/* NOTA: Los estilos de .events-grid y .event-card ahora se manejan en sus archivos específicos:
+   - src/styles/events-grid.css
+   - src/styles/event-card.css
+   
+   Esto permite que los cambios en esos archivos sean efectivos sin ser sobreescritos.
+*/
 
-.event-card {
-  min-height: 380px !important;
-  max-height: 420px !important;
-  background: linear-gradient(135deg, 
-    rgba(15, 23, 42, 0.95) 0%, 
-    rgba(30, 41, 59, 0.9) 100%) !important;
-}
-
-.event-image-container {
-  height: 100px !important;
-}
-
-/* RESPONSIVE GRID FORZADO */
-@media (max-width: 1400px) {
+/* RESPONSIVE GRID - Ahora manejado en events-grid.css */
+/* @media (max-width: 1400px) {
   .events-grid {
     grid-template-columns: repeat(4, 1fr) !important;
   }
@@ -261,4 +246,4 @@ body {
   .events-grid {
     grid-template-columns: 1fr !important;
   }
-}
+} */

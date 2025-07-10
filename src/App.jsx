@@ -70,7 +70,7 @@ const criticalStyles = `
   display: flex !important;
   flex-direction: column !important;
   width: 100% !important;
-  min-height: 640px !important;
+  min-height: 600px !important;
   height: auto !important;
   background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%) !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
@@ -102,7 +102,9 @@ const criticalStyles = `
   flex-direction: column !important;
   padding: 20px !important;
   gap: 16px !important;
-  min-height: 520px !important;
+  min-height: unset !important;
+  height: auto !important;
+  overflow: visible !important;
 }
 
 .event-title {

@@ -74,7 +74,7 @@ const EventSearch = ({ onSearch, initialFilters = {} }) => {
     <div className="event-search-container">
       <div className="event-search-header">
         <FaCompass className="header-icon" aria-hidden="true" />
-        <h2>Explorar Eventos</h2>
+        <h1 className="neon-hero-title">Explorar Eventos</h1>
         <p className="header-subtitle">Descubre experiencias únicas cerca de ti</p>
       </div>
 

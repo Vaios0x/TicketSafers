@@ -2021,6 +2021,53 @@ export const eventsData = [
   }
 ];
 
+// Distribución aleatoria de modalidades de eventos
+// - 60% venta oficial: allowResale: false, allowAuction: false
+// - 30% reventa: allowResale: true, allowAuction: false
+// - 10% subasta: allowAuction: true, allowResale: false
+(function() {
+  eventsData.forEach((ev, index) => {
+    // Los primeros 2 eventos siempre serán de subasta (para página 1)
+    if (index < 2) {
+      ev.allowResale = false;
+      ev.allowAuction = true;
+    } else {
+      // El resto se distribuye aleatoriamente
+      const random = Math.random();
+      if (random < 0.6) {
+        // 60% - Solo venta oficial
+        ev.allowResale = false;
+        ev.allowAuction = false;
+      } else if (random < 0.9) {
+        // 30% - Solo reventa
+        ev.allowResale = true;
+        ev.allowAuction = false;
+      } else {
+        // 10% - Solo subasta
+        ev.allowResale = false;
+        ev.allowAuction = true;
+      }
+    }
+    // --- Garantizar precios para cada modalidad ---
+    // Venta oficial
+    if (!ev.allowResale && !ev.allowAuction) {
+      if (ev.price == null) ev.price = 0.5;
+      if (!ev.currency) ev.currency = 'ETH';
+    }
+    // Reventa
+    if (ev.allowResale) {
+      if (ev.resalePrice == null) ev.resalePrice = ev.price ? (typeof ev.price === 'number' ? +(ev.price * 1.2).toFixed(2) : ev.price) : 0.6;
+      if (!ev.resaleCurrency) ev.resaleCurrency = ev.currency || 'ETH';
+    }
+    // Subasta
+    if (ev.allowAuction) {
+      if (ev.currentBid == null) ev.currentBid = ev.price ? (typeof ev.price === 'number' ? +(ev.price * 1.5).toFixed(2) : ev.price) : 0.7;
+      if (!ev.auctionCurrency) ev.auctionCurrency = ev.currency || 'ETH';
+      if (!ev.auctionTimeLeft) ev.auctionTimeLeft = '1d';
+    }
+  });
+})();
+
 export const events = [
   {
     id: 1,

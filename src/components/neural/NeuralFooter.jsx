@@ -13,7 +13,9 @@ import {
   FaShieldAlt,
   FaNetworkWired,
   FaGasPump,
-  FaExchangeAlt
+  FaExchangeAlt,
+  FaTicketAlt,
+  FaMapMarkerAlt
 } from 'react-icons/fa';
 import '../../styles/neural-footer.css';
 
@@ -67,7 +69,9 @@ const NeuralFooter = () => {
     { value: "10K+", label: "Eventos Vendidos", icon: <FaGem /> },
     { value: "99.9%", label: "Uptime", icon: <FaShieldAlt /> },
     { value: "4", label: "Blockchains", icon: <FaNetworkWired /> },
-    { value: "<$0.1", label: "Gas Promedio", icon: <FaGasPump /> }
+    { value: "<$0.1", label: "Gas Promedio", icon: <FaGasPump /> },
+    { value: "25K+", label: "Tickets Vendidos", icon: <FaTicketAlt /> },
+    { value: "120+", label: "Ciudades", icon: <FaMapMarkerAlt /> }
   ];
 
   return (

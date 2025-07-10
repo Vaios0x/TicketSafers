@@ -29,6 +29,7 @@ import {
 } from 'react-icons/fa';
 import { SiPolygon, SiVisa, SiMastercard, SiStripe, SiMercadopago, SiKlarna } from 'react-icons/si';
 import '../../styles/ticket-modal.css';
+import Confetti from "react-confetti";
 
 const TicketModal = ({ isOpen, onClose, event }) => {
   const [selectedQuantity, setSelectedQuantity] = useState(1);
@@ -49,6 +50,9 @@ const TicketModal = ({ isOpen, onClose, event }) => {
     phone: ''
   });
 
+  // Estado para mostrar el pop-up del ticket
+  const [showTicketPopup, setShowTicketPopup] = useState(false);
+
   useEffect(() => {
     if (isOpen) {
       console.log('Modal abierto con evento:', event);
@@ -61,6 +65,15 @@ const TicketModal = ({ isOpen, onClose, event }) => {
       document.body.style.overflow = 'unset';
     };
   }, [isOpen, event]);
+
+  // Mostrar el pop-up al llegar a la confirmación
+  useEffect(() => {
+    if (currentStep === 'confirmation') {
+      setTimeout(() => setShowTicketPopup(true), 800); // Pequeño delay para efecto
+    } else {
+      setShowTicketPopup(false);
+    }
+  }, [currentStep]);
 
   if (!event) {
     console.log('No hay evento disponible');
@@ -267,34 +280,55 @@ const TicketModal = ({ isOpen, onClose, event }) => {
     navigator.clipboard.writeText(text);
   };
 
+  // Determinar las opciones habilitadas para este ticket
+  const purchaseOptions = [];
+  if (!event.allowResale && !event.allowAuction) {
+    purchaseOptions.push('official');
+  }
+  if (event.allowResale && event.resalePrice) {
+    purchaseOptions.push('resale');
+  }
+  if (event.allowAuction && event.currentBid) {
+    purchaseOptions.push('auction');
+  }
+
+  // Si solo hay una opción, selecciónala automáticamente
+  useEffect(() => {
+    if (purchaseOptions.length === 1) {
+      setPurchaseType(purchaseOptions[0]);
+    }
+  }, [event, isOpen]);
+
+  // Renderizar solo las opciones habilitadas
   const renderPurchaseOptions = () => (
     <div className="purchase-options">
       {/* Venta Oficial */}
-      <div 
-        className={`purchase-option official ${purchaseType === 'official' ? 'selected' : ''}`}
-        onClick={() => setPurchaseType('official')}
-      >
-        <div className="option-header">
-          <div className="option-title">
-            <FaShoppingCart className="option-icon" />
-            <span>Venta Oficial</span>
+      {purchaseOptions.includes('official') && (
+        <div 
+          className={`purchase-option official ${purchaseType === 'official' ? 'selected' : ''}`}
+          onClick={() => purchaseOptions.length > 1 && setPurchaseType('official')}
+        >
+          <div className="option-header">
+            <div className="option-title">
+              <FaShoppingCart className="option-icon" />
+              <span>Venta Oficial</span>
+            </div>
+            <div className="option-price">
+              {event.currency === 'ETH' && <FaEthereum className="currency-icon" />}
+              {event.currency === 'MATIC' && <SiPolygon className="currency-icon" />}
+              <span>{event.price} {event.currency}</span>
+            </div>
           </div>
-          <div className="option-price">
-            {event.currency === 'ETH' && <FaEthereum className="currency-icon" />}
-            {event.currency === 'MATIC' && <SiPolygon className="currency-icon" />}
-            <span>{event.price} {event.currency}</span>
+          <div className="option-details">
+            <span className="availability">{event.availableTickets} tickets disponibles</span>
           </div>
         </div>
-        <div className="option-details">
-          <span className="availability">{event.availableTickets} tickets disponibles</span>
-        </div>
-      </div>
-
+      )}
       {/* Reventa */}
-      {event.allowResale && event.resalePrice && (
+      {purchaseOptions.includes('resale') && (
         <div 
           className={`purchase-option resale ${purchaseType === 'resale' ? 'selected' : ''}`}
-          onClick={() => setPurchaseType('resale')}
+          onClick={() => purchaseOptions.length > 1 && setPurchaseType('resale')}
         >
           <div className="option-header">
             <div className="option-title">
@@ -313,12 +347,11 @@ const TicketModal = ({ isOpen, onClose, event }) => {
           </div>
         </div>
       )}
-
       {/* Subasta */}
-      {event.allowAuction && event.currentBid && (
+      {purchaseOptions.includes('auction') && (
         <div 
           className={`purchase-option auction ${purchaseType === 'auction' ? 'selected' : ''}`}
-          onClick={() => setPurchaseType('auction')}
+          onClick={() => purchaseOptions.length > 1 && setPurchaseType('auction')}
         >
           <div className="option-header">
             <div className="option-title">
@@ -953,6 +986,33 @@ const TicketModal = ({ isOpen, onClose, event }) => {
     </motion.div>
   );
 
+  // Render del pop-up del ticket
+  const renderTicketPopup = () => (
+    <div className="ticket-popup-backdrop">
+      <Confetti width={window.innerWidth} height={window.innerHeight} numberOfPieces={200} recycle={false} />
+      <div className="ticket-popup-modal">
+        <h2>¡Tu Ticket NFT!</h2>
+        <div className="ticket-popup-content">
+          <div className="ticket-popup-event">
+            <img src={event.image} alt={event.title} className="ticket-popup-img" />
+            <div>
+              <h3>{event.title}</h3>
+              <p>{event.date} - {event.location}</p>
+              <span className="ticket-popup-badge">{purchaseType === 'official' ? 'VENTA OFICIAL' : purchaseType === 'resale' ? 'REVENTA' : 'SUBASTA'}</span>
+            </div>
+          </div>
+          <div className="ticket-popup-details">
+            <span>Cantidad: <b>{selectedQuantity}</b></span>
+            <span>Precio total: <b>{getBasePrice()} {getCurrency()}</b></span>
+            <span>Modalidad: <b>{purchaseType === 'official' ? 'Venta Oficial' : purchaseType === 'resale' ? 'Reventa' : 'Subasta'}</b></span>
+            <span className="ticket-popup-qr">[QR SIMULADO]</span>
+          </div>
+        </div>
+        <button className="btn-primary" onClick={() => setShowTicketPopup(false)}>Cerrar</button>
+      </div>
+    </div>
+  );
+
   return createPortal(
     <AnimatePresence>
       {isOpen && (
@@ -1017,6 +1077,7 @@ const TicketModal = ({ isOpen, onClose, event }) => {
           </motion.div>
         </motion.div>
       )}
+      {showTicketPopup && renderTicketPopup()}
     </AnimatePresence>,
     document.body
   );

@@ -5,7 +5,9 @@ import {
   FaUsers, 
   FaEthereum, 
   FaExchangeAlt,
-  FaChartLine
+  FaChartLine,
+  FaCalendarAlt,
+  FaTags
 } from 'react-icons/fa';
 import '../../styles/real-time-stats.css';
 
@@ -14,7 +16,9 @@ const RealTimeStats = () => {
     activeUsers: 0,
     totalTransactions: 0,
     totalVolume: 0,
-    averagePrice: 0
+    averagePrice: 0,
+    activeEvents: 0,
+    ticketsSold: 0
   });
 
   // Simular actualizaciones en tiempo real
@@ -24,7 +28,9 @@ const RealTimeStats = () => {
         activeUsers: Math.floor(Math.random() * 1000) + 500,
         totalTransactions: prev.totalTransactions + Math.floor(Math.random() * 10),
         totalVolume: prev.totalVolume + Math.random() * 2,
-        averagePrice: 0.15 + Math.random() * 0.1
+        averagePrice: 0.15 + Math.random() * 0.1,
+        activeEvents: Math.floor(Math.random() * 10) + 15,
+        ticketsSold: prev.ticketsSold + Math.floor(Math.random() * 20) + 10
       }));
     }, 3000);
 
@@ -55,6 +61,18 @@ const RealTimeStats = () => {
       label: 'Precio Promedio',
       value: `${stats.averagePrice.toFixed(3)} ETH`,
       color: '#ffff00'
+    },
+    {
+      icon: <FaCalendarAlt />,
+      label: 'Eventos Activos',
+      value: stats.activeEvents.toLocaleString(),
+      color: '#ff8800'
+    },
+    {
+      icon: <FaTags />,
+      label: 'Tickets Vendidos',
+      value: stats.ticketsSold.toLocaleString(),
+      color: '#00aaff'
     }
   ];
 

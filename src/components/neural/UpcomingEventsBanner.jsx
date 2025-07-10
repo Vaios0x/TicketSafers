@@ -1,9 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { FaCalendarAlt, FaMapMarkerAlt, FaClock, FaArrowRight } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 import '../../styles/upcoming-events.css';
 
-const UpcomingEventsBanner = ({ events = [] }) => {
+const UpcomingEventsBanner = ({ events = [], onEventClick }) => {
+  const navigate = useNavigate();
   return (
     <div className="upcoming-events-banner">
       <div className="banner-header">
@@ -33,6 +35,8 @@ const UpcomingEventsBanner = ({ events = [] }) => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: index * 0.1 }}
             whileHover={{ scale: 1.02, y: -5 }}
+            onClick={() => onEventClick && onEventClick(event)}
+            style={{ cursor: 'pointer' }}
           >
             <div className="event-date">
               <FaCalendarAlt />
@@ -46,10 +50,12 @@ const UpcomingEventsBanner = ({ events = [] }) => {
                   <FaMapMarkerAlt />
                   {event.location}
                 </span>
-                <span>
-                  <FaClock />
-                  {event.time}
-                </span>
+                {event.time && (
+                  <span>
+                    <FaClock />
+                    {event.time}
+                  </span>
+                )}
               </div>
             </div>
 
@@ -57,6 +63,7 @@ const UpcomingEventsBanner = ({ events = [] }) => {
               className="event-action"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
+              onClick={e => { e.stopPropagation(); onEventClick && onEventClick(event); }}
             >
               Ver Detalles
               <FaArrowRight />
@@ -71,7 +78,7 @@ const UpcomingEventsBanner = ({ events = [] }) => {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.4 }}
       >
-        <button className="view-all-button">
+        <button className="view-all-button" onClick={() => navigate('/eventos')}>
           Ver Todos los Eventos
           <FaArrowRight />
         </button>

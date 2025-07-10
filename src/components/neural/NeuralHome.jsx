@@ -15,6 +15,8 @@ import HeroSearch from './HeroSearch';
 import BlockchainIcons from './BlockchainIcons';
 import AnimatedSubtitle from './AnimatedSubtitle';
 import '../../styles/event-card.css';
+import { eventsData } from '../../data/events.js';
+import TicketModal from './TicketModal';
 
 // Lazy load componentes pesados
 const EventsGrid = lazy(() => import('./EventsGrid'));
@@ -66,29 +68,7 @@ const featuredEvents = [
   }
 ];
 
-const upcomingEvents = [
-  {
-    id: 1,
-    title: "ETH México 2024",
-    date: "15 Jul",
-    time: "10:00 AM",
-    location: "CDMX"
-  },
-  {
-    id: 2,
-    title: "NFT Art Gallery",
-    date: "20 Jul",
-    time: "6:00 PM",
-    location: "Galería Digital"
-  },
-  {
-    id: 3,
-    title: "Hackathon Web3",
-    date: "25 Jul",
-    time: "9:00 AM",
-    location: "Tech Hub"
-  }
-];
+const upcomingEvents = eventsData.filter(e => e.type === 'proximos').slice(0, 4);
 
 const testimonials = [
   {
@@ -97,7 +77,7 @@ const testimonials = [
     name: "María González",
     role: "Organizadora de Eventos",
     rating: 5,
-    avatar: "/assets/testimonials/maria.jpg"
+    avatar: "https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=facearea&w=128&h=128&q=80"
   },
   {
     id: 2,
@@ -105,7 +85,7 @@ const testimonials = [
     name: "Carlos Ruiz",
     role: "Músico Independiente",
     rating: 5,
-    avatar: "/assets/testimonials/carlos.jpg"
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=facearea&w=128&h=128&q=80"
   },
   {
     id: 3,
@@ -113,7 +93,7 @@ const testimonials = [
     name: "Ana Martínez",
     role: "Crypto Entusiasta",
     rating: 5,
-    avatar: "/assets/testimonials/ana.jpg"
+    avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=facearea&w=128&h=128&q=80"
   }
 ];
 
@@ -131,6 +111,9 @@ const NeuralHome = () => {
     priceRange: 'all',
     venue: 'all'
   });
+  // Estado para el modal de checkout
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
   const handleSearch = (searchData) => {
     if (searchData.query) {
@@ -149,6 +132,15 @@ const NeuralHome = () => {
       ...prev,
       ...newFilters
     }));
+  };
+
+  const handleOpenCheckout = (event) => {
+    setSelectedEvent(event);
+    setIsModalOpen(true);
+  };
+  const handleCloseCheckout = () => {
+    setIsModalOpen(false);
+    setSelectedEvent(null);
   };
 
   return (
@@ -226,7 +218,7 @@ const NeuralHome = () => {
 
       {/* Upcoming Events Banner */}
       <Suspense fallback={<LazyLoadingFallback />}>
-        <UpcomingEventsBanner events={upcomingEvents} />
+        <UpcomingEventsBanner events={upcomingEvents} onEventClick={handleOpenCheckout} />
       </Suspense>
 
       {/* Real Time Stats */}
@@ -238,6 +230,11 @@ const NeuralHome = () => {
       <Suspense fallback={<LazyLoadingFallback />}>
         <TestimonialsCarousel testimonials={testimonials} />
       </Suspense>
+
+      {/* TicketModal para checkout */}
+      {isModalOpen && selectedEvent && (
+        <TicketModal isOpen={isModalOpen} onClose={handleCloseCheckout} event={selectedEvent} />
+      )}
     </div>
   );
 };
