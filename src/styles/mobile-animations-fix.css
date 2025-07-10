@@ -84,6 +84,13 @@
 
 /* Optimizaciones específicas para botones de acción en mobile */
 @media (max-width: 768px) {
+  /* Evitar superposición de badges y botones */
+  .event-badges {
+    max-width: calc(100% - 160px) !important;
+    flex-wrap: wrap !important;
+    z-index: 5 !important;
+  }
+  
   .event-actions {
     position: absolute !important;
     top: 12px !important;
@@ -119,7 +126,36 @@
   }
 }
 
+/* Mobile landscape - más espacio horizontal */
+@media (max-width: 768px) and (orientation: landscape) {
+  .event-badges {
+    flex-direction: row !important;
+    max-width: calc(100% - 180px) !important;
+  }
+  
+  .badge {
+    padding: 3px 8px !important;
+    font-size: 10px !important;
+  }
+}
+
 @media (max-width: 480px) {
+  /* Ajustes más estrictos para pantallas muy pequeñas */
+  .event-badges {
+    max-width: calc(100% - 140px) !important;
+    top: 8px !important;
+    left: 8px !important;
+    gap: 3px !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+  
+  .badge {
+    padding: 2px 4px !important;
+    font-size: 9px !important;
+    border-radius: 8px !important;
+  }
+  
   .event-actions {
     top: 10px !important;
     right: 10px !important;
@@ -147,6 +183,29 @@
     border-color: rgba(255, 255, 255, 0.6) !important;
     transform: scale(1.1) !important;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6) !important;
+  }
+}
+
+/* Para pantallas muy pequeñas en portrait, stack vertical */
+@media (max-width: 360px) {
+  .event-badges {
+    max-width: calc(100% - 120px) !important;
+    flex-direction: column !important;
+  }
+  
+  .badge {
+    padding: 1px 3px !important;
+    font-size: 8px !important;
+    margin-bottom: 2px !important;
+  }
+  
+  .action-button {
+    width: 42px !important;
+    height: 42px !important;
+  }
+  
+  .action-button svg {
+    font-size: 16px !important;
   }
 }
 
