@@ -1,11 +1,12 @@
 .verify-ticket-page {
-  min-height: 100vh;
+  min-height: calc(100vh - 80px); /* Ajustado para dar más espacio */
   padding: 2rem;
   background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%);
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  padding-top: 120px;
+  align-items: center; /* Cambiado a center para mejor alineación vertical */
+  padding-top: 6rem; /* Aumentado el padding superior para separar del menú */
+  padding-bottom: 2rem;
 }
 
 .verify-container {
@@ -14,33 +15,35 @@
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
   border-radius: 24px;
-  padding: 2rem;
+  padding: 3rem; /* Aumentado el padding interno */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 2rem auto; /* Añadido margen automático */
 }
 
 .verify-header {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 3rem; /* Aumentado el margen inferior */
 }
 
 .header-icon {
-  font-size: 3rem;
+  font-size: 3.5rem; /* Aumentado el tamaño del ícono */
   color: #667eea;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem; /* Aumentado el margen inferior */
   filter: drop-shadow(0 0 10px rgba(102, 126, 234, 0.5));
 }
 
 .verify-header h1 {
-  font-size: 2.5rem;
+  font-size: 2.8rem; /* Aumentado el tamaño del título */
   color: #fff;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem; /* Aumentado el margen inferior */
   font-weight: 700;
 }
 
 .verify-header p {
   color: rgba(255, 255, 255, 0.7);
-  font-size: 1.1rem;
+  font-size: 1.2rem; /* Aumentado el tamaño del texto */
+  margin-bottom: 2rem; /* Añadido margen inferior */
 }
 
 .verify-form {
@@ -188,22 +191,25 @@
   font-weight: 500;
 }
 
+/* Ajustes para pantallas móviles */
 @media (max-width: 768px) {
   .verify-ticket-page {
-    padding: 1rem;
-    padding-top: 100px;
+    padding: 1.5rem;
+    padding-top: 5rem; /* Ajustado para móviles pero manteniendo buen espacio */
+    min-height: calc(100vh - 60px);
   }
 
   .verify-container {
-    padding: 1.5rem;
+    padding: 2rem;
+    margin: 1rem auto;
   }
 
   .verify-header h1 {
-    font-size: 2rem;
+    font-size: 2.2rem;
   }
 
   .header-icon {
-    font-size: 2.5rem;
+    font-size: 3rem;
   }
 
   .info-row {
@@ -214,8 +220,21 @@
 }
 
 @media (max-width: 480px) {
+  .verify-ticket-page {
+    padding: 1rem;
+    padding-top: 4rem; /* Ajustado para pantallas muy pequeñas */
+  }
+
+  .verify-container {
+    padding: 1.5rem;
+  }
+
   .verify-header h1 {
-    font-size: 1.75rem;
+    font-size: 1.8rem;
+  }
+
+  .header-icon {
+    font-size: 2.5rem;
   }
 
   .verify-header p {

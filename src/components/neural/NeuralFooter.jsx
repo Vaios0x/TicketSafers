@@ -11,11 +11,7 @@ import {
   FaStar,
   FaGem,
   FaShieldAlt,
-  FaNetworkWired,
-  FaGasPump,
-  FaExchangeAlt,
-  FaTicketAlt,
-  FaMapMarkerAlt
+  FaNetworkWired
 } from 'react-icons/fa';
 import '../../styles/neural-footer.css';
 
@@ -65,15 +61,6 @@ const NeuralFooter = () => {
     }
   ];
 
-  const stats = [
-    { value: "10K+", label: "Eventos Vendidos", icon: <FaGem /> },
-    { value: "99.9%", label: "Uptime", icon: <FaShieldAlt /> },
-    { value: "4", label: "Blockchains", icon: <FaNetworkWired /> },
-    { value: "<$0.1", label: "Gas Promedio", icon: <FaGasPump /> },
-    { value: "25K+", label: "Tickets Vendidos", icon: <FaTicketAlt /> },
-    { value: "120+", label: "Ciudades", icon: <FaMapMarkerAlt /> }
-  ];
-
   return (
     <footer className="neural-footer">
       {/* Animated Background */}
@@ -104,35 +91,6 @@ const NeuralFooter = () => {
           ))}
         </div>
       </div>
-
-      {/* Stats Section */}
-      <motion.div 
-        className="footer-stats"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8 }}
-      >
-        <div className="neural-container">
-          <div className="stats-grid">
-            {stats.map((stat, index) => (
-              <motion.div
-                key={index}
-                className="stat-card"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                whileHover={{ scale: 1.05, y: -5 }}
-              >
-                <div className="stat-icon">{stat.icon}</div>
-                <div className="stat-value">{stat.value}</div>
-                <div className="stat-label">{stat.label}</div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </motion.div>
 
       {/* Main Footer Content */}
       <div className="footer-content">

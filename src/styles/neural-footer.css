@@ -68,89 +68,6 @@
 }
 
 /* ===========================
-   STATS SECTION
-   =========================== */
-
-.footer-stats {
-  padding: 5rem 0 3rem 0;
-  position: relative;
-  z-index: 2;
-  flex: 0 0 auto;
-}
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 2rem;
-}
-
-.stat-card {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 20px;
-  padding: 2rem;
-  text-align: center;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.stat-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    135deg,
-    rgba(102, 126, 234, 0.1) 0%,
-    transparent 50%,
-    rgba(118, 75, 162, 0.1) 100%
-  );
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.stat-card:hover::before {
-  opacity: 1;
-}
-
-.stat-card:hover {
-  transform: translateY(-5px);
-}
-
-.stat-icon {
-  font-size: 2rem;
-  color: #667eea;
-  margin-bottom: 1rem;
-  display: flex;
-  justify-content: center;
-}
-
-.stat-value {
-  font-size: 2.5rem;
-  font-weight: 800;
-  color: #fff;
-  margin-bottom: 0.5rem;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.stat-label {
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.9rem;
-  font-weight: 500;
-}
-
-/* ===========================
    MAIN FOOTER CONTENT
    =========================== */
 
@@ -727,8 +644,8 @@
     padding: 3.5rem 0;
   }
   
-  .footer-stats {
-    padding: 4rem 0 2.5rem 0;
+  .footer-bottom {
+    padding: 2rem 0;
   }
 }
 
@@ -782,15 +699,6 @@
     text-align: center;
   }
   
-  .stats-grid {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-  }
-  
-  .stat-card {
-    padding: 1.5rem;
-  }
-  
   .bottom-content {
     grid-template-columns: 1fr;
     text-align: center;
@@ -828,10 +736,6 @@
     flex: none;
   }
   
-  .footer-stats {
-    padding: 3rem 0 2rem 0;
-  }
-  
   .footer-bottom {
     padding: 2rem 0;
   }
@@ -840,10 +744,6 @@
 @media (max-width: 480px) {
   .neural-footer {
     margin-top: 2rem;
-  }
-  
-  .footer-stats {
-    padding: 2rem 0 1rem 0;
   }
   
   .footer-content {
