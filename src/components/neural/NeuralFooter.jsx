@@ -128,7 +128,7 @@ const NeuralFooter = () => {
                 <div className="stat-icon">{stat.icon}</div>
                 <div className="stat-value">{stat.value}</div>
                 <div className="stat-label">{stat.label}</div>
-          </motion.div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -157,20 +157,6 @@ const NeuralFooter = () => {
                 La primera plataforma multichain de tickets NFT que revoluciona 
                 la forma de comprar, vender y verificar entradas para eventos.
               </p>
-              <div className="brand-features">
-                <div className="feature-item">
-                  <FaShieldAlt className="feature-icon" />
-                  <span>100% Seguro</span>
-                </div>
-                <div className="feature-item">
-                  <FaNetworkWired className="feature-icon" />
-                  <span>Multichain</span>
-                </div>
-                <div className="feature-item">
-                  <FaExchangeAlt className="feature-icon" />
-                  <span>Sin Intermediarios</span>
-                </div>
-              </div>
             </motion.div>
 
             {/* Footer Sections */}

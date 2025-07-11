@@ -5,6 +5,7 @@ import NeuralHome from './components/neural/NeuralHome'
 import ProfilePage from './components/neural/ProfilePage'
 import EventsPage from './components/neural/EventsPage'
 import CreateEventPage from './components/neural/CreateEventPage'
+import VerifyTicketPage from './components/neural/VerifyTicketPage'
 import NeuralAbout from './components/neural/NeuralAbout'
 import RoadmapPage from './components/neural/RoadmapPage'
 import FAQPage from './components/neural/FAQPage'
@@ -505,6 +506,7 @@ function App() {
         <Route path="/perfil" element={<ProfilePage />} />
         <Route path="/eventos" element={<EventsPage />} />
         <Route path="/crear-evento" element={<CreateEventPage />} />
+        <Route path="/verificar-ticket" element={<VerifyTicketPage />} />
         <Route path="/acerca-de" element={<NeuralAbout />} />
         <Route path="/roadmap" element={<RoadmapPage />} />
         <Route path="/faq" element={<FAQPage />} />

@@ -1,7 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FaTicketAlt, FaChartLine, FaUsers, FaQuestionCircle, FaCalendarAlt, FaChevronDown, FaRoad, FaPlus } from 'react-icons/fa';
+import { 
+  FaTicketAlt, 
+  FaChartLine, 
+  FaUsers, 
+  FaQuestionCircle, 
+  FaCalendarAlt, 
+  FaChevronDown, 
+  FaRoad, 
+  FaPlus,
+  FaQrcode 
+} from 'react-icons/fa';
 import ConnectButton from './ConnectButton';
 
 const menuItems = [
@@ -22,6 +32,13 @@ const menuItems = [
     path: '/crear-evento',
     icon: <FaPlus />,
     description: 'Crea tu propio evento',
+    highlight: true
+  },
+  {
+    title: 'VERIFICAR TICKET',
+    path: '/verificar-ticket',
+    icon: <FaQrcode />,
+    description: 'Verifica la autenticidad de un ticket',
     highlight: true
   },
   {

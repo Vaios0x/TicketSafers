@@ -195,12 +195,14 @@
 
 .footer-brand {
   position: relative;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
+  text-align: center;
 }
 
 .brand-logo {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 1rem;
   margin-bottom: 1.5rem;
 }
@@ -261,34 +263,10 @@
 
 .brand-description {
   color: rgba(255, 255, 255, 0.8);
+  font-size: 1rem;
   line-height: 1.6;
-  margin-bottom: 2rem;
-  font-size: 1rem;
-}
-
-.brand-features {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.feature-item {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.9rem;
-  transition: all 0.3s ease;
-}
-
-.feature-item:hover {
-  color: #667eea;
-  transform: translateX(5px);
-}
-
-.feature-icon {
-  color: #667eea;
-  font-size: 1rem;
+  max-width: 500px;
+  margin: 0 auto;
 }
 
 /* ===========================
