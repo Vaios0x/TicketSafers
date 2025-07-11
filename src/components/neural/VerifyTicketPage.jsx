@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaQrcode, FaTicketAlt, FaSearch, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
-import '../styles/verify-ticket.css';
+import '../../styles/verify-ticket.css';
 
 const VerifyTicketPage = () => {
   const [ticketId, setTicketId] = useState('');
