@@ -1,4 +1,4 @@
-import React, { useState, lazy, Suspense } from 'react';
+import React, { useState, lazy, Suspense, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -119,6 +119,51 @@ const NeuralHome = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
 
+  // 1. Agregar estado para loading y recomendaciones
+  const [isLoadingRecommendations, setIsLoadingRecommendations] = useState(true);
+  const [recommendedEvents, setRecommendedEvents] = useState([]);
+
+  // 2. Simular carga de recomendaciones (mock)
+  useEffect(() => {
+    setIsLoadingRecommendations(true);
+    setTimeout(() => {
+      // Mock de recomendaciones personalizadas
+      setRecommendedEvents([
+        {
+          id: 101,
+          title: "Jazz & Wine Night",
+          date: "2024-07-22",
+          location: "Foro Indie Rocks!",
+          price: "0.08 ETH",
+          image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80",
+          availableTickets: 50,
+          currency: "ETH"
+        },
+        {
+          id: 102,
+          title: "Expo Arte Urbano",
+          date: "2024-08-05",
+          location: "Museo Tamayo",
+          price: "0.03 ETH",
+          image: "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=800&q=80",
+          availableTickets: 120,
+          currency: "ETH"
+        },
+        {
+          id: 103,
+          title: "Startup Night CDMX",
+          date: "2024-08-18",
+          location: "WeWork Reforma",
+          price: "0.06 ETH",
+          image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800&q=80", // Nueva imagen probada
+          availableTickets: 80,
+          currency: "ETH"
+        }
+      ]);
+      setIsLoadingRecommendations(false);
+    }, 1200);
+  }, []);
+
   const handleSearch = (searchData) => {
     if (searchData.query) {
       setSearchTerm(searchData.query);
@@ -229,6 +274,60 @@ const NeuralHome = () => {
       <Suspense fallback={<LazyLoadingFallback />}>
         <TestimonialsCarousel testimonials={testimonials} />
       </Suspense>
+
+      {/* Sección de recomendaciones personalizadas */}
+      <section className="recommended-events-section">
+        <div className="neural-container">
+          <h2 className="section-title">Recomendado para ti</h2>
+          {isLoadingRecommendations ? (
+            <div className="events-loading">
+              <div className="loading-spinner"></div>
+              <p>Cargando recomendaciones...</p>
+            </div>
+          ) : recommendedEvents.length === 0 ? (
+            <div className="no-events-message">
+              <h3>No se encontraron recomendaciones</h3>
+              <p>Pronto tendrás sugerencias personalizadas.</p>
+            </div>
+          ) : (
+            <div className="recommended-events-grid">
+              {recommendedEvents.map((event) => (
+                <div key={event.id} className="recommended-event-card neural-glass">
+                  <div className="recommended-event-image-wrapper">
+                    <img 
+                      src={event.image} 
+                      alt={event.title} 
+                      className="recommended-event-image"
+                      onError={e => {
+                        e.target.onerror = null;
+                        e.target.style.display = 'none';
+                        const fallback = document.createElement('div');
+                        fallback.className = 'recommended-image-fallback';
+                        fallback.innerHTML = `
+                          <svg width='48' height='48' fill='none' viewBox='0 0 24 24' style='display:block;margin:0 auto 8px auto;'><path fill='#667eea' d='M21 7.24V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v1.24a1 1 0 0 1 0 1.52V18a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.76a1 1 0 0 1 0-1.52ZM7 16a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm5-2a1 1 0 1 1 0 2 1 1 0 0 1 0-2Zm5 2a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z'/></svg>
+                          <div style='color:#a0aec0;font-size:1rem;text-align:center;'>${event.title}</div>
+                        `;
+                        e.target.parentNode.appendChild(fallback);
+                      }}
+                    />
+                  </div>
+                  <div className="recommended-event-content">
+                    <div className="recommended-event-date-badge">{event.date}</div>
+                    <h3 className="recommended-event-title">{event.title}</h3>
+                    <div className="recommended-event-location-price">
+                      <span className="recommended-event-location">{event.location}</span>
+                      <span className="recommended-event-price">{event.price}</span>
+                    </div>
+                    <button className="recommended-buy-button" onClick={() => handleOpenCheckout(event)}>
+                      Ver Tickets
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
 
       {/* TicketModal para checkout */}
       {isModalOpen && selectedEvent && (

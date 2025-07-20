@@ -18,16 +18,37 @@ import {
   FaCamera,
   FaSignOutAlt,
   FaToggleOn,
-  FaToggleOff
+  FaToggleOff,
+  FaSave,
+  FaTimes,
+  FaSpinner,
+  FaCheckCircle,
+  FaExclamationTriangle,
+  FaPhone,
+  FaMapMarkerAlt,
+  FaGlobe,
+  FaBirthdayCake,
+  FaGenderless
 } from 'react-icons/fa';
 import { SiPolygon, SiOptimism } from 'react-icons/si';
 
 const ProfilePage = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [userType, setUserType] = useState('comprador');
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
+  const [saveError, setSaveError] = useState('');
+  
   const [profileData, setProfileData] = useState({
     name: 'Usuario Demo',
     email: 'usuario@ticketsafer.com',
+    phone: '+52 55 1234 5678',
+    location: 'Ciudad de México, México',
+    website: 'https://usuario.com',
+    bio: 'Apasionado por los eventos y la tecnología blockchain. Siempre buscando las mejores experiencias.',
+    birthday: '1990-05-15',
+    gender: 'No especificado',
     avatar: null,
     walletAddress: '0x8c...A343',
     joinDate: '2024',
@@ -37,6 +58,121 @@ const ProfilePage = () => {
       analytics: false
     }
   });
+
+  // Datos de edición (copia temporal)
+  const [editData, setEditData] = useState({});
+
+  // Inicializar datos de edición
+  useEffect(() => {
+    if (showEditModal) {
+      setEditData({ ...profileData });
+    }
+  }, [showEditModal, profileData]);
+
+  // Función para abrir modal de edición
+  const openEditModal = () => {
+    setShowEditModal(true);
+    setSaveSuccess(false);
+    setSaveError('');
+  };
+
+  // Función para cerrar modal de edición
+  const closeEditModal = () => {
+    setShowEditModal(false);
+    setSaveSuccess(false);
+    setSaveError('');
+  };
+
+  // Función para guardar cambios
+  const handleSaveProfile = async () => {
+    setIsSaving(true);
+    setSaveError('');
+    
+    try {
+      // Simular guardado en servidor
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      // Simular posible error (5% de probabilidad)
+      if (Math.random() < 0.05) {
+        throw new Error('Error de conexión. Por favor, intenta nuevamente.');
+      }
+      
+      // Actualizar datos del perfil
+      setProfileData(editData);
+      setSaveSuccess(true);
+      
+      // Cerrar modal después de mostrar éxito
+      setTimeout(() => {
+        closeEditModal();
+      }, 1500);
+      
+    } catch (error) {
+      setSaveError(error.message);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  // Función para manejar cambios en el formulario de edición
+  const handleEditChange = (field, value) => {
+    setEditData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  // Función para manejar cambios en preferencias
+  const handleEditPreferenceChange = (preference) => {
+    setEditData(prev => ({
+      ...prev,
+      preferences: {
+        ...prev.preferences,
+        [preference]: !prev.preferences[preference]
+      }
+    }));
+  };
+
+  // Función para copiar wallet address
+  const copyWalletAddress = () => {
+    navigator.clipboard.writeText(profileData.walletAddress);
+    // Aquí se podría mostrar un toast de confirmación
+  };
+
+  // Función para manejar subida de foto de perfil
+  const handleAvatarUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      // Validar tipo de archivo
+      if (!file.type.startsWith('image/')) {
+        alert('Por favor, selecciona una imagen válida.');
+        return;
+      }
+      
+      // Validar tamaño (máximo 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('La imagen debe ser menor a 5MB.');
+        return;
+      }
+      
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setEditData(prev => ({
+          ...prev,
+          avatar: e.target.result
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // Función para abrir selector de archivo
+  const openFileSelector = () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = handleAvatarUpload;
+    input.click();
+  };
 
   // Datos del dashboard por tipo de usuario
   const dashboardData = {
@@ -163,13 +299,22 @@ const ProfilePage = () => {
                 <FaCamera />
               </button>
             </div>
-            <div className="profile-info">
+                      <div className="profile-info">
+            <div className="profile-header-row">
               <h1 className="profile-name">{profileData.name}</h1>
-              <p className="profile-email">{profileData.email}</p>
-              <div className="profile-wallet">
-                <span>🦄 {profileData.walletAddress}</span>
-              </div>
+              <button className="edit-profile-btn" onClick={openEditModal}>
+                <FaEdit />
+                Editar Perfil
+              </button>
             </div>
+            <p className="profile-email">{profileData.email}</p>
+            <div className="profile-wallet">
+              <span>🦄 {profileData.walletAddress}</span>
+              <button className="copy-wallet-btn" onClick={copyWalletAddress}>
+                Copiar
+              </button>
+            </div>
+          </div>
           </div>
 
           {/* Selector de Tipo de Usuario */}
@@ -450,6 +595,302 @@ const ProfilePage = () => {
           )}
         </AnimatePresence>
       </div>
+
+      {/* Modal de Edición de Perfil */}
+      <AnimatePresence>
+        {showEditModal && (
+          <motion.div 
+            className="edit-modal-backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={closeEditModal}
+          >
+            <motion.div 
+              className="edit-modal"
+              initial={{ opacity: 0, scale: 0.8, y: 50 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.8, y: 50 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Header del Modal */}
+              <div className="edit-modal-header">
+                <h2>Editar Perfil</h2>
+                <button className="close-btn" onClick={closeEditModal}>
+                  <FaTimes />
+                </button>
+              </div>
+
+              {/* Contenido del Modal */}
+              <div className="edit-modal-content">
+                {saveSuccess ? (
+                  <div className="save-success">
+                    <FaCheckCircle className="success-icon" />
+                    <h3>¡Perfil Actualizado!</h3>
+                    <p>Los cambios se han guardado correctamente.</p>
+                  </div>
+                ) : (
+                                       <>
+                       {/* Avatar Section */}
+                       <div className="edit-section">
+                         <h3>Foto de Perfil</h3>
+                         <div className="avatar-upload-section">
+                           <div className="avatar-preview">
+                             {editData.avatar ? (
+                               <img 
+                                 src={editData.avatar} 
+                                 alt="Avatar preview"
+                                 onError={(e) => {
+                                   e.target.style.display = 'none';
+                                   e.target.nextSibling.style.display = 'flex';
+                                 }}
+                               />
+                             ) : null}
+                             <div className="avatar-placeholder" style={{display: editData.avatar ? 'none' : 'flex'}}>
+                               <FaUser />
+                             </div>
+                             <button className="avatar-edit-overlay" onClick={openFileSelector}>
+                               <FaCamera />
+                               <span>Cambiar Foto</span>
+                             </button>
+                           </div>
+                           <div className="avatar-info">
+                             <p>Formatos soportados: JPG, PNG, GIF</p>
+                             <p>Tamaño máximo: 5MB</p>
+                             <p>Recomendado: 400x400 píxeles</p>
+                           </div>
+                         </div>
+                       </div>
+
+                       {/* Información Personal */}
+                       <div className="edit-section">
+                         <h3>Información Personal</h3>
+                         <div className="form-grid">
+                        <div className="form-group">
+                          <label>
+                            <FaUser />
+                            Nombre Completo
+                          </label>
+                          <input 
+                            type="text" 
+                            value={editData.name || ''}
+                            onChange={(e) => handleEditChange('name', e.target.value)}
+                            placeholder="Tu nombre completo"
+                          />
+                        </div>
+                        <div className="form-group">
+                          <label>
+                            <FaUser />
+                            Email
+                          </label>
+                          <input 
+                            type="email" 
+                            value={editData.email || ''}
+                            onChange={(e) => handleEditChange('email', e.target.value)}
+                            placeholder="tu@email.com"
+                          />
+                        </div>
+                        <div className="form-group">
+                          <label>
+                            <FaPhone />
+                            Teléfono
+                          </label>
+                          <input 
+                            type="tel" 
+                            value={editData.phone || ''}
+                            onChange={(e) => handleEditChange('phone', e.target.value)}
+                            placeholder="+52 55 1234 5678"
+                          />
+                        </div>
+                        <div className="form-group">
+                          <label>
+                            <FaMapMarkerAlt />
+                            Ubicación
+                          </label>
+                          <input 
+                            type="text" 
+                            value={editData.location || ''}
+                            onChange={(e) => handleEditChange('location', e.target.value)}
+                            placeholder="Ciudad, País"
+                          />
+                        </div>
+                        <div className="form-group">
+                          <label>
+                            <FaGlobe />
+                            Sitio Web
+                          </label>
+                          <input 
+                            type="url" 
+                            value={editData.website || ''}
+                            onChange={(e) => handleEditChange('website', e.target.value)}
+                            placeholder="https://tu-sitio.com"
+                          />
+                        </div>
+                        <div className="form-group">
+                          <label>
+                            <FaBirthdayCake />
+                            Fecha de Nacimiento
+                          </label>
+                          <input 
+                            type="date" 
+                            value={editData.birthday || ''}
+                            onChange={(e) => handleEditChange('birthday', e.target.value)}
+                          />
+                        </div>
+                        <div className="form-group">
+                          <label>
+                            <FaGenderless />
+                            Género
+                          </label>
+                          <select 
+                            value={editData.gender || ''}
+                            onChange={(e) => handleEditChange('gender', e.target.value)}
+                          >
+                            <option value="No especificado">No especificado</option>
+                            <option value="Masculino">Masculino</option>
+                            <option value="Femenino">Femenino</option>
+                            <option value="No binario">No binario</option>
+                            <option value="Prefiero no decir">Prefiero no decir</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Biografía */}
+                    <div className="edit-section">
+                      <h3>Biografía</h3>
+                      <div className="form-group">
+                        <label>Cuéntanos sobre ti</label>
+                        <textarea 
+                          value={editData.bio || ''}
+                          onChange={(e) => handleEditChange('bio', e.target.value)}
+                          placeholder="Escribe una breve descripción sobre ti..."
+                          rows="4"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Wallet */}
+                    <div className="edit-section">
+                      <h3>Información de Wallet</h3>
+                      <div className="form-group">
+                        <label>Dirección de Wallet</label>
+                        <div className="wallet-input-group">
+                          <input 
+                            type="text" 
+                            value={editData.walletAddress || ''}
+                            onChange={(e) => handleEditChange('walletAddress', e.target.value)}
+                            placeholder="0x..."
+                          />
+                          <button 
+                            type="button" 
+                            className="copy-btn"
+                            onClick={() => navigator.clipboard.writeText(editData.walletAddress || '')}
+                          >
+                            Copiar
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Preferencias */}
+                    <div className="edit-section">
+                      <h3>Preferencias</h3>
+                      <div className="preferences-grid">
+                        <div className="preference-item">
+                          <div className="preference-info">
+                            <FaBell />
+                            <div>
+                              <h4>Notificaciones</h4>
+                              <p>Recibir alertas de eventos</p>
+                            </div>
+                          </div>
+                          <button 
+                            className={`toggle-btn ${editData.preferences?.notifications ? 'active' : ''}`}
+                            onClick={() => handleEditPreferenceChange('notifications')}
+                          >
+                            {editData.preferences?.notifications ? <FaToggleOn /> : <FaToggleOff />}
+                          </button>
+                        </div>
+
+                        <div className="preference-item">
+                          <div className="preference-info">
+                            <FaLock />
+                            <div>
+                              <h4>Newsletter</h4>
+                              <p>Recibir actualizaciones por email</p>
+                            </div>
+                          </div>
+                          <button 
+                            className={`toggle-btn ${editData.preferences?.newsletter ? 'active' : ''}`}
+                            onClick={() => handleEditPreferenceChange('newsletter')}
+                          >
+                            {editData.preferences?.newsletter ? <FaToggleOn /> : <FaToggleOff />}
+                          </button>
+                        </div>
+
+                        <div className="preference-item">
+                          <div className="preference-info">
+                            <FaChartLine />
+                            <div>
+                              <h4>Analytics</h4>
+                              <p>Compartir datos para mejoras</p>
+                            </div>
+                          </div>
+                          <button 
+                            className={`toggle-btn ${editData.preferences?.analytics ? 'active' : ''}`}
+                            onClick={() => handleEditPreferenceChange('analytics')}
+                          >
+                            {editData.preferences?.analytics ? <FaToggleOn /> : <FaToggleOff />}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Mensaje de Error */}
+                    {saveError && (
+                      <div className="save-error">
+                        <FaExclamationTriangle />
+                        <span>{saveError}</span>
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+
+              {/* Footer del Modal */}
+              {!saveSuccess && (
+                <div className="edit-modal-footer">
+                  <button 
+                    className="btn-secondary" 
+                    onClick={closeEditModal}
+                    disabled={isSaving}
+                  >
+                    Cancelar
+                  </button>
+                  <button 
+                    className="btn-primary save-btn"
+                    onClick={handleSaveProfile}
+                    disabled={isSaving}
+                  >
+                    {isSaving ? (
+                      <>
+                        <FaSpinner className="spinning" />
+                        Guardando...
+                      </>
+                    ) : (
+                      <>
+                        <FaSave />
+                        Guardar Cambios
+                      </>
+                    )}
+                  </button>
+                </div>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

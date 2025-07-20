@@ -4,24 +4,30 @@ import { BrowserRouter } from 'react-router-dom'
 import App from './App.jsx'
 import './index.css'
 
-import { WagmiProvider } from 'wagmi'
+import { DynamicContextProvider } from "@dynamic-labs/sdk-react-core";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { RainbowKitProvider } from '@rainbow-me/rainbowkit'
 
-import { config } from './utils/rainbowkit-config.js'
+// Importar la configuración simplificada
+import { dynamicSettings } from './utils/dynamic-config-simple.js'
 
-const queryClient = new QueryClient()
+// Cliente de React Query
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // 5 minutos
+      cacheTime: 1000 * 60 * 10, // 10 minutos
+    },
+  },
+});
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <WagmiProvider config={config}>
+    <DynamicContextProvider settings={dynamicSettings}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
-        </RainbowKitProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
       </QueryClientProvider>
-    </WagmiProvider>
+    </DynamicContextProvider>
   </React.StrictMode>,
 )

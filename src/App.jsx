@@ -1,5 +1,6 @@
 import React from 'react'
 import { Routes, Route } from 'react-router-dom'
+import { DynamicUserProfile } from "@dynamic-labs/sdk-react-core";
 import NeuralMenu from './components/neural/NeuralMenu'
 import NeuralHome from './components/neural/NeuralHome'
 import ProfilePage from './components/neural/ProfilePage'
@@ -523,6 +524,7 @@ function App() {
       </Routes>
       <NeuralFooter />
       <ScrollToTopButton />
+      <DynamicUserProfile />
     </div>
   )
 }

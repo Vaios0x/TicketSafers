@@ -1,9 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  FaUser, 
+  FaCog, 
+  FaSignOutAlt, 
+  FaWallet,
+  FaChartLine,
+  FaHistory,
+  FaCamera,
+  FaEdit,
+  FaChevronDown
+} from 'react-icons/fa';
 import '../../styles/navbar.css';
 
 const NeuralNavbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [profileData, setProfileData] = useState({
+    name: 'Usuario Demo',
+    email: 'usuario@ticketsafer.com',
+    avatar: null,
+    walletAddress: '0x8c...A343'
+  });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -12,6 +30,18 @@ const NeuralNavbar = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Cerrar menú al hacer clic fuera
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showProfileMenu && !event.target.closest('.profile-menu-container')) {
+        setShowProfileMenu(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showProfileMenu]);
 
   const menuItems = [
     {
@@ -35,6 +65,49 @@ const NeuralNavbar = () => {
       path: "/faq"
     }
   ];
+
+  const profileMenuItems = [
+    {
+      id: 'perfil',
+      title: 'Mi Perfil',
+      icon: FaUser,
+      path: '/profile'
+    },
+    {
+      id: 'dashboard',
+      title: 'Dashboard',
+      icon: FaChartLine,
+      path: '/dashboard'
+    },
+    {
+      id: 'configuracion',
+      title: 'Configuración',
+      icon: FaCog,
+      path: '/profile?tab=configuracion'
+    },
+    {
+      id: 'historial',
+      title: 'Historial',
+      icon: FaHistory,
+      path: '/profile?tab=historial'
+    }
+  ];
+
+  const handleProfileClick = () => {
+    setShowProfileMenu(!showProfileMenu);
+  };
+
+  const handleMenuClick = (path) => {
+    setShowProfileMenu(false);
+    // Aquí se podría agregar navegación
+    console.log('Navegando a:', path);
+  };
+
+  const handleLogout = () => {
+    setShowProfileMenu(false);
+    // Aquí se podría agregar lógica de logout
+    console.log('Cerrando sesión...');
+  };
 
   return (
     <motion.nav 
@@ -80,16 +153,100 @@ const NeuralNavbar = () => {
           ))}
         </div>
 
-        {/* Wallet Connect Neural */}
-        <motion.button
-          className="neural-wallet-connect"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <span className="wallet-icon">👛</span>
-          <span>Conectar Wallet</span>
-          <div className="neural-pulse-ring"></div>
-        </motion.button>
+        {/* Profile Menu */}
+        <div className="profile-menu-container">
+          <motion.button
+            className="profile-menu-trigger"
+            onClick={handleProfileClick}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <div className="profile-avatar">
+              {profileData.avatar ? (
+                <img 
+                  src={profileData.avatar} 
+                  alt={profileData.name}
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    e.target.nextSibling.style.display = 'flex';
+                  }}
+                />
+              ) : null}
+              <div className="avatar-placeholder" style={{display: profileData.avatar ? 'none' : 'flex'}}>
+                <FaUser />
+              </div>
+              <button className="avatar-edit-btn">
+                <FaCamera />
+              </button>
+            </div>
+            <div className="profile-info">
+              <span className="profile-name">{profileData.name}</span>
+              <span className="profile-wallet">{profileData.walletAddress}</span>
+            </div>
+            <FaChevronDown className={`profile-arrow ${showProfileMenu ? 'rotated' : ''}`} />
+          </motion.button>
+
+          <AnimatePresence>
+            {showProfileMenu && (
+              <motion.div 
+                className="profile-dropdown"
+                initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                transition={{ duration: 0.2 }}
+              >
+                <div className="dropdown-header">
+                  <div className="dropdown-avatar">
+                    {profileData.avatar ? (
+                      <img 
+                        src={profileData.avatar} 
+                        alt={profileData.name}
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          e.target.nextSibling.style.display = 'flex';
+                        }}
+                      />
+                    ) : null}
+                    <div className="avatar-placeholder" style={{display: profileData.avatar ? 'none' : 'flex'}}>
+                      <FaUser />
+                    </div>
+                  </div>
+                  <div className="dropdown-user-info">
+                    <h4>{profileData.name}</h4>
+                    <p>{profileData.email}</p>
+                    <span className="wallet-badge">
+                      <FaWallet />
+                      {profileData.walletAddress}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="dropdown-menu">
+                  {profileMenuItems.map((item) => {
+                    const IconComponent = item.icon;
+                    return (
+                      <button
+                        key={item.id}
+                        className="dropdown-item"
+                        onClick={() => handleMenuClick(item.path)}
+                      >
+                        <IconComponent />
+                        <span>{item.title}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <div className="dropdown-footer">
+                  <button className="dropdown-item logout-btn" onClick={handleLogout}>
+                    <FaSignOutAlt />
+                    <span>Cerrar Sesión</span>
+                  </button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
     </motion.nav>
   );

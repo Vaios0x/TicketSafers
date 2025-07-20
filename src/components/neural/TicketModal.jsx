@@ -25,7 +25,12 @@ import {
   FaCopy,
   FaMoneyCheckAlt,
   FaBarcode,
-  FaStore
+  FaStore,
+  FaDownload,
+  FaShareAlt,
+  FaSpinner,
+  FaExclamationTriangle,
+  FaCheckDouble
 } from 'react-icons/fa';
 import { SiPolygon, SiVisa, SiMastercard, SiStripe, SiMercadopago, SiKlarna } from 'react-icons/si';
 import '../../styles/ticket-modal.css';
@@ -35,9 +40,10 @@ const TicketModal = ({ isOpen, onClose, event }) => {
   const [selectedBlockchain, setSelectedBlockchain] = useState('ETH');
   const [paymentMethod, setPaymentMethod] = useState('crypto'); // 'crypto' or 'card' or 'spei' or 'dimo' or 'oxxo' or 'mercadopago' or 'kueski'
   const [selectedCurrency, setSelectedCurrency] = useState('USD'); // 'USD' or 'MXN'
-  const [currentStep, setCurrentStep] = useState('details'); // details, checkout, confirmation
+  const [currentStep, setCurrentStep] = useState('details'); // details, checkout, confirmation, ticket
   const [isProcessing, setIsProcessing] = useState(false);
   const [purchaseType, setPurchaseType] = useState('official'); // 'official', 'resale', 'auction'
+  const [generatedTicket, setGeneratedTicket] = useState(null);
   
   // Estados para formulario de tarjeta
   const [cardData, setCardData] = useState({
@@ -49,10 +55,25 @@ const TicketModal = ({ isOpen, onClose, event }) => {
     phone: ''
   });
 
+  // Estados de loading mejorados
+  const [loadingStep, setLoadingStep] = useState(''); // 'validating', 'processing', 'minting', 'confirming'
+  const [loadingMessage, setLoadingMessage] = useState('');
+  const [loadingProgress, setLoadingProgress] = useState(0);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [showError, setShowError] = useState(false);
+
   useEffect(() => {
     if (isOpen) {
       console.log('Modal abierto con evento:', event);
       document.body.style.overflow = 'hidden';
+      // Resetear estados al abrir el modal
+      setCurrentStep('details');
+      setIsProcessing(false);
+      setLoadingStep('');
+      setLoadingMessage('');
+      setLoadingProgress(0);
+      setErrorMessage('');
+      setShowError(false);
     } else {
       document.body.style.overflow = 'unset';
     }
@@ -66,6 +87,36 @@ const TicketModal = ({ isOpen, onClose, event }) => {
     console.log('No hay evento disponible');
     return null;
   }
+
+  // Función para simular progreso de loading
+  const simulateProgress = (step, message, duration = 2000) => {
+    setLoadingStep(step);
+    setLoadingMessage(message);
+    setLoadingProgress(0);
+    
+    return new Promise((resolve) => {
+      const interval = setInterval(() => {
+        setLoadingProgress(prev => {
+          if (prev >= 100) {
+            clearInterval(interval);
+            resolve();
+            return 100;
+          }
+          return prev + 10;
+        });
+      }, duration / 10);
+    });
+  };
+
+  // Función para mostrar error
+  const showErrorMessage = (message) => {
+    setErrorMessage(message);
+    setShowError(true);
+    setTimeout(() => {
+      setShowError(false);
+      setErrorMessage('');
+    }, 5000);
+  };
 
   const blockchainOptions = [
     { 
@@ -223,13 +274,99 @@ const TicketModal = ({ isOpen, onClose, event }) => {
            cardData.phone.length >= 10;
   };
 
+  // Función para generar ticket NFT mock
+  const generateTicketNFT = () => {
+    const ticketId = Math.random().toString(36).substr(2, 9).toUpperCase();
+    const contractAddress = '0x' + Math.random().toString(16).substr(2, 40);
+    const tokenId = Math.floor(Math.random() * 1000000);
+    
+    return {
+      id: ticketId,
+      tokenId: tokenId,
+      contractAddress: contractAddress,
+      blockchain: selectedBlockchain,
+      eventTitle: event.title,
+      eventDate: event.date,
+      eventLocation: event.location,
+      ticketType: 'VIP',
+      seatNumber: selectedQuantity > 1 ? `${Math.floor(Math.random() * 100)}A-${Math.floor(Math.random() * 100)}Z` : `${Math.floor(Math.random() * 100)}A`,
+      price: paymentMethod === 'crypto' ? totalPrice : `${getCurrencySymbol()}${(getTotalPrice() + getProcessingFee()).toFixed(2)}`,
+      purchaseDate: new Date().toISOString(),
+      qrCode: `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${ticketId}`,
+      image: event.image,
+      owner: '0x' + Math.random().toString(16).substr(2, 40),
+      transactionHash: '0x' + Math.random().toString(16).substr(2, 64)
+    };
+  };
+
   const handlePurchase = async () => {
     setIsProcessing(true);
-    // Simular proceso de compra
-    setTimeout(() => {
-      setIsProcessing(false);
+    setShowError(false);
+    setErrorMessage('');
+    
+    try {
+      // Paso 1: Validación
+      await simulateProgress('validating', 'Validando información de pago...', 1500);
+      
+      // Paso 2: Procesamiento de pago
+      await simulateProgress('processing', 'Procesando transacción...', 2000);
+      
+      // Simular posible error (10% de probabilidad)
+      if (Math.random() < 0.1) {
+        throw new Error('Error en la transacción. Por favor, intenta nuevamente.');
+      }
+      
+      // Paso 3: Minting NFT
+      await simulateProgress('minting', 'Creando ticket NFT...', 2500);
+      
+      // Paso 4: Confirmación en blockchain
+      await simulateProgress('confirming', 'Confirmando en blockchain...', 1500);
+      
+      // Generar ticket NFT
+      const ticket = generateTicketNFT();
+      setGeneratedTicket(ticket);
+      
+      // Ir al paso de confirmación
       setCurrentStep('confirmation');
-    }, 3000);
+    } catch (error) {
+      console.error('Error en la compra:', error);
+      showErrorMessage(error.message || 'Error en la transacción. Por favor, intenta nuevamente.');
+    } finally {
+      setIsProcessing(false);
+      setLoadingStep('');
+      setLoadingMessage('');
+      setLoadingProgress(0);
+    }
+  };
+
+  const handleViewTicket = () => {
+    if (currentStep === 'confirmation') {
+      setCurrentStep('ticket');
+    } else if (currentStep === 'ticket') {
+      setCurrentStep('details');
+    }
+  };
+
+  const handleDownloadTicket = () => {
+    // Simular descarga del ticket
+    const link = document.createElement('a');
+    link.href = generatedTicket.qrCode;
+    link.download = `ticket-${generatedTicket.id}.png`;
+    link.click();
+  };
+
+  const handleShareTicket = () => {
+    // Simular compartir ticket
+    if (navigator.share) {
+      navigator.share({
+        title: `Mi ticket para ${generatedTicket.eventTitle}`,
+        text: `¡Compré mi ticket NFT para ${generatedTicket.eventTitle}!`,
+        url: window.location.href
+      });
+    } else {
+      // Fallback: copiar al clipboard
+      navigator.clipboard.writeText(`¡Compré mi ticket NFT para ${generatedTicket.eventTitle}!`);
+    }
   };
 
   const modalVariants = {
@@ -704,6 +841,78 @@ const TicketModal = ({ isOpen, onClose, event }) => {
     </motion.div>
   );
 
+  // Componente de loading mejorado
+  const renderLoadingOverlay = () => (
+    <motion.div 
+      className="loading-overlay"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <div className="loading-content">
+        <div className="loading-icon">
+          <FaSpinner className="spinning" />
+        </div>
+        <h3 className="loading-title">{loadingMessage}</h3>
+        <div className="loading-progress">
+          <div className="progress-bar">
+            <div 
+              className="progress-fill"
+              style={{ width: `${loadingProgress}%` }}
+            ></div>
+          </div>
+          <span className="progress-text">{loadingProgress}%</span>
+        </div>
+        <div className="loading-steps">
+          <div className={`step ${loadingStep === 'validating' ? 'active' : loadingStep === 'processing' || loadingStep === 'minting' || loadingStep === 'confirming' ? 'completed' : ''}`}>
+            <FaCheckCircle className="step-icon" />
+            <span>Validación</span>
+          </div>
+          <div className={`step ${loadingStep === 'processing' ? 'active' : loadingStep === 'minting' || loadingStep === 'confirming' ? 'completed' : ''}`}>
+            <FaSpinner className={`step-icon ${loadingStep === 'processing' ? 'spinning' : ''}`} />
+            <span>Procesamiento</span>
+          </div>
+          <div className={`step ${loadingStep === 'minting' ? 'active' : loadingStep === 'confirming' ? 'completed' : ''}`}>
+            <FaSpinner className={`step-icon ${loadingStep === 'minting' ? 'spinning' : ''}`} />
+            <span>Minting NFT</span>
+          </div>
+          <div className={`step ${loadingStep === 'confirming' ? 'active' : ''}`}>
+            <FaSpinner className={`step-icon ${loadingStep === 'confirming' ? 'spinning' : ''}`} />
+            <span>Confirmación</span>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+
+  // Componente de error
+  const renderErrorOverlay = () => (
+    <motion.div 
+      className="error-overlay"
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.8 }}
+    >
+      <div className="error-content">
+        <div className="error-icon">
+          <FaExclamationTriangle />
+        </div>
+        <h3 className="error-title">Error en la Transacción</h3>
+        <p className="error-message">{errorMessage}</p>
+        <button 
+          className="btn-primary error-retry"
+          onClick={() => {
+            setShowError(false);
+            setErrorMessage('');
+            handlePurchase();
+          }}
+        >
+          Intentar Nuevamente
+        </button>
+      </div>
+    </motion.div>
+  );
+
   const renderCheckoutStep = () => (
     <motion.div 
       className="modal-content-section"
@@ -903,8 +1112,8 @@ const TicketModal = ({ isOpen, onClose, event }) => {
         >
           {isProcessing ? (
             <>
-              <div className="loading-spinner"></div>
-              Procesando...
+              <FaSpinner className="spinning" />
+              Procesando Transacción...
             </>
           ) : (
             <>
@@ -924,11 +1133,13 @@ const TicketModal = ({ isOpen, onClose, event }) => {
       animate={{ opacity: 1, scale: 1 }}
     >
       <div className="confirmation-icon">
-        <FaCheckCircle />
+        <FaCheckDouble />
       </div>
       <h2 className="confirmation-title">¡Compra Exitosa!</h2>
       <p className="confirmation-message">
-        Tus tickets NFT han sido enviados a tu wallet
+        Tus tickets NFT han sido creados y enviados a tu wallet. 
+        <br />
+        <span className="success-note">¡Disfruta del evento!</span>
       </p>
       
       <div className="transaction-details">
@@ -963,11 +1174,119 @@ const TicketModal = ({ isOpen, onClose, event }) => {
       </div>
 
       <div className="modal-actions">
-        <button className="btn-secondary">
-          Ver en Blockchain
+        <button className="btn-secondary" onClick={handleViewTicket}>
+          Ver mi Ticket NFT
         </button>
         <button className="btn-primary" onClick={onClose}>
           Cerrar
+        </button>
+      </div>
+    </motion.div>
+  );
+
+  const renderTicketStep = () => (
+    <motion.div 
+      className="modal-content-section ticket"
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+    >
+      <div className="ticket-header">
+        <h2 className="ticket-title">Tu Ticket NFT</h2>
+        <div className="ticket-qr-code">
+          <img src={generatedTicket.qrCode} alt={`Ticket NFT para ${generatedTicket.eventTitle}`} />
+        </div>
+      </div>
+
+      <div className="ticket-details">
+        <h3 className="section-title">Detalles del Ticket</h3>
+        <div className="detail-row">
+          <FaInfoCircle className="detail-icon" />
+          <div className="detail-content">
+            <span className="detail-label">ID del Ticket:</span>
+            <span className="detail-value">{generatedTicket.id}</span>
+          </div>
+        </div>
+        <div className="detail-row">
+          <FaQrcode className="detail-icon" />
+          <div className="detail-content">
+            <span className="detail-label">Código QR:</span>
+            <span className="detail-value">{generatedTicket.qrCode}</span>
+          </div>
+        </div>
+        <div className="detail-row">
+          <FaUsers className="detail-icon" />
+          <div className="detail-content">
+            <span className="detail-label">Evento:</span>
+            <span className="detail-value">{generatedTicket.eventTitle}</span>
+          </div>
+        </div>
+        <div className="detail-row">
+          <FaCalendarAlt className="detail-icon" />
+          <div className="detail-content">
+            <span className="detail-label">Fecha:</span>
+            <span className="detail-value">{generatedTicket.eventDate}</span>
+          </div>
+        </div>
+        <div className="detail-row">
+          <FaMapMarkerAlt className="detail-icon" />
+          <div className="detail-content">
+            <span className="detail-label">Ubicación:</span>
+            <span className="detail-value">{generatedTicket.eventLocation}</span>
+          </div>
+        </div>
+        <div className="detail-row">
+          <FaUsers className="detail-icon" />
+          <div className="detail-content">
+            <span className="detail-label">Tipo de Ticket:</span>
+            <span className="detail-value">{generatedTicket.ticketType}</span>
+          </div>
+        </div>
+        <div className="detail-row">
+          <FaUsers className="detail-icon" />
+          <div className="detail-content">
+            <span className="detail-label">Asiento:</span>
+            <span className="detail-value">{generatedTicket.seatNumber}</span>
+          </div>
+        </div>
+        <div className="detail-row">
+          <FaEthereum className="detail-icon" />
+          <div className="detail-content">
+            <span className="detail-label">Precio:</span>
+            <span className="detail-value">{generatedTicket.price}</span>
+          </div>
+        </div>
+        <div className="detail-row">
+          <FaCalendar className="detail-icon" />
+          <div className="detail-content">
+            <span className="detail-label">Fecha de Compra:</span>
+            <span className="detail-value">{generatedTicket.purchaseDate}</span>
+          </div>
+        </div>
+        <div className="detail-row">
+          <FaUsers className="detail-icon" />
+          <div className="detail-content">
+            <span className="detail-label">Propietario:</span>
+            <span className="detail-value">{generatedTicket.owner}</span>
+          </div>
+        </div>
+        <div className="detail-row">
+          <FaQrcode className="detail-icon" />
+          <div className="detail-content">
+            <span className="detail-label">Hash de Transacción:</span>
+            <span className="detail-value">{generatedTicket.transactionHash}</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="ticket-actions">
+        <button className="btn-secondary" onClick={handleViewTicket}>
+          <FaShoppingCart /> Comprar Otro Ticket
+        </button>
+        <button className="btn-primary" onClick={handleDownloadTicket}>
+          <FaDownload /> Descargar Ticket
+        </button>
+        <button className="btn-primary" onClick={handleShareTicket}>
+          <FaShareAlt /> Compartir Ticket
         </button>
       </div>
     </motion.div>
@@ -1020,6 +1339,7 @@ const TicketModal = ({ isOpen, onClose, event }) => {
                 {currentStep === 'details' && 'Detalles del Evento'}
                 {currentStep === 'checkout' && 'Checkout'}
                 {currentStep === 'confirmation' && 'Confirmación'}
+                {currentStep === 'ticket' && 'Tu Ticket NFT'}
               </div>
               <button className="modal-close" onClick={onClose}>
                 <FaTimes />
@@ -1032,6 +1352,17 @@ const TicketModal = ({ isOpen, onClose, event }) => {
                 {currentStep === 'details' && renderDetailsStep()}
                 {currentStep === 'checkout' && renderCheckoutStep()}
                 {currentStep === 'confirmation' && renderConfirmationStep()}
+                {currentStep === 'ticket' && renderTicketStep()}
+              </AnimatePresence>
+              
+              {/* Loading Overlay */}
+              <AnimatePresence>
+                {isProcessing && renderLoadingOverlay()}
+              </AnimatePresence>
+              
+              {/* Error Overlay */}
+              <AnimatePresence>
+                {showError && renderErrorOverlay()}
               </AnimatePresence>
             </div>
           </motion.div>

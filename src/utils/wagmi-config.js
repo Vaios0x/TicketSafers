@@ -11,26 +11,10 @@ import {
   polygon,
   polygonMumbai
 } from 'wagmi/chains'
-import { getDefaultWallets } from '@rainbow-me/rainbowkit'
+import { injected, metaMask, walletConnect } from 'wagmi/connectors'
 
+// Project ID de WalletConnect (opcional, puedes usar uno público o dejarlo vacío)
 const projectId = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || '705647bd297da3c2ea969a7940191475'
-
-const { connectors } = getDefaultWallets({
-  appName: 'TicketSafer NFT Platform',
-  projectId,
-  chains: [
-    mainnet,
-    polygon,
-    optimism,
-    arbitrum,
-    base,
-    sepolia,
-    polygonMumbai,
-    optimismSepolia,
-    arbitrumSepolia,
-    baseSepolia
-  ]
-})
 
 export const config = createConfig({
   chains: [
@@ -45,7 +29,14 @@ export const config = createConfig({
     arbitrumSepolia,
     baseSepolia
   ],
-  connectors,
+  connectors: [
+    injected(),
+    metaMask(),
+    walletConnect({
+      projectId,
+      showQrModal: true,
+    }),
+  ],
   transports: {
     [mainnet.id]: http(),
     [polygon.id]: http(),

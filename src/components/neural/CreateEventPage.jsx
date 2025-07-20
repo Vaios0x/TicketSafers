@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import '../../styles/create-event.css';
 import { 
@@ -20,11 +20,20 @@ import {
   FaShieldAlt,
   FaExchangeAlt,
   FaGavel,
-  FaCreditCard
+  FaCreditCard,
+  FaCheckCircle,
+  FaExclamationTriangle,
+  FaSpinner,
+  FaInfoCircle
 } from 'react-icons/fa';
 
-const CreateEventPage = () => {
+const CreateEventPage = ({ isEditing = false, eventToEdit = null }) => {
   const [currentStep, setCurrentStep] = useState(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showError, setShowError] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const [formData, setFormData] = useState({
     // Básicos
     title: '',
@@ -86,6 +95,46 @@ const CreateEventPage = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const fileInputRef = useRef(null);
   const totalSteps = 5;
+
+  // Cargar datos del evento a editar
+  useEffect(() => {
+    if (isEditing && eventToEdit) {
+      setFormData({
+        ...formData,
+        ...eventToEdit,
+        // Asegurar que los campos anidados se copien correctamente
+        paymentMethods: eventToEdit.paymentMethods || { crypto: true, card: false },
+        resalePrices: eventToEdit.resalePrices || { ETH: { min: '', max: '' }, MATIC: { min: '', max: '' }, MXN: { min: '', max: '' }, USD: { min: '', max: '' } },
+        auctionPrices: eventToEdit.auctionPrices || { ETH: { min: '', max: '' }, MATIC: { min: '', max: '' }, MXN: { min: '', max: '' }, USD: { min: '', max: '' } }
+      });
+      
+      // Si hay imagen, establecer preview
+      if (eventToEdit.coverImage) {
+        setImagePreview(eventToEdit.coverImage);
+      }
+      
+      showNotification('success', 'Modo edición activado. Puedes modificar los datos del evento.');
+    }
+  }, [isEditing, eventToEdit]);
+
+  // Función para mostrar notificaciones
+  const showNotification = useCallback((type, message, duration = 5000) => {
+    if (type === 'success') {
+      setSuccessMessage(message);
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), duration);
+    } else {
+      setErrorMessage(message);
+      setShowError(true);
+      setTimeout(() => setShowError(false), duration);
+    }
+  }, []);
+
+  // Función para limpiar notificaciones
+  const clearNotifications = useCallback(() => {
+    setShowSuccess(false);
+    setShowError(false);
+  }, []);
 
   // Definir las monedas disponibles
   const currencies = [
@@ -157,15 +206,68 @@ const CreateEventPage = () => {
     }
   }, [currentStep]);
 
+  // Función para determinar qué campos mostrar según el tipo de evento
+  const getVisibleFields = useCallback(() => {
+    const fields = {
+      // Campos básicos siempre visibles
+      basic: ['title', 'description', 'category'],
+      dateTime: ['startDate', 'startTime', 'endDate', 'endTime'],
+      
+      // Campos de ubicación según tipo
+      location: formData.locationType === 'physical' 
+        ? ['venue', 'address', 'city', 'country']
+        : formData.locationType === 'virtual'
+        ? ['virtualLink']
+        : ['venue', 'address', 'city', 'country', 'virtualLink'], // híbrido
+      
+      // Campos de ticketing según tipo
+      ticketing: ['totalTickets'],
+      
+      // Campos de pago solo para eventos pagados
+      payment: formData.ticketType === 'paid' 
+        ? ['price', 'currency', 'paymentMethods', 'allowResale', 'allowAuction']
+        : [],
+      
+      // Campos de configuración
+      config: ['isPrivate', 'requiresApproval'],
+      
+      // Media siempre visible
+      media: ['coverImage']
+    };
+
+    return fields;
+  }, [formData.locationType, formData.ticketType]);
+
+  // Función para validar campos según tipo de evento
   const validateForm = useCallback(() => {
     const newErrors = {};
+    const visibleFields = getVisibleFields();
     
+    // Validar campos básicos
     if (!formData.title?.trim()) newErrors.title = 'El título es requerido';
     if (!formData.description?.trim()) newErrors.description = 'La descripción es requerida';
     if (!formData.category) newErrors.category = 'Selecciona una categoría';
     if (!formData.startDate) newErrors.startDate = 'Fecha de inicio requerida';
     if (!formData.startTime) newErrors.startTime = 'Hora de inicio requerida';
     
+    // Validar ubicación según tipo
+    if (formData.locationType === 'physical') {
+      if (!formData.venue?.trim()) newErrors.venue = 'El lugar es requerido';
+      if (!formData.address?.trim()) newErrors.address = 'La dirección es requerida';
+      if (!formData.city?.trim()) newErrors.city = 'La ciudad es requerida';
+    } else if (formData.locationType === 'virtual') {
+      if (!formData.virtualLink?.trim()) newErrors.virtualLink = 'El enlace virtual es requerido';
+    } else if (formData.locationType === 'hybrid') {
+      if (!formData.venue?.trim()) newErrors.venue = 'El lugar es requerido';
+      if (!formData.virtualLink?.trim()) newErrors.virtualLink = 'El enlace virtual es requerido';
+    }
+    
+    // Validar ticketing
+    if (!formData.totalTickets || isNaN(formData.totalTickets) || formData.totalTickets <= 0) {
+      newErrors.totalTickets = 'La cantidad de tickets debe ser mayor a 0';
+    }
+    
+    // Validar campos de pago solo para eventos pagados
     if (formData.ticketType === 'paid') {
       if (!formData.price || isNaN(formData.price) || formData.price <= 0) {
         newErrors.price = 'El precio debe ser mayor a 0';
@@ -176,37 +278,14 @@ const CreateEventPage = () => {
         newErrors.paymentMethods = 'Debes seleccionar al menos un método de pago';
       }
     }
-    
-    if (!formData.totalTickets || isNaN(formData.totalTickets) || formData.totalTickets <= 0) {
-      newErrors.totalTickets = 'La cantidad de tickets debe ser mayor a 0';
-    }
-
-    // Validar precios de reventa si está habilitada
-    if (formData.ticketType === 'paid' && formData.allowResale) {
-      if (!formData.resalePrices.ETH.min || isNaN(formData.resalePrices.ETH.min) || formData.resalePrices.ETH.min < 0) {
-        newErrors.resalePrices = { ...newErrors.resalePrices, ETH: { min: 'El precio mínimo de reventa debe ser válido' } };
-      }
-      if (!formData.resalePrices.ETH.max || isNaN(formData.resalePrices.ETH.max) || formData.resalePrices.ETH.max <= formData.resalePrices.ETH.min) {
-        newErrors.resalePrices = { ...newErrors.resalePrices, ETH: { max: 'El precio máximo de reventa debe ser mayor al precio mínimo' } };
-      }
-    }
-
-    // Validar precios de subasta si está habilitada
-    if (formData.ticketType === 'paid' && formData.allowAuction) {
-      if (!formData.auctionPrices.ETH.min || isNaN(formData.auctionPrices.ETH.min) || formData.auctionPrices.ETH.min < 0) {
-        newErrors.auctionPrices = { ...newErrors.auctionPrices, ETH: { min: 'El precio mínimo de subasta debe ser válido' } };
-      }
-      if (!formData.auctionPrices.ETH.max || isNaN(formData.auctionPrices.ETH.max) || formData.auctionPrices.ETH.max <= formData.auctionPrices.ETH.min) {
-        newErrors.auctionPrices = { ...newErrors.auctionPrices, ETH: { max: 'El precio máximo de subasta debe ser mayor al precio mínimo' } };
-      }
-    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  }, [formData]);
+  }, [formData, getVisibleFields]);
 
   const handleSubmit = useCallback(() => {
     if (validateForm()) {
+      setIsSubmitting(true);
       const eventData = {
         ...formData,
         // Asegurar que los eventos gratuitos no tengan opciones de mercado secundario
@@ -222,30 +301,27 @@ const CreateEventPage = () => {
         paymentMethods: formData.ticketType === 'paid' ? formData.paymentMethods : { crypto: false, card: false }
       };
       
-      console.log('Crear evento:', eventData);
-      console.log('Opciones de mercado secundario:', {
-        allowResale: eventData.allowResale,
-        allowAuction: eventData.allowAuction,
-        isPaidEvent: formData.ticketType === 'paid',
-        resalePrices: eventData.allowResale ? {
-          ETH: eventData.resalePrices.ETH,
-          MATIC: eventData.resalePrices.MATIC,
-          MXN: eventData.resalePrices.MXN,
-          USD: eventData.resalePrices.USD
-        } : null,
-        auctionPrices: eventData.allowAuction ? {
-          ETH: eventData.auctionPrices.ETH,
-          MATIC: eventData.auctionPrices.MATIC,
-          MXN: eventData.auctionPrices.MXN,
-          USD: eventData.auctionPrices.USD
-        } : null,
-        paymentMethods: eventData.paymentMethods
-      });
+      console.log(isEditing ? 'Actualizar evento:' : 'Crear evento:', eventData);
       
-      // Aquí iría la lógica para crear el evento en blockchain
-      // El evento se guardaría con allowResale y allowAuction configurados
+      // Simular tiempo de respuesta del backend
+      setTimeout(() => {
+        setIsSubmitting(false);
+        const message = isEditing 
+          ? 'Evento actualizado exitosamente!' 
+          : 'Evento creado exitosamente!';
+        showNotification('success', message);
+        
+        // Si es edición, redirigir al perfil después de un delay
+        if (isEditing) {
+          setTimeout(() => {
+            window.location.href = '/perfil';
+          }, 2000);
+        }
+      }, 2000);
+    } else {
+      showNotification('error', 'Por favor, completa todos los campos correctamente.');
     }
-  }, [formData, validateForm]);
+  }, [formData, validateForm, showNotification, isEditing]);
 
   const renderProgressBar = () => (
     <div className="create-event-progress">
@@ -530,325 +606,123 @@ const CreateEventPage = () => {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    <FaWallet />
+                    <FaCreditCard />
                     <span>De Pago</span>
-                    <small style={{ fontSize: '0.7rem', color: 'rgba(255, 255, 255, 0.6)', marginTop: '0.25rem' }}>
-                      Incluye opciones de reventa y subasta
-                    </small>
                   </motion.button>
                 </div>
               </div>
 
+              <div className="form-group">
+                <label>Cantidad de Tickets *</label>
+                <input
+                  type="number"
+                  value={formData.totalTickets}
+                  onChange={(e) => handleInputChange('totalTickets', e.target.value)}
+                  placeholder="ej. 100"
+                  min="1"
+                  className={`form-input ${errors.totalTickets ? 'error' : ''}`}
+                />
+                {errors.totalTickets && <span className="error-message">{errors.totalTickets}</span>}
+              </div>
+
+              {/* Campos de pago solo para eventos pagados */}
               {formData.ticketType === 'paid' && (
                 <>
-                  <div className="form-group full-width">
-                    <label>Precio del Ticket *</label>
-                    <div className="currency-tabs">
-                      {currencies.map(currency => (
-                        <button
-                          key={currency.id}
-                          className={`currency-tab ${formData.currency === currency.id ? 'active' : ''}`}
-                          onClick={() => handleInputChange('currency', currency.id)}
-                        >
-                          {currency.symbol}
-                        </button>
-                      ))}
-                    </div>
-                    
-                    <div className="price-input-group">
-                      <input
-                        type="number"
-                        value={formData.price}
-                        onChange={(e) => handleInputChange('price', e.target.value)}
-                        placeholder={`0.00 ${formData.currency}`}
-                        className={`form-input price-input ${errors.price ? 'error' : ''}`}
-                        min="0"
-                        step={currencies.find(c => c.id === formData.currency)?.step || '0.01'}
-                      />
-                    </div>
+                  <div className="form-group">
+                    <label>Precio *</label>
+                    <input
+                      type="number"
+                      value={formData.price}
+                      onChange={(e) => handleInputChange('price', e.target.value)}
+                      placeholder="0.00"
+                      step="0.01"
+                      min="0"
+                      className={`form-input ${errors.price ? 'error' : ''}`}
+                    />
                     {errors.price && <span className="error-message">{errors.price}</span>}
-                    
-                    <small style={{ display: 'block', marginTop: '0.5rem', color: 'rgba(255, 255, 255, 0.6)' }}>
-                      {formData.currency === 'ETH' && 'Precio en Ethereum (ETH)'}
-                      {formData.currency === 'MATIC' && 'Precio en Polygon (MATIC)'}
-                      {formData.currency === 'MXN' && 'Precio en Pesos Mexicanos (MXN)'}
-                      {formData.currency === 'USD' && 'Precio en Dólares Americanos (USD)'}
-                    </small>
+                  </div>
+
+                  <div className="form-group">
+                    <label>Moneda</label>
+                    <select
+                      value={formData.currency}
+                      onChange={(e) => handleInputChange('currency', e.target.value)}
+                      className="form-select"
+                    >
+                      {currencies.map(currency => (
+                        <option key={currency.id} value={currency.id}>
+                          {currency.name} ({currency.symbol})
+                        </option>
+                      ))}
+                    </select>
                   </div>
 
                   <div className="form-group full-width">
-                    <label>Métodos de Pago Aceptados</label>
-                    <p style={{ fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '16px' }}>
-                      Selecciona los métodos de pago que aceptarás para este evento
-                    </p>
-                    
+                    <label>Métodos de Pago</label>
                     <div className="payment-methods">
-                      <motion.div 
-                        className="payment-method"
-                        whileHover={{ scale: 1.02 }}
-                      >
-                        <div className="method-content">
-                          <div className="method-header">
-                            <FaWallet style={{ color: '#8b5cf6' }} />
-                            <span>Criptomonedas</span>
-                          </div>
-                          <small>Acepta pagos en {formData.currency} y otras criptomonedas</small>
-                        </div>
-                        <motion.button
-                          type="button"
-                          className={`toggle-switch ${formData.paymentMethods.crypto ? 'active' : ''}`}
-                          onClick={() => handleInputChange('paymentMethods', {
+                      <motion.label className="payment-method">
+                        <input
+                          type="checkbox"
+                          checked={formData.paymentMethods.crypto}
+                          onChange={(e) => handleInputChange('paymentMethods', {
                             ...formData.paymentMethods,
-                            crypto: !formData.paymentMethods.crypto
+                            crypto: e.target.checked
                           })}
-                          whileTap={{ scale: 0.95 }}
-                        >
-                          <motion.div 
-                            className="toggle-thumb"
-                            animate={{ x: formData.paymentMethods.crypto ? 24 : 0 }}
-                            transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                          />
-                        </motion.button>
-                      </motion.div>
-
-                      <motion.div 
-                        className="payment-method"
-                        whileHover={{ scale: 1.02 }}
-                      >
-                        <div className="method-content">
-                          <div className="method-header">
-                            <FaCreditCard style={{ color: '#10b981' }} />
-                            <span>Tarjeta de Crédito/Débito</span>
-                          </div>
-                          <small>Acepta pagos con tarjetas bancarias</small>
-                        </div>
-                        <motion.button
-                          type="button"
-                          className={`toggle-switch ${formData.paymentMethods.card ? 'active' : ''}`}
-                          onClick={() => handleInputChange('paymentMethods', {
+                        />
+                        <FaWallet />
+                        <span>Criptomonedas</span>
+                      </motion.label>
+                      <motion.label className="payment-method">
+                        <input
+                          type="checkbox"
+                          checked={formData.paymentMethods.card}
+                          onChange={(e) => handleInputChange('paymentMethods', {
                             ...formData.paymentMethods,
-                            card: !formData.paymentMethods.card
+                            card: e.target.checked
                           })}
-                          whileTap={{ scale: 0.95 }}
-                        >
-                          <motion.div 
-                            className="toggle-thumb"
-                            animate={{ x: formData.paymentMethods.card ? 24 : 0 }}
-                            transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                          />
-                        </motion.button>
-                      </motion.div>
+                        />
+                        <FaCreditCard />
+                        <span>Tarjeta de Crédito</span>
+                      </motion.label>
                     </div>
-                    {(!formData.paymentMethods.crypto && !formData.paymentMethods.card) && (
-                      <span className="error-message">Debes seleccionar al menos un método de pago</span>
-                    )}
+                    {errors.paymentMethods && <span className="error-message">{errors.paymentMethods}</span>}
                   </div>
 
                   <div className="form-group full-width">
                     <label>Opciones de Mercado Secundario</label>
-                    <p style={{ fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '16px' }}>
-                      Configura qué opciones estarán disponibles después de la venta inicial
-                    </p>
-                    
-                    <div className="market-options">
-                      <motion.div 
-                        className="market-option"
-                        whileHover={{ scale: 1.02 }}
-                      >
-                        <div className="option-content">
-                          <div className="option-header">
-                            <FaExchangeAlt style={{ color: '#8b5cf6' }} />
-                            <span>Permitir Reventa</span>
-                          </div>
-                          <small>Los compradores podrán revender sus tickets</small>
-                          
-                          {formData.allowResale && (
-                            <div className="price-limits">
-                              <div className="currency-tabs">
-                                {currencies.map(currency => (
-                                  <button
-                                    key={currency.id}
-                                    className={`currency-tab ${formData.currency === currency.id ? 'active' : ''}`}
-                                    onClick={() => handleInputChange('currency', currency.id)}
-                                  >
-                                    {currency.symbol}
-                                  </button>
-                                ))}
-                              </div>
-                              
-                              <div className="price-inputs">
-                                <div className="price-limit-input">
-                                  <label>Precio Mínimo en {formData.currency}</label>
-                                  <div className="price-input-group">
-                                    <input
-                                      type="number"
-                                      value={formData.resalePrices[formData.currency].min}
-                                      onChange={(e) => handleInputChange('resalePrices', {
-                                        ...formData.resalePrices,
-                                        [formData.currency]: { 
-                                          ...formData.resalePrices[formData.currency], 
-                                          min: e.target.value 
-                                        }
-                                      })}
-                                      placeholder={`0.00 ${formData.currency}`}
-                                      className={`form-input price-input ${errors.resalePrices?.[formData.currency]?.min ? 'error' : ''}`}
-                                      min="0"
-                                      step={currencies.find(c => c.id === formData.currency)?.step || '0.01'}
-                                    />
-                                  </div>
-                                  {errors.resalePrices?.[formData.currency]?.min && (
-                                    <span className="error-message">{errors.resalePrices[formData.currency].min}</span>
-                                  )}
-                                </div>
-                                
-                                <div className="price-limit-input">
-                                  <label>Precio Máximo en {formData.currency}</label>
-                                  <div className="price-input-group">
-                                    <input
-                                      type="number"
-                                      value={formData.resalePrices[formData.currency].max}
-                                      onChange={(e) => handleInputChange('resalePrices', {
-                                        ...formData.resalePrices,
-                                        [formData.currency]: { 
-                                          ...formData.resalePrices[formData.currency], 
-                                          max: e.target.value 
-                                        }
-                                      })}
-                                      placeholder={`0.00 ${formData.currency}`}
-                                      className={`form-input price-input ${errors.resalePrices?.[formData.currency]?.max ? 'error' : ''}`}
-                                      min="0"
-                                      step={currencies.find(c => c.id === formData.currency)?.step || '0.01'}
-                                    />
-                                  </div>
-                                  {errors.resalePrices?.[formData.currency]?.max && (
-                                    <span className="error-message">{errors.resalePrices[formData.currency].max}</span>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                        <motion.button
-                          type="button"
-                          className={`toggle-switch ${formData.allowResale ? 'active' : ''}`}
-                          onClick={() => handleInputChange('allowResale', !formData.allowResale)}
-                          whileTap={{ scale: 0.95 }}
-                        >
-                          <motion.div 
-                            className="toggle-thumb"
-                            animate={{ x: formData.allowResale ? 24 : 0 }}
-                            transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                          />
-                        </motion.button>
-                      </motion.div>
-
-                      <motion.div 
-                        className="market-option"
-                        whileHover={{ scale: 1.02 }}
-                      >
-                        <div className="option-content">
-                          <div className="option-header">
-                            <FaGavel style={{ color: '#f59e0b' }} />
-                            <span>Permitir Subastas</span>
-                          </div>
-                          <small>Los tickets podrán subastarse al mejor postor</small>
-                          
-                          {formData.allowAuction && (
-                            <div className="price-limits">
-                              <div className="currency-tabs">
-                                {currencies.map(currency => (
-                                  <button
-                                    key={currency.id}
-                                    className={`currency-tab ${formData.currency === currency.id ? 'active' : ''}`}
-                                    onClick={() => handleInputChange('currency', currency.id)}
-                                  >
-                                    {currency.symbol}
-                                  </button>
-                                ))}
-                              </div>
-                              
-                              <div className="price-inputs">
-                                <div className="price-limit-input">
-                                  <label>Precio Mínimo en {formData.currency}</label>
-                                  <div className="price-input-group">
-                                    <input
-                                      type="number"
-                                      value={formData.auctionPrices[formData.currency].min}
-                                      onChange={(e) => handleInputChange('auctionPrices', {
-                                        ...formData.auctionPrices,
-                                        [formData.currency]: { 
-                                          ...formData.auctionPrices[formData.currency], 
-                                          min: e.target.value 
-                                        }
-                                      })}
-                                      placeholder={`0.00 ${formData.currency}`}
-                                      className={`form-input price-input ${errors.auctionPrices?.[formData.currency]?.min ? 'error' : ''}`}
-                                      min="0"
-                                      step={currencies.find(c => c.id === formData.currency)?.step || '0.01'}
-                                    />
-                                  </div>
-                                  {errors.auctionPrices?.[formData.currency]?.min && (
-                                    <span className="error-message">{errors.auctionPrices[formData.currency].min}</span>
-                                  )}
-                                </div>
-                                
-                                <div className="price-limit-input">
-                                  <label>Precio Máximo en {formData.currency}</label>
-                                  <div className="price-input-group">
-                                    <input
-                                      type="number"
-                                      value={formData.auctionPrices[formData.currency].max}
-                                      onChange={(e) => handleInputChange('auctionPrices', {
-                                        ...formData.auctionPrices,
-                                        [formData.currency]: { 
-                                          ...formData.auctionPrices[formData.currency], 
-                                          max: e.target.value 
-                                        }
-                                      })}
-                                      placeholder={`0.00 ${formData.currency}`}
-                                      className={`form-input price-input ${errors.auctionPrices?.[formData.currency]?.max ? 'error' : ''}`}
-                                      min="0"
-                                      step={currencies.find(c => c.id === formData.currency)?.step || '0.01'}
-                                    />
-                                  </div>
-                                  {errors.auctionPrices?.[formData.currency]?.max && (
-                                    <span className="error-message">{errors.auctionPrices[formData.currency].max}</span>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                        <motion.button
-                          type="button"
-                          className={`toggle-switch ${formData.allowAuction ? 'active' : ''}`}
-                          onClick={() => handleInputChange('allowAuction', !formData.allowAuction)}
-                          whileTap={{ scale: 0.95 }}
-                        >
-                          <motion.div 
-                            className="toggle-thumb"
-                            animate={{ x: formData.allowAuction ? 24 : 0 }}
-                            transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                          />
-                        </motion.button>
-                      </motion.div>
+                    <div className="secondary-market-options">
+                      <motion.label className="market-option">
+                        <input
+                          type="checkbox"
+                          checked={formData.allowResale}
+                          onChange={(e) => handleInputChange('allowResale', e.target.checked)}
+                        />
+                        <FaExchangeAlt />
+                        <span>Permitir Reventa</span>
+                      </motion.label>
+                      <motion.label className="market-option">
+                        <input
+                          type="checkbox"
+                          checked={formData.allowAuction}
+                          onChange={(e) => handleInputChange('allowAuction', e.target.checked)}
+                        />
+                        <FaGavel />
+                        <span>Permitir Subastas</span>
+                      </motion.label>
                     </div>
                   </div>
                 </>
               )}
 
-              <div className="form-group">
-                <label>Total de Tickets *</label>
-                <input
-                  type="number"
-                  value={formData.totalTickets}
-                  onChange={(e) => handleInputChange('totalTickets', e.target.value)}
-                  placeholder="100"
-                  className={`form-input ${errors.totalTickets ? 'error' : ''}`}
-                  min="1"
-                />
-                {errors.totalTickets && <span className="error-message">{errors.totalTickets}</span>}
-              </div>
+              {/* Mensaje informativo para eventos gratuitos */}
+              {formData.ticketType === 'free' && (
+                <div className="form-group full-width">
+                  <div className="info-message">
+                    <FaInfoCircle />
+                    <span>Los eventos gratuitos no incluyen opciones de mercado secundario ni métodos de pago.</span>
+                  </div>
+                </div>
+              )}
             </div>
           </motion.div>
         );
@@ -1019,6 +893,47 @@ const CreateEventPage = () => {
 
   return (
     <div className="create-event-page">
+      {/* Notificaciones Toast */}
+      <AnimatePresence>
+        {showSuccess && (
+          <motion.div
+            className="toast-notification success"
+            initial={{ opacity: 0, y: -50, scale: 0.8 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -50, scale: 0.8 }}
+            transition={{ duration: 0.3 }}
+          >
+            <FaCheckCircle className="toast-icon" />
+            <span className="toast-message">{successMessage}</span>
+            <button 
+              className="toast-close" 
+              onClick={() => setShowSuccess(false)}
+            >
+              <FaTimes />
+            </button>
+          </motion.div>
+        )}
+
+        {showError && (
+          <motion.div
+            className="toast-notification error"
+            initial={{ opacity: 0, y: -50, scale: 0.8 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -50, scale: 0.8 }}
+            transition={{ duration: 0.3 }}
+          >
+            <FaExclamationTriangle className="toast-icon" />
+            <span className="toast-message">{errorMessage}</span>
+            <button 
+              className="toast-close" 
+              onClick={() => setShowError(false)}
+            >
+              <FaTimes />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <div className="create-event-container">
         <motion.div
           className="create-event-card"
@@ -1027,8 +942,8 @@ const CreateEventPage = () => {
           transition={{ duration: 0.6 }}
         >
           <div className="create-event-header">
-            <h1>Crear Nuevo Evento</h1>
-            <p>Crea tu evento en blockchain de forma fácil y segura</p>
+            <h1>{isEditing ? 'Editar Evento' : 'Crear Nuevo Evento'}</h1>
+            <p>{isEditing ? 'Modifica los datos de tu evento' : 'Crea tu evento en blockchain de forma fácil y segura'}</p>
           </div>
 
           {renderProgressBar()}
@@ -1067,12 +982,22 @@ const CreateEventPage = () => {
               <motion.button
                 type="button"
                 onClick={handleSubmit}
-                className="nav-button submit"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                disabled={isSubmitting}
+                className={`nav-button submit ${isSubmitting ? 'loading' : ''}`}
+                whileHover={{ scale: isSubmitting ? 1 : 1.05 }}
+                whileTap={{ scale: isSubmitting ? 1 : 0.95 }}
               >
-                <FaCheck />
-                Crear Evento
+                {isSubmitting ? (
+                  <>
+                    <FaSpinner className="spinner" />
+                    {isEditing ? 'Actualizando...' : 'Creando...'}
+                  </>
+                ) : (
+                  <>
+                    <FaCheck />
+                    {isEditing ? 'Actualizar Evento' : 'Crear Evento'}
+                  </>
+                )}
               </motion.button>
             )}
           </div>
