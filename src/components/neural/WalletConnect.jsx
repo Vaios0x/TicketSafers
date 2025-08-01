@@ -1,16 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { FaWallet, FaUser, FaSignOutAlt, FaCopy, FaExternalLinkAlt, FaNetworkWired, FaExclamationTriangle, FaSync, FaInfoCircle } from 'react-icons/fa';
-import { useAccount, useDisconnect } from 'wagmi';
+import { FaWallet, FaUser, FaSignOutAlt, FaCopy, FaExternalLinkAlt, FaNetworkWired, FaExclamationTriangle, FaSync, FaInfoCircle, FaChevronDown, FaExchangeAlt } from 'react-icons/fa';
+import { useAccount, useDisconnect, useSwitchChain } from 'wagmi';
 import { useAppKit } from '@reown/appkit/react';
 
 const WalletConnect = () => {
   const { address, isConnected, chain } = useAccount();
   const { disconnect } = useDisconnect();
+  const { switchChain } = useSwitchChain();
   const { open } = useAppKit();
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState(null);
   const [showNetworkInfo, setShowNetworkInfo] = useState(false);
+  const [showNetworkSelector, setShowNetworkSelector] = useState(false);
+  
+  // Ref para el dropdown
+  const dropdownRef = useRef(null);
+  const buttonRef = useRef(null);
+
+  // Cerrar dropdown cuando se hace clic fuera
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target) &&
+          buttonRef.current && !buttonRef.current.contains(event.target)) {
+        setShowNetworkSelector(false);
+      }
+    };
+
+    if (showNetworkSelector) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showNetworkSelector]);
 
   // Función para manejar la conexión con mejor UX
   const handleConnect = async () => {
@@ -94,17 +118,66 @@ const WalletConnect = () => {
     }
   };
 
+  // Función para cambiar de red
+  const handleSwitchNetwork = async (chainId) => {
+    try {
+      await switchChain({ chainId });
+      setShowNetworkSelector(false);
+    } catch (err) {
+      console.error('❌ Error al cambiar de red:', err);
+      setError('Error al cambiar de red. Intenta de nuevo.');
+    }
+  };
+
   // Información de redes soportadas - TESTNETS
   const supportedNetworks = [
-    { name: 'Arbitrum Sepolia', color: '#28a0f0', description: 'L2 Económico (Por defecto) - TESTNET' },
-    { name: 'Polygon Amoy', color: '#8247e5', description: 'L2 Escalable - TESTNET' },
-    { name: 'Optimism Sepolia', color: '#ff0420', description: 'L2 Rápido - TESTNET' },
-    { name: 'Base Sepolia', color: '#0052ff', description: 'L2 de Coinbase - TESTNET' },
-    { name: 'Scroll Sepolia', color: '#ff6b35', description: 'L2 ZK-Rollup - TESTNET' },
-    { name: 'Sepolia', color: '#627eea', description: 'Red Principal - TESTNET' }
+    { 
+      name: 'Arbitrum Sepolia', 
+      color: '#28a0f0', 
+      description: 'L2 Económico (Por defecto) - TESTNET',
+      chainId: 421614,
+      isDefault: true
+    },
+    { 
+      name: 'Polygon Amoy', 
+      color: '#8247e5', 
+      description: 'L2 Escalable - TESTNET',
+      chainId: 80001
+    },
+    { 
+      name: 'Optimism Sepolia', 
+      color: '#ff0420', 
+      description: 'L2 Rápido - TESTNET',
+      chainId: 11155420
+    },
+    { 
+      name: 'Base Sepolia', 
+      color: '#0052ff', 
+      description: 'L2 de Coinbase - TESTNET',
+      chainId: 84532
+    },
+    { 
+      name: 'Scroll Sepolia', 
+      color: '#ff6b35', 
+      description: 'L2 ZK-Rollup - TESTNET',
+      chainId: 534351
+    },
+    { 
+      name: 'Sepolia', 
+      color: '#627eea', 
+      description: 'Red Principal - TESTNET',
+      chainId: 11155111
+    }
   ];
 
+  // Obtener red actual
+  const getCurrentNetwork = () => {
+    return supportedNetworks.find(network => network.chainId === chain?.id) || supportedNetworks[0];
+  };
+
   if (isConnected && address) {
+    const currentNetwork = getCurrentNetwork();
+    
     return (
       <motion.div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
         {error && (
@@ -201,6 +274,134 @@ const WalletConnect = () => {
           </div>
           
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            {/* Selector de Red */}
+            <div style={{ position: 'relative' }} ref={dropdownRef}>
+              <button
+                ref={buttonRef}
+                onClick={() => setShowNetworkSelector(!showNetworkSelector)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  borderRadius: '8px',
+                  padding: '6px 10px',
+                  color: '#ffffff',
+                  cursor: 'pointer',
+                  fontSize: '11px',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.background = 'rgba(255, 255, 255, 0.2)';
+                  e.target.style.borderColor = 'rgba(255, 255, 255, 0.4)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.background = 'rgba(255, 255, 255, 0.1)';
+                  e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                }}
+                title="Cambiar red"
+              >
+                <FaExchangeAlt style={{ fontSize: '10px' }} />
+                <span>Red</span>
+                <FaChevronDown style={{ fontSize: '8px' }} />
+              </button>
+              
+              {/* Dropdown de Redes */}
+              {showNetworkSelector && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                  style={{
+                    position: 'absolute',
+                    top: '100%',
+                    right: 0,
+                    marginTop: '4px',
+                    background: 'rgba(15, 23, 42, 0.95)',
+                    backdropFilter: 'blur(20px)',
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    borderRadius: '12px',
+                    padding: '8px',
+                    minWidth: '200px',
+                    zIndex: 1000,
+                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
+                  }}
+                >
+                  <div style={{
+                    fontSize: '11px',
+                    fontWeight: '600',
+                    color: '#94a3b8',
+                    marginBottom: '8px',
+                    padding: '0 4px'
+                  }}>
+                    🌐 Cambiar Red:
+                  </div>
+                  {supportedNetworks.map((network) => (
+                    <button
+                      key={network.chainId}
+                      onClick={() => handleSwitchNetwork(network.chainId)}
+                      style={{
+                        width: '100%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        padding: '8px 12px',
+                        background: chain?.id === network.chainId 
+                          ? 'rgba(59, 130, 246, 0.2)' 
+                          : 'transparent',
+                        border: 'none',
+                        borderRadius: '8px',
+                        color: chain?.id === network.chainId ? '#60a5fa' : '#e2e8f0',
+                        cursor: 'pointer',
+                        fontSize: '11px',
+                        transition: 'all 0.2s ease',
+                        textAlign: 'left'
+                      }}
+                      onMouseEnter={(e) => {
+                        if (chain?.id !== network.chainId) {
+                          e.target.style.background = 'rgba(255, 255, 255, 0.1)';
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (chain?.id !== network.chainId) {
+                          e.target.style.background = 'transparent';
+                        }
+                      }}
+                    >
+                      <span style={{
+                        width: '6px',
+                        height: '6px',
+                        background: network.color,
+                        borderRadius: '50%'
+                      }}></span>
+                      <span style={{ flex: 1 }}>
+                        {network.name}
+                      </span>
+                      {network.isDefault && (
+                        <span style={{
+                          fontSize: '9px',
+                          color: '#10b981',
+                          fontWeight: '600'
+                        }}>
+                          DEFAULT
+                        </span>
+                      )}
+                      {chain?.id === network.chainId && (
+                        <span style={{
+                          fontSize: '9px',
+                          color: '#60a5fa',
+                          fontWeight: '600'
+                        }}>
+                          ✓
+                        </span>
+                      )}
+                    </button>
+                  ))}
+                </motion.div>
+              )}
+            </div>
+            
             <button 
               onClick={copyAddress}
               style={{
