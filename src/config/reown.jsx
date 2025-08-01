@@ -21,20 +21,21 @@ const projectId = '8505f6eaaa44b34387416821007c224f';
 // Create metadata object
 const metadata = {
   name: 'TicketSafer',
-  description: 'Plataforma multichain de tickets NFT',
+  description: 'Plataforma multichain de tickets NFT - Wallets sociales automáticas',
   url: 'https://ticketsafer.com',
   icons: ['https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=64&h=64&fit=crop&auto=format&q=80']
 };
 
 // Set networks - TicketSafer soporta múltiples redes
-const networks = [mainnet, arbitrum, base, scroll, polygon, optimism];
+// Orden de prioridad: Arbitrum (L2 económico) -> Polygon -> Optimism -> Base -> Scroll -> Ethereum
+const networks = [arbitrum, polygon, optimism, base, scroll, mainnet];
 
-// Create Wagmi Adapter con configuración mejorada
+// Create Wagmi Adapter con configuración mejorada para wallets sociales
 const wagmiAdapter = new WagmiAdapter({
   networks,
   projectId,
   ssr: true,
-  // Configuración mejorada para evitar errores de conexión
+  // Configuración mejorada para wallets sociales
   options: {
     // Configuración específica para MetaMask
     connectorOptions: {
@@ -63,11 +64,15 @@ const wagmiAdapter = new WagmiAdapter({
       'metaMask', 
       'walletConnect',
       'coinbase'
-    ]
+    ],
+    // Configuración de red por defecto
+    defaultChain: arbitrum, // Arbitrum como red por defecto
+    // Configuración de redes soportadas
+    supportedChains: networks
   }
 });
 
-// Create modal with improved configuration
+// Create modal with improved configuration for social wallets
 createAppKit({
   adapters: [wagmiAdapter],
   networks,
@@ -76,7 +81,20 @@ createAppKit({
   features: {
     analytics: true,
     smartAccounts: false, // Deshabilitado por ahora
-    embeddedWallets: false, // Deshabilitado por ahora
+    embeddedWallets: true, // HABILITADO para wallets sociales
+    // Configuración para wallets sociales
+    socialWallets: {
+      enabled: true,
+      // Redes donde se crearán las wallets sociales (en orden de prioridad)
+      supportedNetworks: ['arbitrum', 'polygon', 'optimism', 'base', 'scroll', 'ethereum'],
+      // Red por defecto para wallets sociales
+      defaultNetwork: 'arbitrum',
+      // Configuración de recuperación
+      recoveryOptions: {
+        email: true,
+        social: true
+      }
+    },
     // Configuración para evitar errores de conexión
     walletConnect: {
       projectId,
