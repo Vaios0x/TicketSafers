@@ -42,19 +42,24 @@ const WalletConnect = () => {
     return chain.name;
   };
 
-  // Obtener color de la red
+  // Obtener color de la red - Solo las redes que soportamos
   const getNetworkColor = () => {
     if (!chain) return '#6b7280';
     
     switch (chain.id) {
-      case 1: return '#627eea'; // Ethereum blue
-      case 137: return '#8247e5'; // Polygon purple
       case 42161: return '#28a0f0'; // Arbitrum blue
-      case 10: return '#ff0420'; // Optimism red
       case 8453: return '#0052ff'; // Base blue
-      case 534352: return '#ff6b35'; // Scroll orange
-      default: return '#6b7280'; // Gray
+      case 10: return '#ff0420'; // Optimism red
+      case 137: return '#8247e5'; // Polygon purple
+      default: return '#6b7280'; // Gray para redes no soportadas
     }
+  };
+
+  // Verificar si la red está soportada
+  const isSupportedNetwork = () => {
+    if (!chain) return false;
+    const supportedChainIds = [42161, 8453, 10, 137]; // Arbitrum, Base, Optimism, Polygon
+    return supportedChainIds.includes(chain.id);
   };
 
   if (isConnected && address) {
@@ -104,7 +109,7 @@ const WalletConnect = () => {
             alignItems: 'center',
             gap: '6px',
             fontSize: '12px',
-            color: '#94a3b8'
+            color: isSupportedNetwork() ? '#94a3b8' : '#ef4444'
           }}>
             <span style={{
               width: '8px',
@@ -114,6 +119,11 @@ const WalletConnect = () => {
               animation: 'pulse 2s infinite'
             }}></span>
             {getNetworkName()}
+            {!isSupportedNetwork() && (
+              <span style={{ color: '#ef4444', fontSize: '10px' }}>
+                (No soportada)
+              </span>
+            )}
           </div>
         </div>
         

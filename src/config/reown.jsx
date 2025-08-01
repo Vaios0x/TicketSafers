@@ -1,7 +1,12 @@
 import React from 'react';
 import { createAppKit } from '@reown/appkit/react';
 import { WagmiProvider } from 'wagmi';
-import { arbitrum, mainnet, base, scroll, polygon, optimism } from '@reown/appkit/networks';
+import { 
+  arbitrum, 
+  base, 
+  optimism, 
+  polygon 
+} from '@reown/appkit/networks';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
 
@@ -21,22 +26,36 @@ const projectId = '8505f6eaaa44b34387416821007c224f';
 // Create metadata object
 const metadata = {
   name: 'TicketSafer',
-  description: 'Plataforma multichain de tickets NFT',
+  description: 'Plataforma multichain de tickets NFT - Arbitrum, Base, Optimism, Polygon',
   url: 'https://ticketsafer.com',
   icons: ['https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=64&h=64&fit=crop&auto=format&q=80']
 };
 
-// Set networks - TicketSafer soporta múltiples redes
-const networks = [mainnet, arbitrum, base, scroll, polygon, optimism];
+// Solo las redes que soportamos en TicketSafer
+const networks = [arbitrum, base, optimism, polygon];
 
-// Create Wagmi Adapter
+// Create Wagmi Adapter con configuración específica
 const wagmiAdapter = new WagmiAdapter({
   networks,
   projectId,
-  ssr: true
+  ssr: true,
+  // Configuración específica para TicketSafer
+  options: {
+    // Solo mostrar estas redes
+    showAllNetworks: false,
+    // Orden específico de redes
+    networkOrder: ['arbitrum', 'base', 'optimism', 'polygon'],
+    // Configuración de wallets preferidas
+    connectorOrder: [
+      'walletConnect',
+      'injected',
+      'coinbase',
+      'metamask'
+    ]
+  }
 });
 
-// Create modal with compact configuration
+// Create modal con configuración específica
 createAppKit({
   adapters: [wagmiAdapter],
   networks,
@@ -45,7 +64,15 @@ createAppKit({
   features: {
     analytics: true,
     smartAccounts: false, // Deshabilitado por ahora
-    embeddedWallets: false // Deshabilitado por ahora
+    embeddedWallets: false, // Deshabilitado por ahora
+    // Configuración específica para multichain
+    multichain: {
+      enabled: true,
+      // Solo estas redes
+      allowedNetworks: ['arbitrum', 'base', 'optimism', 'polygon'],
+      // Configuración de red por defecto
+      defaultNetwork: 'arbitrum'
+    }
   },
   // Configuración para modal más compacto
   modal: {
