@@ -1,0 +1,240 @@
+/* ============================================
+   REOWN WALLET CONNECT STYLES - TICKETSAFER
+   ============================================ */
+
+/* Contenedor del wallet connect */
+.wallet-connect-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 20px;
+}
+
+/* Botón de conexión */
+.wallet-connect-container button {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
+  border: none !important;
+  border-radius: 12px !important;
+  padding: 12px 24px !important;
+  color: white !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important;
+  backdrop-filter: blur(10px) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+.wallet-connect-container button:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4) !important;
+}
+
+.wallet-connect-container button:active {
+  transform: translateY(0) !important;
+}
+
+/* Estado conectado */
+.reown-wallet-connected {
+  background: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 16px !important;
+  padding: 12px 16px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  transition: all 0.3s ease !important;
+}
+
+.reown-wallet-connected:hover {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-color: rgba(102, 126, 234, 0.3) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Avatar del usuario */
+.reown-wallet-connected > div:first-child {
+  width: 40px !important;
+  height: 40px !important;
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
+  border-radius: 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: white !important;
+  font-size: 18px !important;
+  flex-shrink: 0 !important;
+}
+
+/* Información del wallet */
+.reown-wallet-connected > div:nth-child(2) {
+  flex: 1 !important;
+  min-width: 0 !important;
+}
+
+.reown-wallet-connected > div:nth-child(2) > div:first-child {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #ffffff !important;
+  margin-bottom: 2px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.reown-wallet-connected > div:nth-child(2) > div:last-child {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  font-size: 12px !important;
+  color: #94a3b8 !important;
+}
+
+/* Indicador de red */
+.reown-wallet-connected > div:nth-child(2) > div:last-child > span {
+  width: 8px !important;
+  height: 8px !important;
+  border-radius: 50% !important;
+  animation: pulse 2s infinite !important;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Botones de acción */
+.reown-wallet-connected > div:last-child {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.reown-wallet-connected > div:last-child > button {
+  width: 32px !important;
+  height: 32px !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #ffffff !important;
+  cursor: pointer !important;
+  font-size: 12px !important;
+  transition: all 0.2s ease !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+.reown-wallet-connected > div:last-child > button:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .wallet-connect-container {
+    margin-left: 0 !important;
+    margin-top: 16px !important;
+    width: 100% !important;
+  }
+  
+  .reown-wallet-connected {
+    width: 100% !important;
+    justify-content: space-between !important;
+  }
+  
+  .reown-wallet-connected > div:nth-child(2) {
+    flex: 1 !important;
+    margin: 0 12px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .wallet-connect-container button {
+    padding: 10px 20px !important;
+    font-size: 13px !important;
+  }
+  
+  .reown-wallet-connected {
+    padding: 10px 12px !important;
+  }
+  
+  .reown-wallet-connected > div:first-child {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 16px !important;
+  }
+  
+  .reown-wallet-connected > div:last-child > button {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 11px !important;
+  }
+}
+
+/* Integración con navbar neural */
+.neural-nav .wallet-connect-container {
+  margin-left: auto !important;
+}
+
+@media (max-width: 768px) {
+  .neural-nav .wallet-connect-container {
+    margin-left: 0 !important;
+    margin-top: 20px !important;
+    order: 3 !important;
+  }
+}
+
+/* Animaciones de entrada */
+.reown-wallet-connected {
+  animation: walletSlideIn 0.3s ease-out !important;
+}
+
+@keyframes walletSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Efectos de hover mejorados */
+.wallet-connect-container button:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%) !important;
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.5) !important;
+}
+
+.reown-wallet-connected:hover {
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Estados de carga */
+.wallet-connect-container button:disabled {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+}
+
+/* Integración con tema neural */
+.wallet-connect-container button {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+}
+
+.reown-wallet-connected {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+} 

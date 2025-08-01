@@ -47,6 +47,7 @@ import './styles/docs.css'
 import './styles/help.css'
 import './styles/legal.css'
 import './styles/blockchain-pages.css'
+import './styles/wallet-connect.css'
 
 // Estilos críticos para sobrescribir conflictos
 const criticalStyles = `

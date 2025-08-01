@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
   FaTicketAlt, 
-  FaChartLine, 
+  FaCalendarAlt, 
   FaUsers, 
   FaQuestionCircle, 
-  FaCalendarAlt, 
+  FaChartLine,
+  FaBars,
+  FaTimes,
   FaChevronDown, 
   FaRoad, 
   FaPlus,
   FaQrcode 
 } from 'react-icons/fa';
+import WalletConnect from './WalletConnect';
 
 
 const menuItems = [
@@ -285,6 +288,9 @@ const NeuralMenu = () => {
           <nav className={`neural-nav ${isMobileMenuOpen ? 'active' : ''}`}>
             <div className="nav-links">
               {menuItems.map(renderMenuItem)}
+            </div>
+            <div className="wallet-connect-container">
+              <WalletConnect />
             </div>
           </nav>
         </div>
