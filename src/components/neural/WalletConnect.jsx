@@ -52,7 +52,7 @@ const WalletConnect = () => {
   // Función para abrir en explorador
   const openInExplorer = () => {
     if (address && chain) {
-      const explorerUrl = chain.blockExplorers?.default?.url || 'https://etherscan.io';
+      const explorerUrl = chain.blockExplorers?.default?.url || 'https://sepolia.etherscan.io';
       window.open(`${explorerUrl}/address/${address}`, '_blank');
     }
   };
@@ -74,12 +74,12 @@ const WalletConnect = () => {
     if (!chain) return '#6b7280';
     
     switch (chain.id) {
-      case 1: return '#627eea'; // Ethereum blue
-      case 137: return '#8247e5'; // Polygon purple
-      case 42161: return '#28a0f0'; // Arbitrum blue
-      case 10: return '#ff0420'; // Optimism red
-      case 8453: return '#0052ff'; // Base blue
-      case 534352: return '#ff6b35'; // Scroll orange
+      case 11155111: return '#627eea'; // Sepolia blue
+      case 80001: return '#8247e5'; // Polygon Amoy purple
+      case 421614: return '#28a0f0'; // Arbitrum Sepolia blue
+      case 11155420: return '#ff0420'; // Optimism Sepolia red
+      case 84532: return '#0052ff'; // Base Sepolia blue
+      case 534351: return '#ff6b35'; // Scroll Sepolia orange
       default: return '#6b7280'; // Gray
     }
   };
@@ -94,14 +94,14 @@ const WalletConnect = () => {
     }
   };
 
-  // Información de redes soportadas
+  // Información de redes soportadas - TESTNETS
   const supportedNetworks = [
-    { name: 'Arbitrum One', color: '#28a0f0', description: 'L2 Económico (Por defecto)' },
-    { name: 'Polygon', color: '#8247e5', description: 'L2 Escalable' },
-    { name: 'Optimism', color: '#ff0420', description: 'L2 Rápido' },
-    { name: 'Base', color: '#0052ff', description: 'L2 de Coinbase' },
-    { name: 'Scroll', color: '#ff6b35', description: 'L2 ZK-Rollup' },
-    { name: 'Ethereum', color: '#627eea', description: 'Red Principal' }
+    { name: 'Arbitrum Sepolia', color: '#28a0f0', description: 'L2 Económico (Por defecto) - TESTNET' },
+    { name: 'Polygon Amoy', color: '#8247e5', description: 'L2 Escalable - TESTNET' },
+    { name: 'Optimism Sepolia', color: '#ff0420', description: 'L2 Rápido - TESTNET' },
+    { name: 'Base Sepolia', color: '#0052ff', description: 'L2 de Coinbase - TESTNET' },
+    { name: 'Scroll Sepolia', color: '#ff6b35', description: 'L2 ZK-Rollup - TESTNET' },
+    { name: 'Sepolia', color: '#627eea', description: 'Red Principal - TESTNET' }
   ];
 
   if (isConnected && address) {
@@ -306,7 +306,7 @@ const WalletConnect = () => {
             }}
           >
             <div style={{ fontWeight: '600', marginBottom: '8px' }}>
-              🌐 Redes Disponibles (Wallet Social):
+              🌐 Redes Disponibles (Wallet Social) - TESTNETS:
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
               {supportedNetworks.map((network, index) => (

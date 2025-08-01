@@ -1,7 +1,7 @@
 import React from 'react';
 import { createAppKit } from '@reown/appkit/react';
 import { WagmiProvider } from 'wagmi';
-import { arbitrum, mainnet, base, scroll, polygon, optimism } from '@reown/appkit/networks';
+import { arbitrumSepolia, sepolia, baseSepolia, scrollSepolia, polygonAmoy, optimismSepolia } from '@reown/appkit/networks';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
 
@@ -21,14 +21,14 @@ const projectId = '8505f6eaaa44b34387416821007c224f';
 // Create metadata object
 const metadata = {
   name: 'TicketSafer',
-  description: 'Plataforma multichain de tickets NFT - Wallets sociales automáticas',
+  description: 'Plataforma multichain de tickets NFT - Wallets sociales automáticas (TESTNET)',
   url: 'https://ticketsafer.com',
   icons: ['https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=64&h=64&fit=crop&auto=format&q=80']
 };
 
-// Set networks - TicketSafer soporta múltiples redes
-// Orden de prioridad: Arbitrum (L2 económico) -> Polygon -> Optimism -> Base -> Scroll -> Ethereum
-const networks = [arbitrum, polygon, optimism, base, scroll, mainnet];
+// Set networks - TicketSafer soporta múltiples redes TESTNET
+// Orden de prioridad: Arbitrum Sepolia (L2 económico) -> Polygon Amoy -> Optimism Sepolia -> Base Sepolia -> Scroll Sepolia -> Sepolia
+const networks = [arbitrumSepolia, polygonAmoy, optimismSepolia, baseSepolia, scrollSepolia, sepolia];
 
 // Create Wagmi Adapter con configuración mejorada para wallets sociales
 const wagmiAdapter = new WagmiAdapter({
@@ -65,8 +65,8 @@ const wagmiAdapter = new WagmiAdapter({
       'walletConnect',
       'coinbase'
     ],
-    // Configuración de red por defecto
-    defaultChain: arbitrum, // Arbitrum como red por defecto
+    // Configuración de red por defecto - ARBITRUM SEPOLIA
+    defaultChain: arbitrumSepolia, // Arbitrum Sepolia como red por defecto
     // Configuración de redes soportadas
     supportedChains: networks
   }
@@ -85,10 +85,10 @@ createAppKit({
     // Configuración para wallets sociales
     socialWallets: {
       enabled: true,
-      // Redes donde se crearán las wallets sociales (en orden de prioridad)
-      supportedNetworks: ['arbitrum', 'polygon', 'optimism', 'base', 'scroll', 'ethereum'],
-      // Red por defecto para wallets sociales
-      defaultNetwork: 'arbitrum',
+      // Redes donde se crearán las wallets sociales (en orden de prioridad) - TESTNETS
+      supportedNetworks: ['arbitrum-sepolia', 'polygon-amoy', 'optimism-sepolia', 'base-sepolia', 'scroll-sepolia', 'sepolia'],
+      // Red por defecto para wallets sociales - ARBITRUM SEPOLIA
+      defaultNetwork: 'arbitrum-sepolia',
       // Configuración de recuperación
       recoveryOptions: {
         email: true,
