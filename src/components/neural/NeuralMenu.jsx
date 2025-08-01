@@ -12,7 +12,7 @@ import {
   FaPlus,
   FaQrcode 
 } from 'react-icons/fa';
-import SimpleDynamicButton from './SimpleDynamicButton';
+
 
 const menuItems = [
   {
@@ -286,7 +286,6 @@ const NeuralMenu = () => {
             <div className="nav-links">
               {menuItems.map(renderMenuItem)}
             </div>
-            <SimpleDynamicButton />
           </nav>
         </div>
       </div>
