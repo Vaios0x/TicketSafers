@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { FaWallet, FaUser, FaSignOutAlt, FaCopy, FaExternalLinkAlt, FaNetworkWired } from 'react-icons/fa';
+import { FaWallet, FaUser, FaSignOutAlt, FaCopy, FaExternalLinkAlt, FaNetworkWired, FaExclamationTriangle, FaSync } from 'react-icons/fa';
 import { useAccount, useDisconnect } from 'wagmi';
 import { useAppKit } from '@reown/appkit/react';
 
@@ -8,6 +8,32 @@ const WalletConnect = () => {
   const { address, isConnected, chain } = useAccount();
   const { disconnect } = useDisconnect();
   const { open } = useAppKit();
+  const [isConnecting, setIsConnecting] = useState(false);
+  const [error, setError] = useState(null);
+
+  // Función para manejar la conexión con mejor UX
+  const handleConnect = async () => {
+    try {
+      setIsConnecting(true);
+      setError(null);
+      
+      // Limpiar cualquier error anterior
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      // Intentar abrir el modal
+      open();
+      
+      // Resetear estado después de un tiempo
+      setTimeout(() => {
+        setIsConnecting(false);
+      }, 3000);
+      
+    } catch (err) {
+      console.error('❌ Error al conectar wallet:', err);
+      setError('Error al conectar. Intenta de nuevo.');
+      setIsConnecting(false);
+    }
+  };
 
   // Función para copiar dirección
   const copyAddress = async () => {
@@ -42,24 +68,29 @@ const WalletConnect = () => {
     return chain.name;
   };
 
-  // Obtener color de la red - Solo las redes que soportamos
+  // Obtener color de la red
   const getNetworkColor = () => {
     if (!chain) return '#6b7280';
     
     switch (chain.id) {
-      case 42161: return '#28a0f0'; // Arbitrum blue
-      case 8453: return '#0052ff'; // Base blue
-      case 10: return '#ff0420'; // Optimism red
+      case 1: return '#627eea'; // Ethereum blue
       case 137: return '#8247e5'; // Polygon purple
-      default: return '#6b7280'; // Gray para redes no soportadas
+      case 42161: return '#28a0f0'; // Arbitrum blue
+      case 10: return '#ff0420'; // Optimism red
+      case 8453: return '#0052ff'; // Base blue
+      case 534352: return '#ff6b35'; // Scroll orange
+      default: return '#6b7280'; // Gray
     }
   };
 
-  // Verificar si la red está soportada
-  const isSupportedNetwork = () => {
-    if (!chain) return false;
-    const supportedChainIds = [42161, 8453, 10, 137]; // Arbitrum, Base, Optimism, Polygon
-    return supportedChainIds.includes(chain.id);
+  // Función para desconectar
+  const handleDisconnect = () => {
+    try {
+      disconnect();
+      setError(null);
+    } catch (err) {
+      console.error('❌ Error al desconectar:', err);
+    }
   };
 
   if (isConnected && address) {
@@ -109,7 +140,7 @@ const WalletConnect = () => {
             alignItems: 'center',
             gap: '6px',
             fontSize: '12px',
-            color: isSupportedNetwork() ? '#94a3b8' : '#ef4444'
+            color: '#94a3b8'
           }}>
             <span style={{
               width: '8px',
@@ -119,11 +150,6 @@ const WalletConnect = () => {
               animation: 'pulse 2s infinite'
             }}></span>
             {getNetworkName()}
-            {!isSupportedNetwork() && (
-              <span style={{ color: '#ef4444', fontSize: '10px' }}>
-                (No soportada)
-              </span>
-            )}
           </div>
         </div>
         
@@ -187,7 +213,7 @@ const WalletConnect = () => {
           </button>
           
           <button 
-            onClick={() => disconnect()}
+            onClick={handleDisconnect}
             style={{
               width: '32px',
               height: '32px',
@@ -220,35 +246,71 @@ const WalletConnect = () => {
   }
 
   return (
-    <motion.button 
-      onClick={open}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '10px',
-        background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
-        border: 'none',
-        borderRadius: '12px',
-        padding: '12px 24px',
-        color: 'white',
-        fontWeight: '700',
-        fontSize: '14px',
-        textTransform: 'uppercase',
-        letterSpacing: '0.5px',
-        cursor: 'pointer',
-        transition: 'all 0.3s ease',
-        boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)',
-        backdropFilter: 'blur(10px)'
-      }}
-      whileHover={{ 
-        scale: 1.02,
-        boxShadow: '0 6px 20px rgba(59, 130, 246, 0.4)'
-      }}
-      whileTap={{ scale: 0.98 }}
-    >
-      <FaWallet style={{ fontSize: '16px' }} />
-      <span>Conectar Wallet</span>
-    </motion.button>
+    <motion.div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+      {error && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          style={{
+            background: 'rgba(239, 68, 68, 0.1)',
+            border: '1px solid rgba(239, 68, 68, 0.3)',
+            borderRadius: '8px',
+            padding: '8px 12px',
+            fontSize: '12px',
+            color: '#fca5a5',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px'
+          }}
+        >
+          <FaExclamationTriangle />
+          {error}
+        </motion.div>
+      )}
+      
+      <motion.button 
+        onClick={handleConnect}
+        disabled={isConnecting}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+          background: isConnecting 
+            ? 'linear-gradient(135deg, #6b7280 0%, #4b5563 100%)'
+            : 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
+          border: 'none',
+          borderRadius: '12px',
+          padding: '12px 24px',
+          color: 'white',
+          fontWeight: '700',
+          fontSize: '14px',
+          textTransform: 'uppercase',
+          letterSpacing: '0.5px',
+          cursor: isConnecting ? 'not-allowed' : 'pointer',
+          transition: 'all 0.3s ease',
+          boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)',
+          backdropFilter: 'blur(10px)',
+          opacity: isConnecting ? 0.7 : 1
+        }}
+        whileHover={!isConnecting ? { 
+          scale: 1.02,
+          boxShadow: '0 6px 20px rgba(59, 130, 246, 0.4)'
+        } : {}}
+        whileTap={!isConnecting ? { scale: 0.98 } : {}}
+      >
+        {isConnecting ? (
+          <>
+            <FaSync style={{ fontSize: '16px', animation: 'spin 1s linear infinite' }} />
+            <span>Conectando...</span>
+          </>
+        ) : (
+          <>
+            <FaWallet style={{ fontSize: '16px' }} />
+            <span>Conectar Wallet</span>
+          </>
+        )}
+      </motion.button>
+    </motion.div>
   );
 };
 
