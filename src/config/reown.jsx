@@ -36,7 +36,7 @@ const wagmiAdapter = new WagmiAdapter({
   ssr: true
 });
 
-// Create modal
+// Create modal with compact configuration
 createAppKit({
   adapters: [wagmiAdapter],
   networks,
@@ -46,6 +46,24 @@ createAppKit({
     analytics: true,
     smartAccounts: false, // Deshabilitado por ahora
     embeddedWallets: false // Deshabilitado por ahora
+  },
+  // Configuración para modal más compacto
+  modal: {
+    size: 'compact', // Modal más pequeño
+    maxHeight: '80vh', // Altura máxima del 80% de la ventana
+    maxWidth: '400px', // Ancho máximo más pequeño
+    responsive: {
+      mobile: {
+        maxHeight: '90vh',
+        maxWidth: '95vw',
+        padding: '16px'
+      },
+      tablet: {
+        maxHeight: '85vh',
+        maxWidth: '500px',
+        padding: '20px'
+      }
+    }
   }
 });
 
