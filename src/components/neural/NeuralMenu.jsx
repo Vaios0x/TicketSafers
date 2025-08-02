@@ -170,16 +170,19 @@ const NeuralMenu = () => {
             />
           </button>
           
-          <div
+          <motion.div
             className="submenu"
-            style={{
+            initial={false}
+            animate={{
               height: activeSubmenu === item.title ? 'auto' : 0,
-              opacity: activeSubmenu === item.title ? 1 : 0,
+              opacity: activeSubmenu === item.title ? 1 : 0
+            }}
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            style={{
               overflow: 'hidden',
               background: 'rgba(255, 255, 255, 0.05)',
               borderRadius: '12px',
-              marginTop: '8px',
-              transition: 'none' // Quitar transición
+              marginTop: '8px'
             }}
           >
             {item.submenu.map((subItem) => (
@@ -211,7 +214,7 @@ const NeuralMenu = () => {
                 <span className="submenu-text">{subItem.title}</span>
               </Link>
             ))}
-          </div>
+          </motion.div>
           
           <div className="menu-tooltip">
             <span>{item.description}</span>
@@ -221,9 +224,11 @@ const NeuralMenu = () => {
     }
 
     return (
-      <div
+      <motion.div
         key={item.path}
         className={`menu-item ${item.highlight ? 'highlight' : ''}`}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
       >
         <Link
           to={item.path}
@@ -236,15 +241,22 @@ const NeuralMenu = () => {
           <span className="nav-icon">{item.icon}</span>
           <span className="nav-text">{item.title}</span>
           {activeItem === item.path && (
-            <div
+            <motion.div
               className="nav-indicator"
+              layoutId="indicator"
+              initial={false}
+              transition={{
+                type: "spring",
+                stiffness: 500,
+                damping: 30
+              }}
             />
           )}
         </Link>
         <div className="menu-tooltip">
           <span>{item.description}</span>
         </div>
-      </div>
+      </motion.div>
     );
   };
 

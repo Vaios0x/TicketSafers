@@ -1,33 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { FaWallet, FaUser, FaSignOutAlt, FaCopy, FaExternalLinkAlt, FaNetworkWired, FaChevronDown, FaExchangeAlt } from 'react-icons/fa';
 import { useAccount, useDisconnect, useBalance, useSwitchChain } from 'wagmi';
+import { getNetworkInfo, TESTNET_CONFIG } from '../../config/testnet-config';
 import { useReownModal } from '../../hooks/useReownModal';
 import { applyAllModalStyles } from '../../utils/modalPositionFix';
-import { TESTNET_CONFIG, getNetworkInfo } from '../../config/testnet-config';
-import { FaExchangeAlt, FaCopy, FaExternalLinkAlt, FaWallet, FaUser, FaSignOutAlt } from 'react-icons/fa';
-import '../../styles/wallet-connect.css';
-
-// Hook para detectar el tamaño de pantalla
-const useWindowSize = () => {
-  const [windowSize, setWindowSize] = useState({
-    width: typeof window !== 'undefined' ? window.innerWidth : 1024,
-    height: typeof window !== 'undefined' ? window.innerHeight : 768,
-  });
-
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowSize({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  return windowSize;
-};
 
 const WalletConnect = () => {
   const { address, isConnected, chain } = useAccount();
@@ -35,43 +12,18 @@ const WalletConnect = () => {
   const { data: balance } = useBalance({
     address,
   });
-  const { switchChain, isPending: isSwitchingNetwork } = useSwitchChain();
+  const { switchChain } = useSwitchChain();
   const { open } = useReownModal();
   const [isConnecting, setIsConnecting] = useState(false);
   const [connectionError, setConnectionError] = useState(null);
   const [showNetworkSelector, setShowNetworkSelector] = useState(false);
-  const networkSelectorRef = useRef(null);
-  const { width: windowWidth } = useWindowSize();
-  const isMobile = windowWidth <= 768;
+  const [isSwitchingNetwork, setIsSwitchingNetwork] = useState(false);
 
   // Aplicar estilos del modal cuando el componente se monta
   useEffect(() => {
-    applyAllModalStyles();
+    const cleanup = applyAllModalStyles();
+    return cleanup;
   }, []);
-
-  // Manejar posicionamiento del dropdown para evitar desbordamientos
-  useEffect(() => {
-    if (showNetworkSelector && networkSelectorRef.current && !isMobile) {
-      const dropdown = networkSelectorRef.current;
-      const rect = dropdown.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
-      const viewportWidth = window.innerWidth;
-      
-      // Si el dropdown se sale por abajo
-      if (rect.bottom > viewportHeight - 20) {
-        dropdown.style.top = 'auto';
-        dropdown.style.bottom = '100%';
-        dropdown.style.marginTop = '0';
-        dropdown.style.marginBottom = '8px';
-      }
-      
-      // Si el dropdown se sale por la derecha
-      if (rect.right > viewportWidth - 20) {
-        dropdown.style.right = 'auto';
-        dropdown.style.left = '0';
-      }
-    }
-  }, [showNetworkSelector, isMobile]);
 
   // Cerrar selector de red cuando se hace clic fuera
   useEffect(() => {
@@ -166,7 +118,7 @@ const WalletConnect = () => {
   const handleNetworkSwitch = async (chainId) => {
     if (isSwitchingNetwork) return;
     
-    // setIsSwitchingNetwork(true); // This line is removed as per the new_code
+    setIsSwitchingNetwork(true);
     try {
       await switchChain({ chainId });
       setShowNetworkSelector(false);
@@ -174,7 +126,7 @@ const WalletConnect = () => {
     } catch (error) {
       console.error('❌ Error al cambiar red:', error);
     } finally {
-      // setIsSwitchingNetwork(false); // This line is removed as per the new_code
+      setIsSwitchingNetwork(false);
     }
   };
 
@@ -237,7 +189,6 @@ const WalletConnect = () => {
           }}>
             {formatAddress(address)}
           </div>
-          
           <div style={{
             display: 'flex',
             alignItems: 'center',
@@ -295,204 +246,91 @@ const WalletConnect = () => {
             
             {/* Dropdown del selector de red */}
             {showNetworkSelector && (
-              <>
-                {/* Backdrop solo para móviles */}
-                {isMobile && (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    style={{
-                      position: 'fixed',
-                      top: 0,
-                      left: 0,
-                      width: '100vw',
-                      height: '100vh',
-                      background: 'rgba(0, 0, 0, 0.6)',
-                      backdropFilter: 'blur(8px)',
-                      zIndex: 9999
-                    }}
-                    onClick={() => setShowNetworkSelector(false)}
-                  />
-                )}
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                style={{
+                  position: 'absolute',
+                  top: '100%',
+                  right: '0',
+                  marginTop: '8px',
+                  background: 'rgba(15, 23, 42, 0.95)',
+                  border: '1px solid rgba(59, 130, 246, 0.2)',
+                  borderRadius: '12px',
+                  padding: '8px',
+                  minWidth: '200px',
+                  backdropFilter: 'blur(20px)',
+                  boxShadow: '0 10px 25px rgba(0, 0, 0, 0.3)',
+                  zIndex: 1000
+                }}
+              >
+                <div style={{
+                  fontSize: '12px',
+                  color: '#94a3b8',
+                  padding: '8px 12px',
+                  borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+                  marginBottom: '8px'
+                }}>
+                  Seleccionar Red
+                </div>
                 
-                <motion.div
-                  ref={networkSelectorRef}
-                  initial={{ opacity: 0, scale: 0.9, y: isMobile ? -20 : -10 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.9, y: isMobile ? -20 : -10 }}
-                  style={{
-                    position: isMobile ? 'fixed' : 'absolute',
-                    top: isMobile ? '50%' : '100%',
-                    left: isMobile ? '50%' : 'auto',
-                    right: isMobile ? 'auto' : '0',
-                    transform: isMobile ? 'translate(-50%, -50%)' : 'none',
-                    marginTop: isMobile ? '0' : '8px',
-                    background: 'rgba(15, 23, 42, 0.98)',
-                    border: '1px solid rgba(59, 130, 246, 0.3)',
-                    borderRadius: '16px',
-                    padding: isMobile ? '16px' : '12px',
-                    width: isMobile ? 'calc(90vw - 32px)' : 'auto',
-                    minWidth: isMobile ? 'auto' : '240px',
-                    maxWidth: isMobile ? '320px' : 'none',
-                    maxHeight: isMobile ? 'calc(80vh - 32px)' : 'none',
-                    overflowY: isMobile ? 'auto' : 'visible',
-                    backdropFilter: 'blur(20px)',
-                    boxShadow: '0 20px 40px rgba(0, 0, 0, 0.4)',
-                    zIndex: isMobile ? 10000 : 1000,
-                    // Prevenir desbordamiento
-                    boxSizing: 'border-box',
-                    // Asegurar que no se salga de la pantalla
-                    ...(isMobile ? {} : {
-                      maxHeight: 'calc(100vh - 100px)',
-                      overflowY: 'auto'
-                    })
-                  }}
-                >
-                  {/* Header solo para móviles */}
-                  {isMobile && (
-                    <div style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      marginBottom: '16px',
-                      paddingBottom: '12px',
-                      borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
-                    }}>
-                      <h3 style={{
-                        fontSize: '16px',
-                        fontWeight: '600',
-                        color: '#ffffff',
-                        margin: 0
-                      }}>
-                        Seleccionar Red
-                      </h3>
-                      <button
-                        onClick={() => setShowNetworkSelector(false)}
-                        style={{
-                          background: 'none',
-                          border: 'none',
-                          color: '#94a3b8',
-                          fontSize: '18px',
-                          cursor: 'pointer',
-                          padding: '4px',
-                          borderRadius: '4px',
-                          transition: 'all 0.2s ease'
-                        }}
-                        onMouseEnter={(e) => {
-                          e.target.style.color = '#ffffff';
+                {TESTNET_CONFIG.supportedNetworks.map((network) => {
+                  const isCurrentNetwork = network.id === chain?.id;
+                  return (
+                    <button
+                      key={network.id}
+                      onClick={() => handleNetworkSwitch(network.id)}
+                      disabled={isSwitchingNetwork || isCurrentNetwork}
+                      style={{
+                        width: '100%',
+                        padding: '8px 12px',
+                        background: isCurrentNetwork ? 'rgba(59, 130, 246, 0.2)' : 'transparent',
+                        border: 'none',
+                        borderRadius: '8px',
+                        color: isCurrentNetwork ? '#3b82f6' : '#ffffff',
+                        fontSize: '12px',
+                        cursor: isCurrentNetwork ? 'default' : 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        transition: 'all 0.2s ease',
+                        opacity: isSwitchingNetwork ? 0.5 : 1
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!isCurrentNetwork && !isSwitchingNetwork) {
                           e.target.style.background = 'rgba(255, 255, 255, 0.1)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.target.style.color = '#94a3b8';
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!isCurrentNetwork) {
                           e.target.style.background = 'transparent';
-                        }}
-                      >
-                        ×
-                      </button>
-                    </div>
-                  )}
-                  
-                  <div style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: isMobile ? '8px' : '4px'
-                  }}>
-                    {TESTNET_CONFIG.supportedNetworks.map((network) => {
-                      const isCurrentNetwork = network.id === chain?.id;
-                      return (
-                        <button
-                          key={network.id}
-                          onClick={() => handleNetworkSwitch(network.id)}
-                          disabled={isSwitchingNetwork || isCurrentNetwork}
-                          style={{
-                            width: '100%',
-                            padding: isMobile ? '12px 16px' : '8px 12px',
-                            background: isCurrentNetwork ? 'rgba(59, 130, 246, 0.2)' : 'rgba(255, 255, 255, 0.05)',
-                            border: isCurrentNetwork ? '1px solid rgba(59, 130, 246, 0.4)' : '1px solid rgba(255, 255, 255, 0.1)',
-                            borderRadius: isMobile ? '12px' : '8px',
-                            color: isCurrentNetwork ? '#3b82f6' : '#ffffff',
-                            fontSize: isMobile ? '14px' : '12px',
-                            fontWeight: '500',
-                            cursor: isCurrentNetwork ? 'default' : 'pointer',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: isMobile ? '12px' : '8px',
-                            transition: 'all 0.2s ease',
-                            opacity: isSwitchingNetwork ? 0.5 : 1
-                          }}
-                          onMouseEnter={(e) => {
-                            if (!isCurrentNetwork && !isSwitchingNetwork) {
-                              e.target.style.background = 'rgba(255, 255, 255, 0.1)';
-                              e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-                            }
-                          }}
-                          onMouseLeave={(e) => {
-                            if (!isCurrentNetwork) {
-                              e.target.style.background = 'rgba(255, 255, 255, 0.05)';
-                              e.target.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-                            }
-                          }}
-                        >
-                          <div style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: isMobile ? '12px' : '8px',
-                            flex: 1
-                          }}>
-                            <span style={{
-                              width: isMobile ? '12px' : '8px',
-                              height: isMobile ? '12px' : '8px',
-                              background: network.color,
-                              borderRadius: '50%',
-                              boxShadow: isMobile ? `0 0 8px ${network.color}40` : 'none'
-                            }}></span>
-                            <div style={{
-                              display: 'flex',
-                              flexDirection: isMobile ? 'column' : 'row',
-                              alignItems: isMobile ? 'flex-start' : 'center',
-                              gap: isMobile ? '0' : '8px'
-                            }}>
-                              <span style={{
-                                fontSize: isMobile ? '14px' : '12px',
-                                fontWeight: '600'
-                              }}>
-                                {network.shortName}
-                              </span>
-                              {isMobile && (
-                                <span style={{
-                                  fontSize: '11px',
-                                  color: '#94a3b8',
-                                  marginTop: '2px'
-                                }}>
-                                  {network.description}
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                          {isCurrentNetwork && (
-                            <span style={{
-                              fontSize: isMobile ? '16px' : '12px',
-                              color: '#3b82f6',
-                              fontWeight: 'bold'
-                            }}>
-                              ✓
-                            </span>
-                          )}
-                          {isSwitchingNetwork && network.id === chain?.id && (
-                            <span style={{
-                              fontSize: isMobile ? '14px' : '12px',
-                              color: '#3b82f6'
-                            }}>
-                              ...
-                            </span>
-                          )}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </motion.div>
-              </>
+                        }
+                      }}
+                    >
+                      <span style={{
+                        width: '8px',
+                        height: '8px',
+                        background: network.color,
+                        borderRadius: '50%'
+                      }}></span>
+                      <span style={{ flex: 1, textAlign: 'left' }}>
+                        {network.shortName}
+                      </span>
+                      {isCurrentNetwork && (
+                        <span style={{ fontSize: '10px', color: '#3b82f6' }}>
+                          ✓
+                        </span>
+                      )}
+                      {isSwitchingNetwork && network.id === chain?.id && (
+                        <span style={{ fontSize: '10px', color: '#3b82f6' }}>
+                          ...
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </motion.div>
             )}
           </div>
 

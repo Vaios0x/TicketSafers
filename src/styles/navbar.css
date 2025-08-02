@@ -8,6 +8,8 @@
   backdrop-filter: var(--neural-blur-md);
   border-bottom: var(--neural-border);
   padding: 0.5rem 0;
+  overflow-x: hidden; /* Prevenir overflow horizontal */
+  contain: layout; /* Optimizar rendimiento */
 }
 
 .neural-navbar.scrolled {
@@ -26,6 +28,8 @@
   min-height: 70px;
   width: 100%;
   box-sizing: border-box;
+  overflow-x: hidden; /* Prevenir overflow horizontal */
+  contain: layout; /* Optimizar rendimiento */
 }
 
 .neural-logo {
@@ -121,6 +125,8 @@
   transform: scaleX(0);
   transform-origin: right;
   transition: transform 0.3s var(--neural-bounce);
+  will-change: transform; /* Optimizar animación */
+  contain: layout; /* Prevenir overflow */
 }
 
 .neural-logo:hover .logo-text::after {
@@ -215,6 +221,10 @@
   backdrop-filter: var(--neural-blur-md);
   box-shadow: var(--neural-glow-blue);
   z-index: 1000;
+  will-change: transform, opacity; /* Optimizar animación */
+  contain: layout; /* Prevenir overflow */
+  max-width: 200px; /* Limitar ancho */
+  overflow: hidden; /* Prevenir overflow */
 }
 
 .menu-tooltip::before {
@@ -228,6 +238,7 @@
   background: var(--neural-bg-secondary);
   border-left: var(--neural-border);
   border-top: var(--neural-border);
+  contain: layout; /* Prevenir overflow */
 }
 
 .menu-item:hover .menu-tooltip {
@@ -252,7 +263,6 @@
   width: 24px;
   height: 2px;
   background: var(--neural-text-primary);
-  transition: none; /* Quitar transiciones */
 }
 
 /* Placeholder invisible para equilibrio visual */
@@ -385,16 +395,10 @@
     flex-direction: column;
     align-items: flex-start;
     z-index: 1000;
-    /* Quitar animaciones */
-    transform: none;
-    transition: none;
   }
 
   .neural-nav.active {
     display: flex;
-    /* Quitar animaciones */
-    transform: none;
-    transition: none;
   }
 
   .nav-links {
@@ -415,18 +419,12 @@
     margin: 0;
     font-size: 0.95rem;
     letter-spacing: 0.5px;
-    /* Quitar animaciones */
-    transition: none;
-    transform: none;
   }
 
   .nav-link:hover,
   .nav-link.active {
     background: rgba(255, 255, 255, 0.08);
     border-color: rgba(255, 255, 255, 0.1);
-    /* Quitar animaciones */
-    transition: none;
-    transform: none;
   }
 
   .nav-text {
@@ -462,9 +460,6 @@
     box-shadow: none;
     margin-top: 0.25rem;
     padding-left: 2.5rem;
-    /* Quitar animaciones */
-    transition: none;
-    transform: none;
   }
 
   .submenu::before,
@@ -533,49 +528,48 @@
     overflow-x: hidden;
   }
 
-  /* Botón de hamburguesa mejorado - SIN ANIMACIONES */
-.menu-btn {
-  width: 30px;
-  height: 30px;
-  position: relative;
-  cursor: pointer;
-  z-index: 1001;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+  /* Botón de hamburguesa mejorado */
+  .menu-btn {
+    width: 30px;
+    height: 30px;
+    position: relative;
+    cursor: pointer;
+    z-index: 1001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-.menu-btn span,
-.menu-btn span::before,
-.menu-btn span::after {
-  content: '';
-  display: block;
-  width: 24px;
-  height: 2px;
-  background: var(--neural-text-primary);
-  position: absolute;
-  transition: none; /* Quitar todas las transiciones */
-}
+  .menu-btn span,
+  .menu-btn span::before,
+  .menu-btn span::after {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--neural-text-primary);
+    position: absolute;
+  }
 
-.menu-btn span::before {
-  transform: translateY(-8px);
-}
+  .menu-btn span::before {
+    transform: translateY(-8px);
+  }
 
-.menu-btn span::after {
-  transform: translateY(8px);
-}
+  .menu-btn span::after {
+    transform: translateY(8px);
+  }
 
-.menu-btn.active span {
-  background: transparent;
-}
+  .menu-btn.active span {
+    background: transparent;
+  }
 
-.menu-btn.active span::before {
-  transform: rotate(45deg);
-}
+  .menu-btn.active span::before {
+    transform: rotate(45deg);
+  }
 
-.menu-btn.active span::after {
-  transform: rotate(-45deg);
-}
+  .menu-btn.active span::after {
+    transform: rotate(-45deg);
+  }
 }
 
 /* Wallet Button Styles */
@@ -755,12 +749,14 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
   overflow: visible;
   z-index: 10001;
+  will-change: transform; /* Optimizar animación */
+  contain: layout; /* Prevenir overflow */
+  max-width: 280px; /* Limitar ancho máximo */
 }
 
 .submenu-visible {
+  /* Sin cambios para mantener funcionalidad */
 }
-
-
 
 .submenu::before {
   content: '';
@@ -773,6 +769,7 @@
   border-left: 8px solid transparent;
   border-right: 8px solid transparent;
   border-bottom: 8px solid rgba(102, 126, 234, 0.3);
+  contain: layout; /* Prevenir overflow */
 }
 
 .submenu::after {
@@ -786,6 +783,7 @@
   border-left: 7px solid transparent;
   border-right: 7px solid transparent;
   border-bottom: 7px solid rgba(10, 11, 30, 0.95);
+  contain: layout; /* Prevenir overflow */
 }
 
 .submenu-link {
@@ -906,7 +904,7 @@
 
 /* Animación especial para el ícono de crear evento */
 .menu-item.highlight .nav-icon {
-  /* animation: createEventGlow 2s infinite; */ /* QUITADA - Causaba problemas */
+  animation: createEventGlow 2s infinite;
 }
 
 

@@ -7,6 +7,8 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  overflow-x: hidden; /* Prevenir overflow horizontal */
+  contain: layout; /* Optimizar rendimiento */
 }
 
 /* Botón de conexión principal */
@@ -27,6 +29,8 @@
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
   backdrop-filter: blur(10px);
+  will-change: transform; /* Optimizar animación */
+  contain: layout; /* Prevenir overflow */
 }
 
 .wallet-connect-btn:hover {
@@ -306,16 +310,18 @@
 @keyframes walletSlideIn {
   from {
     opacity: 0;
-    transform: translateX(20px);
+    transform: translateY(20px); /* Cambiado de translateX a translateY */
   }
   to {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateY(0); /* Cambiado de translateX a translateY */
   }
 }
 
 .wallet-connected {
   animation: walletSlideIn 0.3s ease-out;
+  will-change: transform, opacity; /* Optimizar animación */
+  contain: layout; /* Prevenir overflow */
 }
 
 /* Efectos de hover mejorados */
@@ -449,7 +455,7 @@
 } 
 
 /* ============================================
-   NETWORK SELECTOR STYLES - TRULY RESPONSIVE
+   NETWORK SELECTOR STYLES
    ============================================ */
 
 .network-selector {
@@ -464,126 +470,47 @@
   transform: translateY(-1px);
 }
 
-/* Dropdown del selector de red - DESKTOP FIRST */
+/* Dropdown del selector de red */
 .network-selector-dropdown {
   position: absolute;
   top: 100%;
   right: 0;
   margin-top: 8px;
-  background: rgba(15, 23, 42, 0.98);
-  border: 1px solid rgba(59, 130, 246, 0.3);
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid rgba(59, 130, 246, 0.2);
   border-radius: 12px;
-  padding: 12px;
-  min-width: 240px;
-  max-width: 300px;
-  max-height: calc(100vh - 100px);
-  overflow-y: auto;
+  padding: 8px;
+  min-width: 200px;
   backdrop-filter: blur(20px);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
   z-index: 1000;
   animation: dropdownSlideIn 0.2s ease-out;
-  box-sizing: border-box;
-  /* Prevenir desbordamiento */
-  word-wrap: break-word;
-  white-space: nowrap;
-}
-
-/* Posicionamiento inteligente para evitar desbordamientos */
-.network-selector-dropdown.bottom-up {
-  top: auto;
-  bottom: 100%;
-  margin-top: 0;
-  margin-bottom: 8px;
-}
-
-.network-selector-dropdown.left-aligned {
-  right: auto;
-  left: 0;
+  will-change: transform, opacity; /* Optimizar animación */
+  contain: layout; /* Prevenir overflow */
+  max-width: 250px; /* Limitar ancho máximo */
+  overflow: hidden; /* Prevenir overflow */
 }
 
 @keyframes dropdownSlideIn {
   from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(-10px); /* Cambiado de translateX a translateY */
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0); /* Cambiado de translateX a translateY */
   }
-}
-
-/* Backdrop para móviles */
-.network-selector-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(8px);
-  z-index: 9999;
-  animation: backdropFadeIn 0.3s ease-out;
-}
-
-@keyframes backdropFadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-/* Header del selector - SOLO MOBILE */
-.network-selector-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.network-selector-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: #ffffff;
-  margin: 0;
-}
-
-.network-selector-close {
-  background: none;
-  border: none;
-  color: #94a3b8;
-  font-size: 18px;
-  cursor: pointer;
-  padding: 4px;
-  border-radius: 4px;
-  transition: all 0.2s ease;
-}
-
-.network-selector-close:hover {
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.1);
-}
-
-/* Contenedor de opciones */
-.network-options-container {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
 }
 
 /* Opciones de red */
 .network-option {
   width: 100%;
   padding: 8px 12px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: transparent;
+  border: none;
   border-radius: 8px;
   color: #ffffff;
   font-size: 12px;
-  font-weight: 500;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -593,12 +520,10 @@
 
 .network-option:hover {
   background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .network-option.current {
   background: rgba(59, 130, 246, 0.2);
-  border-color: rgba(59, 130, 246, 0.4);
   color: #3b82f6;
   cursor: default;
 }
@@ -606,14 +531,6 @@
 .network-option:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-}
-
-/* Contenido de la opción */
-.network-option-content {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex: 1;
 }
 
 /* Indicador de red */
@@ -624,152 +541,22 @@
   flex-shrink: 0;
 }
 
-/* Información de la red */
-.network-info {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 8px;
-}
-
-.network-name {
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.network-description {
-  font-size: 11px;
-  color: #94a3b8;
-  margin-top: 2px;
-}
-
-/* Indicadores de estado */
-.network-status {
-  font-size: 12px;
-  color: #3b82f6;
-  font-weight: bold;
-}
-
-.network-loading {
-  font-size: 12px;
-  color: #3b82f6;
-}
-
-/* RESPONSIVE - MOBILE */
+/* Responsive para el selector de red */
 @media (max-width: 768px) {
   .network-selector-dropdown {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    right: auto;
-    margin: 0;
-    width: 90vw;
-    max-width: 320px;
-    max-height: 80vh;
-    overflow-y: auto;
-    padding: 16px;
-    z-index: 10000;
-    animation: modalSlideIn 0.3s ease-out;
-  }
-  
-  @keyframes modalSlideIn {
-    from {
-      opacity: 0;
-      transform: translate(-50%, -60%);
-      scale: 0.9;
-    }
-    to {
-      opacity: 1;
-      transform: translate(-50%, -50%);
-      scale: 1;
-    }
-  }
-  
-  .network-options-container {
-    gap: 8px;
-  }
-  
-  .network-option {
-    padding: 12px 16px;
-    font-size: 14px;
-    gap: 12px;
-    border-radius: 12px;
-  }
-  
-  .network-option-content {
-    gap: 12px;
-  }
-  
-  .network-indicator {
-    width: 12px;
-    height: 12px;
-    box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
-  }
-  
-  .network-info {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0;
-  }
-  
-  .network-name {
-    font-size: 14px;
-  }
-  
-  .network-description {
-    font-size: 11px;
-    margin-top: 2px;
-  }
-  
-  .network-status {
-    font-size: 16px;
-  }
-  
-  .network-loading {
-    font-size: 14px;
+    min-width: 180px;
+    right: -50px;
   }
 }
 
-/* RESPONSIVE - MOBILE SMALL */
 @media (max-width: 480px) {
   .network-selector-dropdown {
-    width: 95vw;
-    max-width: 300px;
-    padding: 20px;
+    min-width: 160px;
+    right: -80px;
   }
   
   .network-option {
-    padding: 14px 16px;
-    font-size: 15px;
-  }
-  
-  .network-selector-title {
-    font-size: 18px;
-  }
-  
-  .network-name {
-    font-size: 15px;
-  }
-  
-  .network-description {
-    font-size: 12px;
-  }
-}
-
-@media (max-width: 360px) {
-  .network-selector-dropdown {
-    width: 98vw;
-    max-width: 280px;
-    padding: 16px;
-  }
-  
-  .network-option {
-    padding: 12px 14px;
-    font-size: 14px;
-  }
-  
-  .network-selector-title {
-    font-size: 16px;
+    padding: 6px 10px;
+    font-size: 11px;
   }
 } 
