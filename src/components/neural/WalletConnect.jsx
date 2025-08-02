@@ -247,91 +247,99 @@ const WalletConnect = () => {
             {/* Dropdown del selector de red */}
             {showNetworkSelector && (
               <>
-                {/* Backdrop para móviles */}
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  style={{
-                    position: 'fixed',
-                    top: 0,
-                    left: 0,
-                    width: '100vw',
-                    height: '100vh',
-                    background: 'rgba(0, 0, 0, 0.6)',
-                    backdropFilter: 'blur(8px)',
-                    zIndex: 9999
-                  }}
-                  onClick={() => setShowNetworkSelector(false)}
-                />
+                {/* Backdrop solo para móviles */}
+                {window.innerWidth <= 768 && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    style={{
+                      position: 'fixed',
+                      top: 0,
+                      left: 0,
+                      width: '100vw',
+                      height: '100vh',
+                      background: 'rgba(0, 0, 0, 0.6)',
+                      backdropFilter: 'blur(8px)',
+                      zIndex: 9999
+                    }}
+                    onClick={() => setShowNetworkSelector(false)}
+                  />
+                )}
                 
                 <motion.div
-                  initial={{ opacity: 0, scale: 0.9, y: -20 }}
+                  initial={{ opacity: 0, scale: 0.9, y: window.innerWidth <= 768 ? -20 : -10 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.9, y: -20 }}
+                  exit={{ opacity: 0, scale: 0.9, y: window.innerWidth <= 768 ? -20 : -10 }}
                   style={{
-                    position: 'fixed',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
+                    position: window.innerWidth <= 768 ? 'fixed' : 'absolute',
+                    top: window.innerWidth <= 768 ? '50%' : '100%',
+                    left: window.innerWidth <= 768 ? '50%' : 'auto',
+                    right: window.innerWidth <= 768 ? 'auto' : '0',
+                    transform: window.innerWidth <= 768 ? 'translate(-50%, -50%)' : 'none',
+                    marginTop: window.innerWidth <= 768 ? '0' : '8px',
                     background: 'rgba(15, 23, 42, 0.98)',
                     border: '1px solid rgba(59, 130, 246, 0.3)',
                     borderRadius: '16px',
-                    padding: '16px',
-                    width: '90vw',
-                    maxWidth: '320px',
-                    maxHeight: '80vh',
-                    overflowY: 'auto',
+                    padding: window.innerWidth <= 768 ? '16px' : '12px',
+                    width: window.innerWidth <= 768 ? '90vw' : 'auto',
+                    minWidth: window.innerWidth <= 768 ? 'auto' : '240px',
+                    maxWidth: window.innerWidth <= 768 ? '320px' : 'none',
+                    maxHeight: window.innerWidth <= 768 ? '80vh' : 'none',
+                    overflowY: window.innerWidth <= 768 ? 'auto' : 'visible',
                     backdropFilter: 'blur(20px)',
                     boxShadow: '0 20px 40px rgba(0, 0, 0, 0.4)',
-                    zIndex: 10000
+                    zIndex: window.innerWidth <= 768 ? 10000 : 1000
                   }}
                 >
-                  <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    marginBottom: '16px',
-                    paddingBottom: '12px',
-                    borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
-                  }}>
-                    <h3 style={{
-                      fontSize: '16px',
-                      fontWeight: '600',
-                      color: '#ffffff',
-                      margin: 0
+                  {/* Header solo para móviles */}
+                  {window.innerWidth <= 768 && (
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      marginBottom: '16px',
+                      paddingBottom: '12px',
+                      borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
                     }}>
-                      Seleccionar Red
-                    </h3>
-                    <button
-                      onClick={() => setShowNetworkSelector(false)}
-                      style={{
-                        background: 'none',
-                        border: 'none',
-                        color: '#94a3b8',
-                        fontSize: '18px',
-                        cursor: 'pointer',
-                        padding: '4px',
-                        borderRadius: '4px',
-                        transition: 'all 0.2s ease'
-                      }}
-                      onMouseEnter={(e) => {
-                        e.target.style.color = '#ffffff';
-                        e.target.style.background = 'rgba(255, 255, 255, 0.1)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.target.style.color = '#94a3b8';
-                        e.target.style.background = 'transparent';
-                      }}
-                    >
-                      ×
-                    </button>
-                  </div>
+                      <h3 style={{
+                        fontSize: '16px',
+                        fontWeight: '600',
+                        color: '#ffffff',
+                        margin: 0
+                      }}>
+                        Seleccionar Red
+                      </h3>
+                      <button
+                        onClick={() => setShowNetworkSelector(false)}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          color: '#94a3b8',
+                          fontSize: '18px',
+                          cursor: 'pointer',
+                          padding: '4px',
+                          borderRadius: '4px',
+                          transition: 'all 0.2s ease'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.target.style.color = '#ffffff';
+                          e.target.style.background = 'rgba(255, 255, 255, 0.1)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.target.style.color = '#94a3b8';
+                          e.target.style.background = 'transparent';
+                        }}
+                      >
+                        ×
+                      </button>
+                    </div>
+                  )}
                   
                   <div style={{
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: '8px'
+                    gap: window.innerWidth <= 768 ? '8px' : '4px'
                   }}>
                     {TESTNET_CONFIG.supportedNetworks.map((network) => {
                       const isCurrentNetwork = network.id === chain?.id;
@@ -342,17 +350,17 @@ const WalletConnect = () => {
                           disabled={isSwitchingNetwork || isCurrentNetwork}
                           style={{
                             width: '100%',
-                            padding: '12px 16px',
+                            padding: window.innerWidth <= 768 ? '12px 16px' : '8px 12px',
                             background: isCurrentNetwork ? 'rgba(59, 130, 246, 0.2)' : 'rgba(255, 255, 255, 0.05)',
                             border: isCurrentNetwork ? '1px solid rgba(59, 130, 246, 0.4)' : '1px solid rgba(255, 255, 255, 0.1)',
-                            borderRadius: '12px',
+                            borderRadius: window.innerWidth <= 768 ? '12px' : '8px',
                             color: isCurrentNetwork ? '#3b82f6' : '#ffffff',
-                            fontSize: '14px',
+                            fontSize: window.innerWidth <= 768 ? '14px' : '12px',
                             fontWeight: '500',
                             cursor: isCurrentNetwork ? 'default' : 'pointer',
                             display: 'flex',
                             alignItems: 'center',
-                            gap: '12px',
+                            gap: window.innerWidth <= 768 ? '12px' : '8px',
                             transition: 'all 0.2s ease',
                             opacity: isSwitchingNetwork ? 0.5 : 1
                           }}
@@ -372,39 +380,42 @@ const WalletConnect = () => {
                           <div style={{
                             display: 'flex',
                             alignItems: 'center',
-                            gap: '12px',
+                            gap: window.innerWidth <= 768 ? '12px' : '8px',
                             flex: 1
                           }}>
                             <span style={{
-                              width: '12px',
-                              height: '12px',
+                              width: window.innerWidth <= 768 ? '12px' : '8px',
+                              height: window.innerWidth <= 768 ? '12px' : '8px',
                               background: network.color,
                               borderRadius: '50%',
-                              boxShadow: `0 0 8px ${network.color}40`
+                              boxShadow: window.innerWidth <= 768 ? `0 0 8px ${network.color}40` : 'none'
                             }}></span>
                             <div style={{
                               display: 'flex',
-                              flexDirection: 'column',
-                              alignItems: 'flex-start'
+                              flexDirection: window.innerWidth <= 768 ? 'column' : 'row',
+                              alignItems: window.innerWidth <= 768 ? 'flex-start' : 'center',
+                              gap: window.innerWidth <= 768 ? '0' : '8px'
                             }}>
                               <span style={{
-                                fontSize: '14px',
+                                fontSize: window.innerWidth <= 768 ? '14px' : '12px',
                                 fontWeight: '600'
                               }}>
                                 {network.shortName}
                               </span>
-                              <span style={{
-                                fontSize: '11px',
-                                color: '#94a3b8',
-                                marginTop: '2px'
-                              }}>
-                                {network.description}
-                              </span>
+                              {window.innerWidth <= 768 && (
+                                <span style={{
+                                  fontSize: '11px',
+                                  color: '#94a3b8',
+                                  marginTop: '2px'
+                                }}>
+                                  {network.description}
+                                </span>
+                              )}
                             </div>
                           </div>
                           {isCurrentNetwork && (
                             <span style={{
-                              fontSize: '16px',
+                              fontSize: window.innerWidth <= 768 ? '16px' : '12px',
                               color: '#3b82f6',
                               fontWeight: 'bold'
                             }}>
@@ -413,7 +424,7 @@ const WalletConnect = () => {
                           )}
                           {isSwitchingNetwork && network.id === chain?.id && (
                             <span style={{
-                              fontSize: '14px',
+                              fontSize: window.innerWidth <= 768 ? '14px' : '12px',
                               color: '#3b82f6'
                             }}>
                               ...
