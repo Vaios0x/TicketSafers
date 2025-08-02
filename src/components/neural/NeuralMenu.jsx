@@ -112,6 +112,46 @@ const NeuralMenu = () => {
     };
   }, []);
 
+  // Control de overflow horizontal cuando el menú móvil está abierto
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      // Agregar clase CSS al body
+      document.body.classList.add('menu-open');
+      // Prevenir scroll horizontal y vertical en el body
+      document.body.style.overflow = 'hidden';
+      document.body.style.overflowX = 'hidden';
+      document.body.style.overflowY = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+      document.body.style.top = `-${window.scrollY}px`;
+    } else {
+      // Remover clase CSS del body
+      document.body.classList.remove('menu-open');
+      // Restaurar el estado normal del body
+      const scrollY = document.body.style.top;
+      document.body.style.overflow = '';
+      document.body.style.overflowX = '';
+      document.body.style.overflowY = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.top = '';
+      if (scrollY) {
+        window.scrollTo(0, parseInt(scrollY || '0') * -1);
+      }
+    }
+
+    // Cleanup function para limpiar el estado cuando el componente se desmonta
+    return () => {
+      document.body.classList.remove('menu-open');
+      document.body.style.overflow = '';
+      document.body.style.overflowX = '';
+      document.body.style.overflowY = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.top = '';
+    };
+  }, [isMobileMenuOpen]);
+
   useEffect(() => {
     setActiveItem(location.pathname);
   }, [location]);
