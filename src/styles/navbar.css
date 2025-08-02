@@ -1,3 +1,16 @@
+/* Prevenir overflow horizontal global */
+body {
+  overflow-x: hidden;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+html {
+  overflow-x: hidden;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .neural-navbar {
   position: fixed;
   top: 0;
@@ -8,6 +21,10 @@
   backdrop-filter: var(--neural-blur-md);
   border-bottom: var(--neural-border);
   padding: 0.5rem 0;
+  /* Prevenir overflow horizontal */
+  overflow-x: hidden;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .neural-navbar.scrolled {
@@ -26,6 +43,8 @@
   min-height: 70px;
   width: 100%;
   box-sizing: border-box;
+  /* Prevenir overflow horizontal */
+  overflow-x: hidden;
 }
 
 .neural-logo {
@@ -38,6 +57,9 @@
   flex-shrink: 0;
   min-width: 220px;
   margin-right: 1rem;
+  /* Prevenir overflow horizontal */
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .logo-icon {
@@ -137,6 +159,9 @@
   margin: 0 1.5rem;
   max-width: calc(100vw - 550px);
   overflow: visible;
+  /* Prevenir overflow horizontal */
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .nav-links {
@@ -145,6 +170,9 @@
   align-items: center;
   flex-wrap: nowrap;
   overflow: visible;
+  /* Prevenir overflow horizontal */
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .menu-item {
@@ -363,9 +391,43 @@
 }
 
 @media (max-width: 768px) {
+  /* Prevenir overflow horizontal en móviles */
+  body {
+    overflow-x: hidden !important;
+    width: 100vw;
+    max-width: 100vw;
+  }
+  
+  .neural-navbar {
+    overflow-x: hidden;
+    width: 100vw;
+    max-width: 100vw;
+  }
+  
+  .navbar-container {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
+    padding: 0.75rem 0.5rem;
+  }
+  
+  .neural-logo {
+    min-width: auto;
+    max-width: 150px;
+    overflow-x: hidden;
+  }
+  
+  .logo-text {
+    font-size: 1rem;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
   .menu-btn {
     display: block;
     z-index: 1001;
+    flex-shrink: 0;
   }
 
   .neural-nav {
@@ -388,6 +450,8 @@
     /* Quitar animaciones */
     transform: none;
     transition: none;
+    /* Prevenir overflow horizontal */
+    box-sizing: border-box;
   }
 
   .neural-nav.active {
@@ -395,6 +459,8 @@
     /* Quitar animaciones */
     transform: none;
     transition: none;
+    /* Prevenir overflow horizontal */
+    overflow-x: hidden;
   }
 
   .nav-links {
@@ -403,6 +469,9 @@
     gap: 0.5rem;
     align-items: stretch;
     padding: 0 0.5rem;
+    /* Prevenir overflow horizontal */
+    overflow-x: hidden;
+    box-sizing: border-box;
   }
 
   .nav-link {
