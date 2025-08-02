@@ -191,16 +191,24 @@ html {
   position: relative;
   white-space: nowrap;
   flex-shrink: 0;
+  /* Prevenir overflow */
+  overflow: hidden;
+  max-width: 100%;
 }
 
 .nav-icon {
   font-size: 1.2rem;
   transition: var(--neural-transition);
+  flex-shrink: 0;
 }
 
 .nav-text {
   font-weight: 500;
   font-size: 0.85rem;
+  flex-shrink: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .nav-indicator {
@@ -447,18 +455,18 @@ html {
     flex-direction: column;
     align-items: flex-start;
     z-index: 1000;
-    /* Quitar animaciones */
-    transform: none;
-    transition: none;
+    /* Animaciones controladas */
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
     /* Prevenir overflow horizontal */
     box-sizing: border-box;
   }
 
   .neural-nav.active {
     display: flex;
-    /* Quitar animaciones */
-    transform: none;
-    transition: none;
+    /* Animaciones controladas */
+    transform: translateX(0);
+    transition: transform 0.3s ease;
     /* Prevenir overflow horizontal */
     overflow-x: hidden;
   }
@@ -484,17 +492,20 @@ html {
     margin: 0;
     font-size: 0.95rem;
     letter-spacing: 0.5px;
-    /* Quitar animaciones */
-    transition: none;
+    /* Animaciones controladas */
+    transition: all 0.2s ease;
     transform: none;
+    /* Prevenir overflow */
+    overflow: hidden;
+    max-width: 100%;
   }
 
   .nav-link:hover,
   .nav-link.active {
     background: rgba(255, 255, 255, 0.08);
     border-color: rgba(255, 255, 255, 0.1);
-    /* Quitar animaciones */
-    transition: none;
+    /* Animaciones controladas */
+    transition: all 0.2s ease;
     transform: none;
   }
 
