@@ -385,9 +385,10 @@
     width: 280px;
     max-width: 85%;
     height: 100vh;
+    max-height: 100vh;
     background: rgba(10, 11, 30, 0.98);
     backdrop-filter: blur(10px);
-    padding: 5rem 1rem 2rem;
+    padding: 6rem 1rem 2rem 1rem; /* Aumentado padding-top */
     overflow-y: auto;
     overflow-x: hidden;
     box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
@@ -395,10 +396,56 @@
     flex-direction: column;
     align-items: flex-start;
     z-index: 1000;
+    box-sizing: border-box; /* Asegurar que el padding no afecte el ancho */
+    /* Asegurar que el menú sea scrollable */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(102, 126, 234, 0.3) transparent;
+  }
+
+  /* Estilos para la scrollbar del menú */
+  .neural-nav::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .neural-nav::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .neural-nav::-webkit-scrollbar-thumb {
+    background: rgba(102, 126, 234, 0.3);
+    border-radius: 2px;
+  }
+
+  .neural-nav::-webkit-scrollbar-thumb:hover {
+    background: rgba(102, 126, 234, 0.5);
   }
 
   .neural-nav.active {
     display: flex;
+  }
+
+  /* Asegurar que el contenido del menú sea scrollable */
+  .neural-nav .nav-links {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.5rem;
+    align-items: stretch;
+    padding: 0 0.5rem;
+    max-height: calc(100vh - 8rem); /* Altura máxima considerando padding */
+    overflow-y: auto;
+    overflow-x: hidden;
+    /* Asegurar que el contenido no se corte */
+    min-height: 0;
+    flex: 1;
+  }
+
+  /* Asegurar que el WalletConnect no se corte */
+  .neural-nav .wallet-connect-container {
+    margin-top: auto;
+    padding-top: 1rem;
+    width: 100%;
+    max-width: 100%;
+    flex-shrink: 0; /* Prevenir que se comprima */
   }
 
   .nav-links {
@@ -1253,5 +1300,46 @@
   .dropdown-item {
     padding: 0.625rem 0.75rem;
     font-size: 0.8rem;
+  }
+} 
+
+/* Ajustes específicos para pantallas medianas */
+@media (max-width: 480px) {
+  .neural-nav {
+    width: 100%;
+    max-width: 100%;
+    padding: 5rem 1rem 1rem 1rem; /* Reducido padding para pantallas pequeñas */
+  }
+
+  .neural-nav .nav-links {
+    max-height: calc(100vh - 6rem); /* Ajustado para pantallas pequeñas */
+    padding: 0 0.25rem;
+  }
+
+  .neural-nav .wallet-connect-container {
+    margin-top: 1rem;
+    padding-top: 0.5rem;
+  }
+}
+
+/* Ajustes para pantallas muy pequeñas */
+@media (max-width: 360px) {
+  .neural-nav {
+    padding: 4rem 0.5rem 1rem 0.5rem; /* Padding mínimo */
+  }
+
+  .neural-nav .nav-links {
+    max-height: calc(100vh - 5rem);
+    padding: 0;
+  }
+
+  .nav-link {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  .submenu-trigger {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9rem;
   }
 } 
