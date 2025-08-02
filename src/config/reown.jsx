@@ -73,8 +73,8 @@ createAppKit({
     verify: false,
     relay: false,
     blockchainApi: false,
-    email: false, // Desactivado temporalmente
-    socials: false, // Desactivado temporalmente
+    email: true, // ACTIVADO - Login con email
+    socials: true, // ACTIVADO - Login con redes sociales
     siwe: false,
     siwx: false,
     smartAccounts: false,
@@ -108,6 +108,53 @@ createAppKit({
       blur: true,
       opacity: 0.5,
       closeOnClick: true
+    }
+  },
+  // Configuración para redes sociales
+  socials: {
+    // Redes sociales soportadas
+    providers: [
+      'google',
+      'twitter',
+      'discord',
+      'github',
+      'facebook',
+      'apple'
+    ],
+    // Configuración específica para cada red social
+    google: {
+      clientId: process.env.REACT_APP_GOOGLE_CLIENT_ID || '',
+      redirectUri: 'http://localhost:3000'
+    },
+    twitter: {
+      clientId: process.env.REACT_APP_TWITTER_CLIENT_ID || '',
+      redirectUri: 'http://localhost:3000'
+    },
+    discord: {
+      clientId: process.env.REACT_APP_DISCORD_CLIENT_ID || '',
+      redirectUri: 'http://localhost:3000'
+    },
+    github: {
+      clientId: process.env.REACT_APP_GITHUB_CLIENT_ID || '',
+      redirectUri: 'http://localhost:3000'
+    },
+    facebook: {
+      clientId: process.env.REACT_APP_FACEBOOK_CLIENT_ID || '',
+      redirectUri: 'http://localhost:3000'
+    },
+    apple: {
+      clientId: process.env.REACT_APP_APPLE_CLIENT_ID || '',
+      redirectUri: 'http://localhost:3000'
+    }
+  },
+  // Configuración para email
+  email: {
+    // Configuración del proveedor de email
+    provider: 'magic', // 'magic', 'web3auth', etc.
+    // Configuración específica para Magic Link
+    magic: {
+      apiKey: process.env.REACT_APP_MAGIC_API_KEY || '',
+      network: 'testnet'
     }
   }
 })
