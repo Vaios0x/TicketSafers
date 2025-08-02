@@ -534,19 +534,64 @@
 /* Responsive para el selector de red */
 @media (max-width: 768px) {
   .network-selector-dropdown {
-    min-width: 180px;
-    right: -50px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    right: auto;
+    margin: 0;
+    min-width: 280px;
+    max-width: calc(100vw - 40px);
+    max-height: 70vh;
+    overflow-y: auto;
+    z-index: 10000;
+  }
+  
+  .network-selector {
+    position: relative;
+  }
+  
+  /* Mejorar el wallet conectado en móviles */
+  .wallet-connected {
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px;
+  }
+  
+  .wallet-actions {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  
+  .wallet-action-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
   }
 }
 
 @media (max-width: 480px) {
   .network-selector-dropdown {
-    min-width: 160px;
-    right: -80px;
+    min-width: 260px;
+    max-width: calc(100vw - 20px);
+    padding: 12px;
   }
   
   .network-option {
-    padding: 6px 10px;
-    font-size: 11px;
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 360px) {
+  .network-selector-dropdown {
+    min-width: 240px;
+    max-width: calc(100vw - 16px);
+  }
+  
+  .network-option {
+    padding: 8px 10px;
+    font-size: 12px;
   }
 } 
