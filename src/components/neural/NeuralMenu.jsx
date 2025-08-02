@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
   FaTicketAlt, 
-  FaChartLine, 
+  FaCalendarAlt, 
   FaUsers, 
   FaQuestionCircle, 
-  FaCalendarAlt, 
+  FaChartLine,
   FaChevronDown, 
   FaRoad, 
   FaPlus,
   FaQrcode 
 } from 'react-icons/fa';
 import WalletConnect from './WalletConnect';
-
 
 const menuItems = [
   {
@@ -82,6 +81,7 @@ const NeuralMenu = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSubmenu, setActiveSubmenu] = useState(null);
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -113,26 +113,16 @@ const NeuralMenu = () => {
   }, []);
 
   useEffect(() => {
-    // Prevenir scroll cuando el menú móvil está abierto
-    if (isMobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [isMobileMenuOpen]);
+    setActiveItem(location.pathname);
+  }, [location]);
 
   const handleSubmenuToggle = (itemTitle) => {
-    const newValue = activeSubmenu === itemTitle ? null : itemTitle;
-    setActiveSubmenu(newValue);
+    setActiveSubmenu(activeSubmenu === itemTitle ? null : itemTitle);
   };
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
-    if (activeSubmenu) {
+    if (isMobileMenuOpen) {
       setActiveSubmenu(null);
     }
   };
@@ -146,56 +136,65 @@ const NeuralMenu = () => {
     if (item.hasSubmenu) {
       return (
         <motion.div
-          key={item.title}
+          key={item.path}
           className={`menu-item has-submenu ${activeSubmenu === item.title ? 'active' : ''}`}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
           <button
-            className={`nav-link submenu-trigger ${activeSubmenu === item.title ? 'active' : ''}`}
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              handleSubmenuToggle(item.title);
-            }}
-            style={{ 
-              all: 'unset',
+            className={`nav-link ${activeItem === item.path ? 'active' : ''} ${item.highlight ? 'highlight' : ''}`}
+            onClick={() => handleSubmenuToggle(item.title)}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'inherit',
+              cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
-              gap: '0.4rem',
-              width: '100%'
+              gap: '8px',
+              padding: '12px 16px',
+              borderRadius: '12px',
+              transition: 'all 0.3s ease',
+              width: '100%',
+              textAlign: 'left'
             }}
           >
             <span className="nav-icon">{item.icon}</span>
             <span className="nav-text">{item.title}</span>
-            <span 
-              className="submenu-arrow"
+            <FaChevronDown 
               style={{ 
-                transform: activeSubmenu === item.title ? 'rotate(180deg)' : 'rotate(0deg)',
-                transition: 'transform 0.3s ease'
-              }}
-            >
-              <FaChevronDown />
-            </span>
+                marginLeft: 'auto',
+                transition: 'transform 0.3s ease',
+                transform: activeSubmenu === item.title ? 'rotate(180deg)' : 'rotate(0deg)'
+              }} 
+            />
           </button>
           
-          <div 
-            className={`submenu ${activeSubmenu === item.title ? 'submenu-visible' : ''}`}
+          <motion.div
+            className="submenu"
+            initial={false}
+            animate={{
+              height: activeSubmenu === item.title ? 'auto' : 0,
+              opacity: activeSubmenu === item.title ? 1 : 0
+            }}
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
             style={{
-              display: activeSubmenu === item.title ? 'block' : 'none'
+              overflow: 'hidden',
+              background: 'rgba(255, 255, 255, 0.05)',
+              borderRadius: '12px',
+              marginTop: '8px'
             }}
           >
             {item.submenu.map((subItem) => (
               <Link
                 key={subItem.path}
                 to={subItem.path}
-                className="submenu-link"
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '10px',
+                  gap: '12px',
                   padding: '12px 16px',
-                  color: '#e2e8f0',
+                  color: '#94a3b8',
                   textDecoration: 'none',
                   borderBottom: '1px solid rgba(255,255,255,0.1)'
                 }}
@@ -215,7 +214,7 @@ const NeuralMenu = () => {
                 <span className="submenu-text">{subItem.title}</span>
               </Link>
             ))}
-          </div>
+          </motion.div>
           
           <div className="menu-tooltip">
             <span>{item.description}</span>
@@ -287,9 +286,7 @@ const NeuralMenu = () => {
             <div className="nav-links">
               {menuItems.map(renderMenuItem)}
             </div>
-            <div className="wallet-connect-container">
-              <WalletConnect />
-            </div>
+            <WalletConnect />
           </nav>
         </div>
       </div>

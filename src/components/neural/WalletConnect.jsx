@@ -1,16 +1,41 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaWallet, FaUser, FaSignOutAlt, FaCopy, FaExternalLinkAlt, FaNetworkWired } from 'react-icons/fa';
 import { useAccount, useDisconnect, useBalance } from 'wagmi';
-import { useAppKit } from '@reown/appkit/react';
+import { getNetworkInfo } from '../../config/testnet-config';
+import { useReownModal } from '../../hooks/useReownModal';
 
 const WalletConnect = () => {
-  const { address, isConnected, chainId } = useAccount();
+  const { address, isConnected, chain } = useAccount();
   const { disconnect } = useDisconnect();
-  const { open } = useAppKit();
   const { data: balance } = useBalance({
-    address: address,
+    address,
   });
+  const { open } = useReownModal();
+  const [isConnecting, setIsConnecting] = useState(false);
+  const [connectionError, setConnectionError] = useState(null);
+
+  // Función para manejar la conexión con reintentos
+  const handleConnect = async () => {
+    setIsConnecting(true);
+    setConnectionError(null);
+    
+    try {
+      // Limpiar cualquier estado previo
+      await disconnect();
+      
+      // Pequeño delay para asegurar que MetaMask esté listo
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Abrir modal de conexión
+      open();
+    } catch (error) {
+      console.error('Error al conectar wallet:', error);
+      setConnectionError('Error al conectar. Intenta de nuevo.');
+    } finally {
+      setIsConnecting(false);
+    }
+  };
 
   // Función para copiar dirección
   const copyAddress = async () => {
@@ -28,65 +53,9 @@ const WalletConnect = () => {
   // Función para abrir en explorador (detecta la red)
   const openInExplorer = () => {
     if (address) {
-      let explorerUrl = 'https://etherscan.io'; // Default
-      
-      switch (chainId) {
-        // MAINNET
-        case 1:
-          explorerUrl = 'https://etherscan.io';
-          break;
-        case 137:
-          explorerUrl = 'https://polygonscan.com';
-          break;
-        case 42161:
-          explorerUrl = 'https://arbiscan.io';
-          break;
-        case 10:
-          explorerUrl = 'https://optimistic.etherscan.io';
-          break;
-        case 8453:
-          explorerUrl = 'https://basescan.org';
-          break;
-        case 534352:
-          explorerUrl = 'https://scrollscan.com';
-          break;
-        case 56:
-          explorerUrl = 'https://bscscan.com';
-          break;
-        case 43114:
-          explorerUrl = 'https://snowtrace.io';
-          break;
-        
-        // TESTNET
-        case 11155111:
-          explorerUrl = 'https://sepolia.etherscan.io';
-          break;
-        case 421614:
-          explorerUrl = 'https://sepolia.arbiscan.io';
-          break;
-        case 84532:
-          explorerUrl = 'https://sepolia.basescan.org';
-          break;
-        case 534351:
-          explorerUrl = 'https://sepolia.scrollscan.com';
-          break;
-        case 80002:
-          explorerUrl = 'https://amoy.polygonscan.com';
-          break;
-        case 11155420:
-          explorerUrl = 'https://sepolia-optimism.etherscan.io';
-          break;
-        case 97:
-          explorerUrl = 'https://testnet.bscscan.com';
-          break;
-        case 43113:
-          explorerUrl = 'https://testnet.snowtrace.io';
-          break;
-        default:
-          explorerUrl = 'https://etherscan.io';
-      }
-      
-      window.open(`${explorerUrl}/address/${address}`, '_blank');
+      const chainId = chain?.id;
+      const networkInfo = getNetworkInfo(chainId);
+      window.open(`${networkInfo.explorer}/address/${address}`, '_blank');
     }
   };
 
@@ -96,45 +65,18 @@ const WalletConnect = () => {
     return `${address.slice(0, 6)}...${address.slice(-4)}`;
   };
 
-  // Obtener nombre de la red
+  // Obtener información de la red usando la configuración centralizada
   const getNetworkName = () => {
-    switch (chainId) {
-      // MAINNET
-      case 1: return 'Ethereum';
-      case 137: return 'Polygon';
-      case 42161: return 'Arbitrum';
-      case 10: return 'Optimism';
-      case 8453: return 'Base';
-      case 534352: return 'Scroll';
-      case 56: return 'BSC';
-      case 43114: return 'Avalanche';
-      
-      // TESTNET
-      case 11155111: return 'Sepolia';
-      case 421614: return 'Arbitrum Sepolia';
-      case 84532: return 'Base Sepolia';
-      case 534351: return 'Scroll Sepolia';
-      case 80002: return 'Polygon Amoy';
-      case 11155420: return 'Optimism Sepolia';
-      case 97: return 'BSC Testnet';
-      case 43113: return 'Avalanche Fuji';
-      default: return 'Unknown';
-    }
+    const chainId = chain?.id;
+    const networkInfo = getNetworkInfo(chainId);
+    return networkInfo.name;
   };
 
-  // Obtener color de la red
+  // Obtener color de la red usando la configuración centralizada
   const getNetworkColor = () => {
-    switch (chainId) {
-      case 1: case 11155111: return '#627eea'; // Ethereum blue
-      case 137: case 80002: return '#8247e5'; // Polygon purple
-      case 42161: case 421614: return '#28a0f0'; // Arbitrum blue
-      case 10: case 11155420: return '#ff0420'; // Optimism red
-      case 8453: case 84532: return '#0052ff'; // Base blue
-      case 534352: case 534351: return '#fefefe'; // Scroll white
-      case 56: case 97: return '#f3ba2f'; // BSC yellow
-      case 43114: case 43113: return '#e84142'; // Avalanche red
-      default: return '#6b7280'; // Gray
-    }
+    const chainId = chain?.id;
+    const networkInfo = getNetworkInfo(chainId);
+    return networkInfo.color;
   };
 
   // Formatear balance
@@ -201,7 +143,7 @@ const WalletConnect = () => {
             }}></span>
             {getNetworkName()}
             {balance && (
-              <span style={{ marginLeft: '8px', color: '#10b981' }}>
+              <span style={{ marginLeft: '8px' }}>
                 {formatBalance(balance)} {balance.symbol}
               </span>
             )}
@@ -268,7 +210,7 @@ const WalletConnect = () => {
           </button>
           
           <button 
-            onClick={disconnect}
+            onClick={() => disconnect()}
             style={{
               width: '32px',
               height: '32px',
@@ -302,7 +244,8 @@ const WalletConnect = () => {
 
   return (
     <motion.button
-      onClick={open}
+      onClick={handleConnect}
+      disabled={isConnecting}
       style={{
         display: 'flex',
         alignItems: 'center',
@@ -316,10 +259,11 @@ const WalletConnect = () => {
         fontSize: '14px',
         textTransform: 'uppercase',
         letterSpacing: '0.5px',
-        cursor: 'pointer',
         transition: 'all 0.3s ease',
         boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)',
-        backdropFilter: 'blur(10px)'
+        backdropFilter: 'blur(10px)',
+        opacity: isConnecting ? 0.7 : 1,
+        cursor: isConnecting ? 'not-allowed' : 'pointer'
       }}
       whileHover={{ 
         scale: 1.02,
@@ -329,6 +273,16 @@ const WalletConnect = () => {
     >
       <FaWallet style={{ fontSize: '16px' }} />
       <span>Conectar Wallet</span>
+      {isConnecting && (
+        <span style={{ marginLeft: '8px', fontSize: '12px', color: 'white' }}>
+          Conectando...
+        </span>
+      )}
+      {connectionError && (
+        <span style={{ marginLeft: '8px', fontSize: '12px', color: 'red' }}>
+          {connectionError}
+        </span>
+      )}
     </motion.button>
   );
 };

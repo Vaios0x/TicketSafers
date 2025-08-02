@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom'
 import App from './App.jsx'
 import './index.css'
 
+// Importar la configuración de Reown AppKit
 import { AppKitProvider } from './config/reown.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
