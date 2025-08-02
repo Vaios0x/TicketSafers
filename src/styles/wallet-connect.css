@@ -449,38 +449,16 @@
 } 
 
 /* ============================================
-   CHAIN SELECTOR STYLES
+   SELECTOR DE RED - WALLET CONNECT
    ============================================ */
 
-/* Contenedor del selector de chain */
-.chain-selector {
+/* Contenedor del selector de red */
+.network-selector {
   position: relative;
 }
 
-/* Botón del selector de chain */
-.chain-selector-btn {
-  width: 32px;
-  height: 32px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #ffffff;
-  cursor: pointer;
-  font-size: 12px;
-  transition: all 0.2s ease;
-}
-
-.chain-selector-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-  color: #3b82f6;
-  transform: translateY(-1px);
-}
-
-/* Dropdown del selector de chain */
-.chain-selector-dropdown {
+/* Dropdown del selector de red */
+.network-selector-dropdown {
   position: absolute;
   top: 100%;
   right: 0;
@@ -499,463 +477,125 @@
 @keyframes dropdownSlideIn {
   from {
     opacity: 0;
-    transform: translateY(-10px) scale(0.95);
+    transform: translateY(-10px);
   }
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
   }
 }
 
-/* Contenedor de la lista de chains */
-.chain-list {
+/* Lista de redes */
+.network-list {
   padding: 8px 0;
   max-height: 300px;
   overflow-y: auto;
 }
 
-/* Scrollbar personalizado para la lista */
-.chain-list::-webkit-scrollbar {
-  width: 4px;
-}
-
-.chain-list::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 2px;
-}
-
-.chain-list::-webkit-scrollbar-thumb {
-  background: rgba(59, 130, 246, 0.5);
-  border-radius: 2px;
-}
-
-.chain-list::-webkit-scrollbar-thumb:hover {
-  background: rgba(59, 130, 246, 0.7);
-}
-
-/* Botón de cada chain */
-.chain-option {
+/* Botón de red individual */
+.network-option {
   width: 100%;
   padding: 12px 16px;
   background: transparent;
   border: none;
-  color: #ffffff;
+  color: #94a3b8;
   font-size: 13px;
   text-align: left;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   transition: all 0.2s ease;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.chain-option:hover {
-  background: rgba(59, 130, 246, 0.1);
+.network-option:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
 }
 
-.chain-option.active {
-  color: #3b82f6;
-  background: rgba(59, 130, 246, 0.1);
+.network-option.active {
+  background: rgba(59, 130, 246, 0.2);
+  color: #ffffff;
 }
 
-/* Indicador de red actual */
-.chain-indicator {
+/* Indicador de red activa */
+.network-indicator {
   width: 8px;
   height: 8px;
   border-radius: 50%;
   flex-shrink: 0;
-  animation: pulse 2s infinite;
 }
 
-/* Etiqueta de red actual */
-.chain-current-label {
+/* Checkmark para red activa */
+.network-check {
   font-size: 10px;
-  color: #3b82f6;
-  font-weight: bold;
+  color: #10b981;
   margin-left: auto;
 }
 
-/* Responsive para el selector de chain */
+/* Scrollbar personalizado para el dropdown */
+.network-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.network-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+}
+
+.network-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+}
+
+.network-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* Responsive para el selector de red */
 @media (max-width: 768px) {
-  .chain-selector-dropdown {
+  .network-selector-dropdown {
     min-width: 180px;
     right: -50px;
   }
   
-  .chain-option {
-    padding: 10px 14px;
+  .network-option {
+    padding: 10px 12px;
     font-size: 12px;
   }
 }
 
 @media (max-width: 480px) {
-  .chain-selector-dropdown {
+  .network-selector-dropdown {
     min-width: 160px;
     right: -80px;
   }
   
-  .chain-option {
-    padding: 8px 12px;
+  .network-option {
+    padding: 8px 10px;
     font-size: 11px;
   }
 }
 
-/* Animaciones para el selector */
-.chain-selector-btn:active {
-  transform: scale(0.95);
-}
-
-.chain-option:active {
-  transform: scale(0.98);
-}
-
-/* Efectos de hover mejorados */
-.chain-option:hover .chain-indicator {
-  animation: pulse 1s infinite;
-}
-
-/* Estados de carga para el cambio de red */
-.chain-option.loading {
-  opacity: 0.7;
-  pointer-events: none;
-}
-
-.chain-option.loading::after {
-  content: '';
-  width: 12px;
-  height: 12px;
-  border: 2px solid transparent;
-  border-top: 2px solid #3b82f6;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-left: auto;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Tooltip para el botón de cambio de red */
-.chain-selector-btn::before {
-  content: attr(title);
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.8);
-  color: white;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 11px;
-  white-space: nowrap;
+/* Animación de entrada para el dropdown */
+.network-selector-dropdown-enter {
   opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s ease;
-  z-index: 1001;
+  transform: translateY(-10px);
 }
 
-.chain-selector-btn:hover::before {
+.network-selector-dropdown-enter-active {
   opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
-/* Modo oscuro específico */
-@media (prefers-color-scheme: dark) {
-  .chain-selector-dropdown {
-    background: rgba(15, 23, 42, 0.98);
-    border-color: rgba(59, 130, 246, 0.3);
-  }
-  
-  .chain-option:hover {
-    background: rgba(59, 130, 246, 0.15);
-  }
-}
-
-/* Accesibilidad */
-.chain-selector-btn:focus {
-  outline: 2px solid #3b82f6;
-  outline-offset: 2px;
-}
-
-.chain-option:focus {
-  outline: 2px solid #3b82f6;
-  outline-offset: -2px;
-}
-
-/* Reducción de movimiento */
-@media (prefers-reduced-motion: reduce) {
-  .chain-selector-dropdown {
-    animation: none;
-  }
-  
-  .chain-indicator {
-    animation: none;
-  }
-  
-  .chain-option:hover {
-    transform: none;
-  }
-} 
-
-/* ============================================
-   ANIMACIONES MEJORADAS
-   ============================================ */
-
-/* Animación de brillo */
-@keyframes shine {
-  0% {
-    transform: translateX(-100%) translateY(-100%) rotate(45deg);
-  }
-  50% {
-    transform: translateX(100%) translateY(100%) rotate(45deg);
-  }
-  100% {
-    transform: translateX(-100%) translateY(-100%) rotate(45deg);
-  }
-}
-
-/* Animación de spin */
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Animación de pulse mejorada */
-@keyframes pulse {
-  0%, 100% {
-    opacity: 0.6;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.1);
-  }
-}
-
-/* ============================================
-   MEJORAS AL COMPONENTE PRINCIPAL
-   ============================================ */
-
-.wallet-connected {
-  animation: walletSlideIn 0.4s ease-out;
-}
-
-@keyframes walletSlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-/* Mejoras a los botones de acción */
-.wallet-action-btn {
-  position: relative;
-  overflow: hidden;
-}
-
-.wallet-action-btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-  transition: left 0.5s;
-}
-
-.wallet-action-btn:hover::before {
-  left: 100%;
-}
-
-/* Efectos de hover mejorados para el selector de chain */
-.chain-selector-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
-}
-
-.chain-selector-btn:active {
+.network-selector-dropdown-exit {
+  opacity: 1;
   transform: translateY(0);
 }
 
-/* Mejoras al dropdown */
-.chain-selector-dropdown {
-  animation: dropdownSlideIn 0.3s ease-out;
-}
-
-@keyframes dropdownSlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-15px) scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-/* Efectos de hover para las opciones del dropdown */
-.chain-option:hover {
-  background: rgba(59, 130, 246, 0.1) !important;
-  transform: translateX(4px);
-}
-
-.chain-option.active {
-  background: rgba(59, 130, 246, 0.15) !important;
-  border-left: 3px solid #3b82f6;
-}
-
-/* Mejoras al botón de conexión */
-.wallet-connect-btn {
-  position: relative;
-  overflow: hidden;
-}
-
-.wallet-connect-btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.6s;
-}
-
-.wallet-connect-btn:hover::before {
-  left: 100%;
-}
-
-/* Estados de carga mejorados */
-.wallet-connect-btn.loading {
-  background: linear-gradient(135deg, #6b7280 0%, #4b5563 50%, #374151 100%);
-  cursor: not-allowed;
-}
-
-.wallet-connect-btn.loading::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 20px;
-  height: 20px;
-  margin: -10px 0 0 -10px;
-  border: 2px solid transparent;
-  border-top: 2px solid white;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-/* Feedback visual para copiar dirección */
-.copy-success {
-  animation: copySuccess 0.3s ease-out;
-}
-
-@keyframes copySuccess {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-/* Mejoras responsive */
-@media (max-width: 768px) {
-  .wallet-connected {
-    min-width: 280px;
-    padding: 12px 16px;
-  }
-  
-  .wallet-connect-btn {
-    min-width: 180px;
-    padding: 12px 24px;
-    font-size: 14px;
-  }
-}
-
-@media (max-width: 480px) {
-  .wallet-connected {
-    min-width: 260px;
-    padding: 10px 14px;
-    gap: 12px;
-  }
-  
-  .wallet-connect-btn {
-    min-width: 160px;
-    padding: 10px 20px;
-    font-size: 13px;
-  }
-  
-  .wallet-action-btn {
-    width: 32px;
-    height: 32px;
-    font-size: 12px;
-  }
-}
-
-/* Efectos de profundidad */
-.wallet-connected {
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.2),
-    0 4px 16px rgba(59, 130, 246, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-}
-
-.wallet-connect-btn {
-  box-shadow: 
-    0 6px 20px rgba(59, 130, 246, 0.3),
-    0 2px 8px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-}
-
-/* Transiciones suaves */
-* {
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Mejoras de accesibilidad */
-.wallet-action-btn:focus,
-.chain-selector-btn:focus,
-.wallet-connect-btn:focus {
-  outline: 2px solid #3b82f6;
-  outline-offset: 2px;
-}
-
-/* Modo oscuro específico */
-@media (prefers-color-scheme: dark) {
-  .wallet-connected {
-    background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%);
-  }
-  
-  .wallet-connect-btn {
-    background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 50%, #1e293b 100%);
-  }
-}
-
-/* Reducción de movimiento */
-@media (prefers-reduced-motion: reduce) {
-  .wallet-connected,
-  .wallet-connect-btn,
-  .chain-selector-dropdown {
-    animation: none;
-  }
-  
-  .wallet-action-btn:hover,
-  .chain-option:hover {
-    transform: none;
-  }
+.network-selector-dropdown-exit-active {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
 } 
