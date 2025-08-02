@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { 
   FaTicketAlt, 
-  FaCalendarAlt, 
+  FaChartLine, 
   FaUsers, 
   FaQuestionCircle, 
-  FaChartLine,
-  FaBars,
-  FaTimes,
+  FaCalendarAlt, 
   FaChevronDown, 
   FaRoad, 
   FaPlus,
@@ -146,9 +145,11 @@ const NeuralMenu = () => {
   const renderMenuItem = (item) => {
     if (item.hasSubmenu) {
       return (
-        <div
+        <motion.div
           key={item.title}
           className={`menu-item has-submenu ${activeSubmenu === item.title ? 'active' : ''}`}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
         >
           <button
             className={`nav-link submenu-trigger ${activeSubmenu === item.title ? 'active' : ''}`}
@@ -219,14 +220,16 @@ const NeuralMenu = () => {
           <div className="menu-tooltip">
             <span>{item.description}</span>
           </div>
-        </div>
+        </motion.div>
       );
     }
 
     return (
-      <div
+      <motion.div
         key={item.path}
         className={`menu-item ${item.highlight ? 'highlight' : ''}`}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
       >
         <Link
           to={item.path}
@@ -239,15 +242,22 @@ const NeuralMenu = () => {
           <span className="nav-icon">{item.icon}</span>
           <span className="nav-text">{item.title}</span>
           {activeItem === item.path && (
-            <div
+            <motion.div
               className="nav-indicator"
+              layoutId="indicator"
+              initial={false}
+              transition={{
+                type: "spring",
+                stiffness: 500,
+                damping: 30
+              }}
             />
           )}
         </Link>
         <div className="menu-tooltip">
           <span>{item.description}</span>
         </div>
-      </div>
+      </motion.div>
     );
   };
 

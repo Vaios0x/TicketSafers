@@ -1,7 +1,24 @@
 import React from 'react';
 import { createAppKit } from '@reown/appkit/react';
 import { WagmiProvider } from 'wagmi';
-import { arbitrumSepolia, sepolia, baseSepolia, scrollSepolia, polygonAmoy, optimismSepolia } from '@reown/appkit/networks';
+import { 
+  mainnet, 
+  arbitrum, 
+  base, 
+  scroll, 
+  polygon,
+  optimism,
+  bsc,
+  avalanche,
+  sepolia,
+  arbitrumSepolia,
+  baseSepolia,
+  scrollSepolia,
+  polygonAmoy,
+  optimismSepolia,
+  bscTestnet,
+  avalancheFuji
+} from '@reown/appkit/networks';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
 
@@ -15,64 +32,48 @@ const queryClient = new QueryClient({
   },
 });
 
-// Project ID from Reown Dashboard
-const projectId = '8505f6eaaa44b34387416821007c224f';
+// Project ID from Reown Dashboard - REEMPLAZAR CON TU PROJECT ID
+const projectId = 'TU_PROJECT_ID';
 
 // Create metadata object
 const metadata = {
   name: 'TicketSafer',
-  description: 'Plataforma multichain de tickets NFT - Wallets sociales automáticas (TESTNET)',
-  url: 'https://ticketsafer.com',
+  description: 'Plataforma multichain de tickets NFT',
+  url: 'http://localhost:3000',
   icons: ['https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=64&h=64&fit=crop&auto=format&q=80']
 };
 
-// Set networks - TicketSafer soporta múltiples redes TESTNET
-// Orden de prioridad: Arbitrum Sepolia (L2 económico) -> Polygon Amoy -> Optimism Sepolia -> Base Sepolia -> Scroll Sepolia -> Sepolia
-const networks = [arbitrumSepolia, polygonAmoy, optimismSepolia, baseSepolia, scrollSepolia, sepolia];
+// Set networks - Mainnet y Testnet
+const networks = [
+  // MAINNET
+  mainnet,      // Ethereum
+  arbitrum,     // Arbitrum One
+  base,         // Base
+  scroll,       // Scroll
+  polygon,      // Polygon
+  optimism,     // Optimism
+  bsc,          // BSC
+  avalanche,    // Avalanche
+  
+  // TESTNET
+  sepolia,           // Ethereum Sepolia
+  arbitrumSepolia,   // Arbitrum Sepolia
+  baseSepolia,       // Base Sepolia
+  scrollSepolia,     // Scroll Sepolia
+  polygonAmoy,       // Polygon Amoy
+  optimismSepolia,   // Optimism Sepolia
+  bscTestnet,        // BSC Testnet
+  avalancheFuji      // Avalanche Fuji
+];
 
-// Create Wagmi Adapter con configuración mejorada para wallets sociales
+// Create Wagmi Adapter
 const wagmiAdapter = new WagmiAdapter({
   networks,
   projectId,
-  ssr: true,
-  // Configuración mejorada para wallets sociales
-  options: {
-    // Configuración específica para MetaMask
-    connectorOptions: {
-      walletConnect: {
-        projectId,
-        showQrModal: true,
-        qrModalOptions: {
-          themeMode: 'dark',
-          themeVariables: {
-            '--w3m-z-index': '9999'
-          }
-        }
-      },
-      injected: {
-        shimDisconnect: true,
-        shimChainChangedDisconnect: true
-      },
-      metaMask: {
-        shimDisconnect: true,
-        shimChainChangedDisconnect: true
-      }
-    },
-    // Orden de conectores para mejor compatibilidad
-    connectorOrder: [
-      'injected',
-      'metaMask', 
-      'walletConnect',
-      'coinbase'
-    ],
-    // Configuración de red por defecto - ARBITRUM SEPOLIA
-    defaultChain: arbitrumSepolia, // Arbitrum Sepolia como red por defecto
-    // Configuración de redes soportadas
-    supportedChains: networks
-  }
+  ssr: true
 });
 
-// Create modal with improved configuration for social wallets
+// Create modal
 createAppKit({
   adapters: [wagmiAdapter],
   networks,
@@ -80,47 +81,8 @@ createAppKit({
   metadata,
   features: {
     analytics: true,
-    smartAccounts: false, // Deshabilitado por ahora
-    embeddedWallets: true, // HABILITADO para wallets sociales
-    // Configuración para wallets sociales
-    socialWallets: {
-      enabled: true,
-      // Redes donde se crearán las wallets sociales (en orden de prioridad) - TESTNETS
-      supportedNetworks: ['arbitrum-sepolia', 'polygon-amoy', 'optimism-sepolia', 'base-sepolia', 'scroll-sepolia', 'sepolia'],
-      // Red por defecto para wallets sociales - ARBITRUM SEPOLIA
-      defaultNetwork: 'arbitrum-sepolia',
-      // Configuración de recuperación
-      recoveryOptions: {
-        email: true,
-        social: true
-      }
-    },
-    // Configuración para evitar errores de conexión
-    walletConnect: {
-      projectId,
-      showQrModal: true,
-      qrModalOptions: {
-        themeMode: 'dark'
-      }
-    }
-  },
-  // Configuración para modal más compacto
-  modal: {
-    size: 'compact', // Modal más pequeño
-    maxHeight: '80vh', // Altura máxima del 80% de la ventana
-    maxWidth: '400px', // Ancho máximo más pequeño
-    responsive: {
-      mobile: {
-        maxHeight: '90vh',
-        maxWidth: '95vw',
-        padding: '16px'
-      },
-      tablet: {
-        maxHeight: '85vh',
-        maxWidth: '500px',
-        padding: '20px'
-      }
-    }
+    smartSessions: false,
+    chainAbstraction: false
   }
 });
 

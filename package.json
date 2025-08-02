@@ -19,9 +19,7 @@
     "clean": "rimraf dist node_modules/.vite"
   },
   "dependencies": {
-    "@reown/appkit": "^1.7.17",
-    "@reown/appkit-adapter-wagmi": "^1.7.17",
-    "@tanstack/react-query": "^5.84.1",
+    "@tanstack/react-query": "^5.83.0",
     "@types/mapbox-gl": "^3.4.1",
     "framer-motion": "^12.18.1",
     "ipfs-http-client": "^60.0.1",
@@ -33,8 +31,8 @@
     "react-icons": "^5.5.0",
     "react-map-gl": "^7.1.6",
     "react-router-dom": "^7.6.3",
-    "viem": "^2.33.2",
-    "wagmi": "^2.16.1"
+    "viem": "^2.32.1",
+    "wagmi": "^2.16.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.0",
