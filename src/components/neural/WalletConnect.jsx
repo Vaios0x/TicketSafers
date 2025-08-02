@@ -1,10 +1,33 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { FaWallet, FaUser, FaSignOutAlt, FaCopy, FaExternalLinkAlt, FaNetworkWired, FaChevronDown, FaExchangeAlt } from 'react-icons/fa';
 import { useAccount, useDisconnect, useBalance, useSwitchChain } from 'wagmi';
 import { getNetworkInfo, TESTNET_CONFIG } from '../../config/testnet-config';
 import { useReownModal } from '../../hooks/useReownModal';
 import { applyAllModalStyles } from '../../utils/modalPositionFix';
+import './WalletConnect.css';
+
+// Hook para detectar el tamaño de pantalla
+const useWindowSize = () => {
+  const [windowSize, setWindowSize] = useState({
+    width: typeof window !== 'undefined' ? window.innerWidth : 1024,
+    height: typeof window !== 'undefined' ? window.innerHeight : 768,
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return windowSize;
+};
 
 const WalletConnect = () => {
   const { address, isConnected, chain } = useAccount();
@@ -12,18 +35,43 @@ const WalletConnect = () => {
   const { data: balance } = useBalance({
     address,
   });
-  const { switchChain } = useSwitchChain();
+  const { switchChain, isPending: isSwitchingNetwork } = useSwitchChain();
   const { open } = useReownModal();
   const [isConnecting, setIsConnecting] = useState(false);
   const [connectionError, setConnectionError] = useState(null);
   const [showNetworkSelector, setShowNetworkSelector] = useState(false);
-  const [isSwitchingNetwork, setIsSwitchingNetwork] = useState(false);
+  const networkSelectorRef = useRef(null);
+  const { width: windowWidth } = useWindowSize();
+  const isMobile = windowWidth <= 768;
 
   // Aplicar estilos del modal cuando el componente se monta
   useEffect(() => {
-    const cleanup = applyAllModalStyles();
-    return cleanup;
+    applyAllModalStyles();
   }, []);
+
+  // Manejar posicionamiento del dropdown para evitar desbordamientos
+  useEffect(() => {
+    if (showNetworkSelector && networkSelectorRef.current && !isMobile) {
+      const dropdown = networkSelectorRef.current;
+      const rect = dropdown.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const viewportWidth = window.innerWidth;
+      
+      // Si el dropdown se sale por abajo
+      if (rect.bottom > viewportHeight - 20) {
+        dropdown.style.top = 'auto';
+        dropdown.style.bottom = '100%';
+        dropdown.style.marginTop = '0';
+        dropdown.style.marginBottom = '8px';
+      }
+      
+      // Si el dropdown se sale por la derecha
+      if (rect.right > viewportWidth - 20) {
+        dropdown.style.right = 'auto';
+        dropdown.style.left = '0';
+      }
+    }
+  }, [showNetworkSelector, isMobile]);
 
   // Cerrar selector de red cuando se hace clic fuera
   useEffect(() => {
@@ -118,7 +166,7 @@ const WalletConnect = () => {
   const handleNetworkSwitch = async (chainId) => {
     if (isSwitchingNetwork) return;
     
-    setIsSwitchingNetwork(true);
+    // setIsSwitchingNetwork(true); // This line is removed as per the new_code
     try {
       await switchChain({ chainId });
       setShowNetworkSelector(false);
@@ -126,7 +174,7 @@ const WalletConnect = () => {
     } catch (error) {
       console.error('❌ Error al cambiar red:', error);
     } finally {
-      setIsSwitchingNetwork(false);
+      // setIsSwitchingNetwork(false); // This line is removed as per the new_code
     }
   };
 
@@ -248,7 +296,7 @@ const WalletConnect = () => {
             {showNetworkSelector && (
               <>
                 {/* Backdrop solo para móviles */}
-                {window.innerWidth <= 768 && (
+                {isMobile && (
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -268,32 +316,40 @@ const WalletConnect = () => {
                 )}
                 
                 <motion.div
-                  initial={{ opacity: 0, scale: 0.9, y: window.innerWidth <= 768 ? -20 : -10 }}
+                  ref={networkSelectorRef}
+                  initial={{ opacity: 0, scale: 0.9, y: isMobile ? -20 : -10 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.9, y: window.innerWidth <= 768 ? -20 : -10 }}
+                  exit={{ opacity: 0, scale: 0.9, y: isMobile ? -20 : -10 }}
                   style={{
-                    position: window.innerWidth <= 768 ? 'fixed' : 'absolute',
-                    top: window.innerWidth <= 768 ? '50%' : '100%',
-                    left: window.innerWidth <= 768 ? '50%' : 'auto',
-                    right: window.innerWidth <= 768 ? 'auto' : '0',
-                    transform: window.innerWidth <= 768 ? 'translate(-50%, -50%)' : 'none',
-                    marginTop: window.innerWidth <= 768 ? '0' : '8px',
+                    position: isMobile ? 'fixed' : 'absolute',
+                    top: isMobile ? '50%' : '100%',
+                    left: isMobile ? '50%' : 'auto',
+                    right: isMobile ? 'auto' : '0',
+                    transform: isMobile ? 'translate(-50%, -50%)' : 'none',
+                    marginTop: isMobile ? '0' : '8px',
                     background: 'rgba(15, 23, 42, 0.98)',
                     border: '1px solid rgba(59, 130, 246, 0.3)',
                     borderRadius: '16px',
-                    padding: window.innerWidth <= 768 ? '16px' : '12px',
-                    width: window.innerWidth <= 768 ? '90vw' : 'auto',
-                    minWidth: window.innerWidth <= 768 ? 'auto' : '240px',
-                    maxWidth: window.innerWidth <= 768 ? '320px' : 'none',
-                    maxHeight: window.innerWidth <= 768 ? '80vh' : 'none',
-                    overflowY: window.innerWidth <= 768 ? 'auto' : 'visible',
+                    padding: isMobile ? '16px' : '12px',
+                    width: isMobile ? 'calc(90vw - 32px)' : 'auto',
+                    minWidth: isMobile ? 'auto' : '240px',
+                    maxWidth: isMobile ? '320px' : 'none',
+                    maxHeight: isMobile ? 'calc(80vh - 32px)' : 'none',
+                    overflowY: isMobile ? 'auto' : 'visible',
                     backdropFilter: 'blur(20px)',
                     boxShadow: '0 20px 40px rgba(0, 0, 0, 0.4)',
-                    zIndex: window.innerWidth <= 768 ? 10000 : 1000
+                    zIndex: isMobile ? 10000 : 1000,
+                    // Prevenir desbordamiento
+                    boxSizing: 'border-box',
+                    // Asegurar que no se salga de la pantalla
+                    ...(isMobile ? {} : {
+                      maxHeight: 'calc(100vh - 100px)',
+                      overflowY: 'auto'
+                    })
                   }}
                 >
                   {/* Header solo para móviles */}
-                  {window.innerWidth <= 768 && (
+                  {isMobile && (
                     <div style={{
                       display: 'flex',
                       alignItems: 'center',
@@ -339,7 +395,7 @@ const WalletConnect = () => {
                   <div style={{
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: window.innerWidth <= 768 ? '8px' : '4px'
+                    gap: isMobile ? '8px' : '4px'
                   }}>
                     {TESTNET_CONFIG.supportedNetworks.map((network) => {
                       const isCurrentNetwork = network.id === chain?.id;
@@ -350,17 +406,17 @@ const WalletConnect = () => {
                           disabled={isSwitchingNetwork || isCurrentNetwork}
                           style={{
                             width: '100%',
-                            padding: window.innerWidth <= 768 ? '12px 16px' : '8px 12px',
+                            padding: isMobile ? '12px 16px' : '8px 12px',
                             background: isCurrentNetwork ? 'rgba(59, 130, 246, 0.2)' : 'rgba(255, 255, 255, 0.05)',
                             border: isCurrentNetwork ? '1px solid rgba(59, 130, 246, 0.4)' : '1px solid rgba(255, 255, 255, 0.1)',
-                            borderRadius: window.innerWidth <= 768 ? '12px' : '8px',
+                            borderRadius: isMobile ? '12px' : '8px',
                             color: isCurrentNetwork ? '#3b82f6' : '#ffffff',
-                            fontSize: window.innerWidth <= 768 ? '14px' : '12px',
+                            fontSize: isMobile ? '14px' : '12px',
                             fontWeight: '500',
                             cursor: isCurrentNetwork ? 'default' : 'pointer',
                             display: 'flex',
                             alignItems: 'center',
-                            gap: window.innerWidth <= 768 ? '12px' : '8px',
+                            gap: isMobile ? '12px' : '8px',
                             transition: 'all 0.2s ease',
                             opacity: isSwitchingNetwork ? 0.5 : 1
                           }}
@@ -380,29 +436,29 @@ const WalletConnect = () => {
                           <div style={{
                             display: 'flex',
                             alignItems: 'center',
-                            gap: window.innerWidth <= 768 ? '12px' : '8px',
+                            gap: isMobile ? '12px' : '8px',
                             flex: 1
                           }}>
                             <span style={{
-                              width: window.innerWidth <= 768 ? '12px' : '8px',
-                              height: window.innerWidth <= 768 ? '12px' : '8px',
+                              width: isMobile ? '12px' : '8px',
+                              height: isMobile ? '12px' : '8px',
                               background: network.color,
                               borderRadius: '50%',
-                              boxShadow: window.innerWidth <= 768 ? `0 0 8px ${network.color}40` : 'none'
+                              boxShadow: isMobile ? `0 0 8px ${network.color}40` : 'none'
                             }}></span>
                             <div style={{
                               display: 'flex',
-                              flexDirection: window.innerWidth <= 768 ? 'column' : 'row',
-                              alignItems: window.innerWidth <= 768 ? 'flex-start' : 'center',
-                              gap: window.innerWidth <= 768 ? '0' : '8px'
+                              flexDirection: isMobile ? 'column' : 'row',
+                              alignItems: isMobile ? 'flex-start' : 'center',
+                              gap: isMobile ? '0' : '8px'
                             }}>
                               <span style={{
-                                fontSize: window.innerWidth <= 768 ? '14px' : '12px',
+                                fontSize: isMobile ? '14px' : '12px',
                                 fontWeight: '600'
                               }}>
                                 {network.shortName}
                               </span>
-                              {window.innerWidth <= 768 && (
+                              {isMobile && (
                                 <span style={{
                                   fontSize: '11px',
                                   color: '#94a3b8',
@@ -415,7 +471,7 @@ const WalletConnect = () => {
                           </div>
                           {isCurrentNetwork && (
                             <span style={{
-                              fontSize: window.innerWidth <= 768 ? '16px' : '12px',
+                              fontSize: isMobile ? '16px' : '12px',
                               color: '#3b82f6',
                               fontWeight: 'bold'
                             }}>
@@ -424,7 +480,7 @@ const WalletConnect = () => {
                           )}
                           {isSwitchingNetwork && network.id === chain?.id && (
                             <span style={{
-                              fontSize: window.innerWidth <= 768 ? '14px' : '12px',
+                              fontSize: isMobile ? '14px' : '12px',
                               color: '#3b82f6'
                             }}>
                               ...

@@ -475,10 +475,30 @@
   border-radius: 12px;
   padding: 12px;
   min-width: 240px;
+  max-width: 300px;
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
   backdrop-filter: blur(20px);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
   z-index: 1000;
   animation: dropdownSlideIn 0.2s ease-out;
+  box-sizing: border-box;
+  /* Prevenir desbordamiento */
+  word-wrap: break-word;
+  white-space: nowrap;
+}
+
+/* Posicionamiento inteligente para evitar desbordamientos */
+.network-selector-dropdown.bottom-up {
+  top: auto;
+  bottom: 100%;
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+.network-selector-dropdown.left-aligned {
+  right: auto;
+  left: 0;
 }
 
 @keyframes dropdownSlideIn {
