@@ -163,10 +163,12 @@ const NeuralMenu = () => {
   };
 
   const toggleMobileMenu = () => {
+    console.log('🔧 Toggle mobile menu clicked, current state:', isMobileMenuOpen);
     setIsMobileMenuOpen(!isMobileMenuOpen);
     if (isMobileMenuOpen) {
       setActiveSubmenu(null);
     }
+    console.log('🔧 New mobile menu state will be:', !isMobileMenuOpen);
   };
 
   const handleOverlayClick = () => {

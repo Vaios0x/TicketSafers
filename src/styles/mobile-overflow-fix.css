@@ -51,7 +51,7 @@ html, body {
 
   /* Cuando el menú está activo */
   .neural-nav.active {
-    display: flex;
+    display: flex !important;
     transform: translateX(0);
     transition: transform 0.3s ease;
   }

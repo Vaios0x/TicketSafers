@@ -363,8 +363,49 @@
 
 @media (max-width: 768px) {
   .menu-btn {
-    display: block;
+    display: flex !important; /* Forzar que aparezca en móvil */
+    width: 30px;
+    height: 30px;
+    position: relative;
+    cursor: pointer;
     z-index: 1001;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    padding: 0.5rem;
+  }
+
+  .menu-btn span,
+  .menu-btn span::before,
+  .menu-btn span::after {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--neural-text-primary);
+    position: absolute;
+    transition: all 0.3s ease;
+  }
+
+  .menu-btn span::before {
+    transform: translateY(-8px);
+  }
+
+  .menu-btn span::after {
+    transform: translateY(8px);
+  }
+
+  .menu-btn.active span {
+    background: transparent;
+  }
+
+  .menu-btn.active span::before {
+    transform: rotate(45deg);
+  }
+
+  .menu-btn.active span::after {
+    transform: rotate(-45deg);
   }
 
   .neural-nav {
@@ -391,7 +432,7 @@
   }
 
   .neural-nav.active {
-    display: flex;
+    display: flex !important; /* Forzar que aparezca cuando está activo */
   }
 
   .nav-links {
