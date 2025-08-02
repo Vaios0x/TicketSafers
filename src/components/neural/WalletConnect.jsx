@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FaWallet, FaUser, FaSignOutAlt, FaCopy, FaExternalLinkAlt, FaNetworkWired, FaChevronDown, FaGlobe } from 'react-icons/fa';
+import { FaWallet, FaUser, FaSignOutAlt, FaCopy, FaExternalLinkAlt, FaNetworkWired, FaChevronDown, FaExchangeAlt } from 'react-icons/fa';
 import { useAccount, useDisconnect, useBalance, useSwitchChain } from 'wagmi';
 import { getNetworkInfo, TESTNET_CONFIG } from '../../config/testnet-config';
 import { useReownModal } from '../../hooks/useReownModal';
@@ -9,14 +9,15 @@ import { applyAllModalStyles } from '../../utils/modalPositionFix';
 const WalletConnect = () => {
   const { address, isConnected, chain } = useAccount();
   const { disconnect } = useDisconnect();
-  const { switchChain } = useSwitchChain();
   const { data: balance } = useBalance({
     address,
   });
+  const { switchChain } = useSwitchChain();
   const { open } = useReownModal();
   const [isConnecting, setIsConnecting] = useState(false);
   const [connectionError, setConnectionError] = useState(null);
   const [showNetworkSelector, setShowNetworkSelector] = useState(false);
+  const [isSwitchingNetwork, setIsSwitchingNetwork] = useState(false);
 
   // Aplicar estilos del modal cuando el componente se monta
   useEffect(() => {
@@ -24,7 +25,7 @@ const WalletConnect = () => {
     return cleanup;
   }, []);
 
-  // Cerrar el selector de red cuando se hace clic fuera
+  // Cerrar selector de red cuando se hace clic fuera
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (showNetworkSelector && !event.target.closest('.network-selector')) {
@@ -62,16 +63,6 @@ const WalletConnect = () => {
       setConnectionError('Error al conectar. Intenta de nuevo.');
     } finally {
       setIsConnecting(false);
-    }
-  };
-
-  // Función para cambiar de red
-  const handleNetworkSwitch = async (chainId) => {
-    try {
-      await switchChain({ chainId });
-      setShowNetworkSelector(false);
-    } catch (error) {
-      console.error('Error al cambiar de red:', error);
     }
   };
 
@@ -123,6 +114,39 @@ const WalletConnect = () => {
     return parseFloat(balance.formatted).toFixed(4);
   };
 
+  // Función para cambiar de red
+  const handleNetworkSwitch = async (chainId) => {
+    if (isSwitchingNetwork) return;
+    
+    setIsSwitchingNetwork(true);
+    try {
+      await switchChain({ chainId });
+      setShowNetworkSelector(false);
+      console.log(`✅ Red cambiada a ${getNetworkInfo(chainId).name}`);
+    } catch (error) {
+      console.error('❌ Error al cambiar red:', error);
+    } finally {
+      setIsSwitchingNetwork(false);
+    }
+  };
+
+  // Función para alternar el selector de red
+  const toggleNetworkSelector = () => {
+    setShowNetworkSelector(!showNetworkSelector);
+  };
+
+  // Obtener la red actual
+  const getCurrentNetwork = () => {
+    const chainId = chain?.id;
+    return getNetworkInfo(chainId);
+  };
+
+  // Verificar si la red actual es soportada
+  const isCurrentNetworkSupported = () => {
+    const chainId = chain?.id;
+    return TESTNET_CONFIG.supportedNetworks.some(network => network.id === chainId);
+  };
+
   if (isConnected && address) {
     return (
       <motion.div 
@@ -139,8 +163,7 @@ const WalletConnect = () => {
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
           display: 'flex',
           alignItems: 'center',
-          gap: '12px',
-          position: 'relative'
+          gap: '12px'
         }}
       >
         <div style={{
@@ -190,10 +213,10 @@ const WalletConnect = () => {
         </div>
         
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          {/* Selector de Red */}
+          {/* Selector de red */}
           <div style={{ position: 'relative' }} className="network-selector">
             <button 
-              onClick={() => setShowNetworkSelector(!showNetworkSelector)}
+              onClick={toggleNetworkSelector}
               style={{
                 width: '32px',
                 height: '32px',
@@ -210,7 +233,7 @@ const WalletConnect = () => {
               }}
               onMouseEnter={(e) => {
                 e.target.style.background = 'rgba(255, 255, 255, 0.2)';
-                e.target.style.color = '#10b981';
+                e.target.style.color = '#3b82f6';
               }}
               onMouseLeave={(e) => {
                 e.target.style.background = 'rgba(255, 255, 255, 0.1)';
@@ -218,10 +241,10 @@ const WalletConnect = () => {
               }}
               title="Cambiar red"
             >
-              <FaGlobe />
+              <FaExchangeAlt />
             </button>
             
-            {/* Dropdown de redes */}
+            {/* Dropdown del selector de red */}
             {showNetworkSelector && (
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
@@ -230,51 +253,58 @@ const WalletConnect = () => {
                 style={{
                   position: 'absolute',
                   top: '100%',
-                  right: 0,
+                  right: '0',
                   marginTop: '8px',
                   background: 'rgba(15, 23, 42, 0.95)',
                   border: '1px solid rgba(59, 130, 246, 0.2)',
                   borderRadius: '12px',
-                  backdropFilter: 'blur(20px)',
-                  boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-                  zIndex: 1000,
+                  padding: '8px',
                   minWidth: '200px',
-                  overflow: 'hidden'
+                  backdropFilter: 'blur(20px)',
+                  boxShadow: '0 10px 25px rgba(0, 0, 0, 0.3)',
+                  zIndex: 1000
                 }}
               >
                 <div style={{
-                  padding: '8px 0',
-                  maxHeight: '300px',
-                  overflowY: 'auto'
+                  fontSize: '12px',
+                  color: '#94a3b8',
+                  padding: '8px 12px',
+                  borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+                  marginBottom: '8px'
                 }}>
-                  {TESTNET_CONFIG.supportedNetworks.map((network) => (
+                  Seleccionar Red
+                </div>
+                
+                {TESTNET_CONFIG.supportedNetworks.map((network) => {
+                  const isCurrentNetwork = network.id === chain?.id;
+                  return (
                     <button
                       key={network.id}
                       onClick={() => handleNetworkSwitch(network.id)}
+                      disabled={isSwitchingNetwork || isCurrentNetwork}
                       style={{
                         width: '100%',
-                        padding: '12px 16px',
-                        background: chain?.id === network.id ? 'rgba(59, 130, 246, 0.2)' : 'transparent',
+                        padding: '8px 12px',
+                        background: isCurrentNetwork ? 'rgba(59, 130, 246, 0.2)' : 'transparent',
                         border: 'none',
-                        color: chain?.id === network.id ? '#ffffff' : '#94a3b8',
-                        fontSize: '13px',
-                        textAlign: 'left',
-                        cursor: 'pointer',
+                        borderRadius: '8px',
+                        color: isCurrentNetwork ? '#3b82f6' : '#ffffff',
+                        fontSize: '12px',
+                        cursor: isCurrentNetwork ? 'default' : 'pointer',
                         display: 'flex',
                         alignItems: 'center',
                         gap: '8px',
-                        transition: 'all 0.2s ease'
+                        transition: 'all 0.2s ease',
+                        opacity: isSwitchingNetwork ? 0.5 : 1
                       }}
                       onMouseEnter={(e) => {
-                        if (chain?.id !== network.id) {
+                        if (!isCurrentNetwork && !isSwitchingNetwork) {
                           e.target.style.background = 'rgba(255, 255, 255, 0.1)';
-                          e.target.style.color = '#ffffff';
                         }
                       }}
                       onMouseLeave={(e) => {
-                        if (chain?.id !== network.id) {
+                        if (!isCurrentNetwork) {
                           e.target.style.background = 'transparent';
-                          e.target.style.color = '#94a3b8';
                         }
                       }}
                     >
@@ -282,20 +312,28 @@ const WalletConnect = () => {
                         width: '8px',
                         height: '8px',
                         background: network.color,
-                        borderRadius: '50%',
-                        flexShrink: 0
+                        borderRadius: '50%'
                       }}></span>
-                      <span style={{ flex: 1 }}>{network.shortName}</span>
-                      {chain?.id === network.id && (
-                        <span style={{ fontSize: '10px', color: '#10b981' }}>✓</span>
+                      <span style={{ flex: 1, textAlign: 'left' }}>
+                        {network.shortName}
+                      </span>
+                      {isCurrentNetwork && (
+                        <span style={{ fontSize: '10px', color: '#3b82f6' }}>
+                          ✓
+                        </span>
+                      )}
+                      {isSwitchingNetwork && network.id === chain?.id && (
+                        <span style={{ fontSize: '10px', color: '#3b82f6' }}>
+                          ...
+                        </span>
                       )}
                     </button>
-                  ))}
-                </div>
+                  );
+                })}
               </motion.div>
             )}
           </div>
-          
+
           <button 
             onClick={copyAddress}
             style={{

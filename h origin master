@@ -1,0 +1,5 @@
+[33mdda0665[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m fix: restore mobile menu functionality and prevent overflow
+[33m5c7027a[m fix: solve horizontal overflow issues in mobile menu
+[33m414cf7d[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m fix: resolve horizontal overflow issues in mobile menu with comprehensive overflow control
+[33m30c6499[m feat: add network selector to wallet connect component
+[33md66faac[m feat: maximize UX/UI improvements for WalletConnect component

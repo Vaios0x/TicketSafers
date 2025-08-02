@@ -112,48 +112,6 @@ const NeuralMenu = () => {
     };
   }, []);
 
-  // Control de overflow horizontal y estado del body
-  useEffect(() => {
-    if (isMobileMenuOpen) {
-      // Prevenir scroll horizontal y vertical cuando el menú está abierto
-      document.body.style.overflow = 'hidden';
-      document.body.style.overflowX = 'hidden';
-      document.body.style.overflowY = 'hidden';
-      document.body.classList.add('menu-open');
-      
-      // Forzar el ancho del viewport para prevenir overflow
-      const viewport = document.querySelector('meta[name="viewport"]');
-      if (viewport) {
-        viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
-      }
-    } else {
-      // Restaurar scroll normal cuando el menú se cierra
-      document.body.style.overflow = '';
-      document.body.style.overflowX = '';
-      document.body.style.overflowY = '';
-      document.body.classList.remove('menu-open');
-      
-      // Restaurar viewport normal
-      const viewport = document.querySelector('meta[name="viewport"]');
-      if (viewport) {
-        viewport.setAttribute('content', 'width=device-width, initial-scale=1.0');
-      }
-    }
-
-    // Cleanup cuando el componente se desmonta
-    return () => {
-      document.body.style.overflow = '';
-      document.body.style.overflowX = '';
-      document.body.style.overflowY = '';
-      document.body.classList.remove('menu-open');
-      
-      const viewport = document.querySelector('meta[name="viewport"]');
-      if (viewport) {
-        viewport.setAttribute('content', 'width=device-width, initial-scale=1.0');
-      }
-    };
-  }, [isMobileMenuOpen]);
-
   useEffect(() => {
     setActiveItem(location.pathname);
   }, [location]);
@@ -163,12 +121,10 @@ const NeuralMenu = () => {
   };
 
   const toggleMobileMenu = () => {
-    console.log('🔧 Toggle mobile menu clicked, current state:', isMobileMenuOpen);
     setIsMobileMenuOpen(!isMobileMenuOpen);
     if (isMobileMenuOpen) {
       setActiveSubmenu(null);
     }
-    console.log('🔧 New mobile menu state will be:', !isMobileMenuOpen);
   };
 
   const handleOverlayClick = () => {

@@ -363,49 +363,8 @@
 
 @media (max-width: 768px) {
   .menu-btn {
-    display: flex !important; /* Forzar que aparezca en móvil */
-    width: 30px;
-    height: 30px;
-    position: relative;
-    cursor: pointer;
-    z-index: 1001;
-    align-items: center;
-    justify-content: center;
-    background: transparent;
-    border: none;
-    padding: 0.5rem;
-  }
-
-  .menu-btn span,
-  .menu-btn span::before,
-  .menu-btn span::after {
-    content: '';
     display: block;
-    width: 24px;
-    height: 2px;
-    background: var(--neural-text-primary);
-    position: absolute;
-    transition: all 0.3s ease;
-  }
-
-  .menu-btn span::before {
-    transform: translateY(-8px);
-  }
-
-  .menu-btn span::after {
-    transform: translateY(8px);
-  }
-
-  .menu-btn.active span {
-    background: transparent;
-  }
-
-  .menu-btn.active span::before {
-    transform: rotate(45deg);
-  }
-
-  .menu-btn.active span::after {
-    transform: rotate(-45deg);
+    z-index: 1001;
   }
 
   .neural-nav {
@@ -413,26 +372,22 @@
     top: 0;
     right: 0;
     width: 280px;
-    max-width: 85vw; /* Cambiado de 85% a 85vw para prevenir overflow */
+    max-width: 85%;
     height: 100vh;
     background: rgba(10, 11, 30, 0.98);
     backdrop-filter: blur(10px);
     padding: 5rem 1rem 2rem;
     overflow-y: auto;
-    overflow-x: hidden; /* Forzar hidden para prevenir overflow horizontal */
+    overflow-x: hidden;
     box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
     display: none;
     flex-direction: column;
     align-items: flex-start;
     z-index: 1000;
-    /* Prevenir que el menú cause overflow */
-    box-sizing: border-box;
-    word-wrap: break-word;
-    word-break: break-word;
   }
 
   .neural-nav.active {
-    display: flex !important; /* Forzar que aparezca cuando está activo */
+    display: flex;
   }
 
   .nav-links {
@@ -441,9 +396,6 @@
     gap: 0.5rem;
     align-items: stretch;
     padding: 0 0.5rem;
-    /* Prevenir overflow en los links */
-    overflow-x: hidden;
-    box-sizing: border-box;
   }
 
   .nav-link {
@@ -456,11 +408,6 @@
     margin: 0;
     font-size: 0.95rem;
     letter-spacing: 0.5px;
-    /* Prevenir overflow en los links */
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    box-sizing: border-box;
   }
 
   .nav-link:hover,
@@ -472,17 +419,12 @@
   .nav-text {
     font-size: 0.95rem;
     font-weight: 500;
-    /* Prevenir overflow en el texto */
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
 
   .nav-icon {
     font-size: 1.1rem;
     margin-right: 0.75rem;
     opacity: 0.9;
-    flex-shrink: 0; /* Prevenir que el icono se comprima */
   }
 
   .submenu-trigger {
@@ -495,11 +437,6 @@
     margin: 0;
     font-size: 0.95rem;
     letter-spacing: 0.5px;
-    /* Prevenir overflow en los triggers */
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    box-sizing: border-box;
   }
 
   .submenu {
@@ -512,9 +449,6 @@
     box-shadow: none;
     margin-top: 0.25rem;
     padding-left: 2.5rem;
-    /* Prevenir overflow en submenús */
-    overflow-x: hidden;
-    box-sizing: border-box;
   }
 
   .submenu::before,
@@ -530,11 +464,6 @@
     margin-bottom: 0.5rem;
     font-size: 0.9rem;
     transition: all 0.3s ease;
-    /* Prevenir overflow en submenu links */
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    box-sizing: border-box;
   }
 
   .submenu-link:hover {
@@ -547,9 +476,7 @@
     margin: 1rem auto;
     width: auto;
     min-width: 200px;
-    max-width: 100%; /* Prevenir overflow */
     padding: 0.75rem 1.5rem;
-    box-sizing: border-box;
   }
 
   /* Ajuste para el botón de CREAR EVENTO en móvil */
@@ -574,13 +501,11 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw; /* Usar vw en lugar de % */
-    height: 100vh; /* Usar vh en lugar de % */
+    width: 100%;
+    height: 100%;
     background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(3px);
     z-index: 999;
-    /* Prevenir overflow en el overlay */
-    overflow: hidden;
   }
 
   .menu-overlay.active {
@@ -589,35 +514,50 @@
 
   /* Prevenir scroll horizontal cuando el menú está abierto */
   body.menu-open {
-    overflow: hidden !important;
-    overflow-x: hidden !important;
-    overflow-y: hidden !important;
-    position: fixed;
-    width: 100%;
-    height: 100%;
-  }
-
-  /* Prevenir que elementos causen overflow */
-  .menu-item {
-    max-width: 100%;
-    overflow: hidden;
-    box-sizing: border-box;
-  }
-
-  /* Asegurar que el contenedor principal no cause overflow */
-  .navbar-container {
-    max-width: 100vw;
     overflow-x: hidden;
-    box-sizing: border-box;
   }
 
-  /* Prevenir overflow en elementos de texto */
-  .nav-text,
-  .submenu-text {
-    max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  /* Botón de hamburguesa mejorado */
+  .menu-btn {
+    width: 30px;
+    height: 30px;
+    position: relative;
+    cursor: pointer;
+    z-index: 1001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .menu-btn span,
+  .menu-btn span::before,
+  .menu-btn span::after {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--neural-text-primary);
+    position: absolute;
+  }
+
+  .menu-btn span::before {
+    transform: translateY(-8px);
+  }
+
+  .menu-btn span::after {
+    transform: translateY(8px);
+  }
+
+  .menu-btn.active span {
+    background: transparent;
+  }
+
+  .menu-btn.active span::before {
+    transform: rotate(45deg);
+  }
+
+  .menu-btn.active span::after {
+    transform: rotate(-45deg);
   }
 }
 
@@ -1298,95 +1238,5 @@
   .dropdown-item {
     padding: 0.625rem 0.75rem;
     font-size: 0.8rem;
-  }
-} 
-
-/* Reglas adicionales para prevenir overflow horizontal */
-@media (max-width: 480px) {
-  .neural-nav {
-    width: 100vw; /* Usar todo el ancho en pantallas muy pequeñas */
-    max-width: 100vw;
-    right: 0;
-    left: 0;
-  }
-
-  .nav-links {
-    padding: 0 1rem;
-  }
-
-  .nav-link,
-  .submenu-trigger {
-    font-size: 0.9rem;
-    padding: 0.75rem 0.75rem;
-  }
-
-  .submenu {
-    padding-left: 2rem;
-  }
-
-  .submenu-link {
-    font-size: 0.85rem;
-    padding: 0.75rem 0.75rem;
-  }
-
-  /* Asegurar que el logo no cause overflow */
-  .neural-logo {
-    min-width: auto;
-    max-width: 60vw;
-  }
-
-  .logo-text {
-    font-size: 1.2rem;
-  }
-}
-
-/* Reglas para prevenir overflow en todas las pantallas */
-* {
-  box-sizing: border-box;
-}
-
-body {
-  overflow-x: hidden;
-  max-width: 100vw;
-}
-
-/* Prevenir overflow en el contenedor principal */
-.neural-navbar {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
-/* Asegurar que el menú móvil no cause overflow */
-@media (max-width: 768px) {
-  html, body {
-    overflow-x: hidden !important;
-    max-width: 100vw !important;
-  }
-
-  .neural-nav.active {
-    transform: translateX(0);
-    transition: transform 0.3s ease;
-  }
-
-  /* Prevenir que elementos se salgan del viewport */
-  .menu-item,
-  .nav-link,
-  .submenu-link {
-    max-width: 100%;
-    min-width: 0;
-  }
-
-  /* Asegurar que el texto se ajuste */
-  .nav-text,
-  .submenu-text {
-    flex: 1;
-    min-width: 0;
-  }
-
-  /* Prevenir que los iconos causen overflow */
-  .nav-icon,
-  .submenu-icon {
-    flex-shrink: 0;
-    min-width: 1.1rem;
   }
 } 
