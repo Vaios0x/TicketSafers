@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FaWallet, FaUser, FaSignOutAlt, FaCopy, FaExternalLinkAlt, FaNetworkWired } from 'react-icons/fa';
 import { useAccount, useDisconnect, useBalance } from 'wagmi';
 import { getNetworkInfo } from '../../config/testnet-config';
 import { useReownModal } from '../../hooks/useReownModal';
+import { applyAllModalStyles } from '../../utils/modalPositionFix';
 
 const WalletConnect = () => {
   const { address, isConnected, chain } = useAccount();
@@ -14,6 +15,12 @@ const WalletConnect = () => {
   const { open } = useReownModal();
   const [isConnecting, setIsConnecting] = useState(false);
   const [connectionError, setConnectionError] = useState(null);
+
+  // Aplicar estilos del modal cuando el componente se monta
+  useEffect(() => {
+    const cleanup = applyAllModalStyles();
+    return cleanup;
+  }, []);
 
   // Función para manejar la conexión con reintentos
   const handleConnect = async () => {
@@ -29,6 +36,11 @@ const WalletConnect = () => {
       
       // Abrir modal de conexión
       open();
+      
+      // Aplicar estilos después de abrir el modal
+      setTimeout(() => {
+        applyAllModalStyles();
+      }, 200);
     } catch (error) {
       console.error('Error al conectar wallet:', error);
       setConnectionError('Error al conectar. Intenta de nuevo.');

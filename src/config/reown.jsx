@@ -87,14 +87,14 @@ createAppKit({
   modalConfig: {
     // Posicionamiento del modal
     position: 'center', // 'center', 'top', 'bottom'
-    // Margen desde la parte superior
-    topMargin: '10vh', // 10% del viewport height
+    // Margen desde la parte superior - AUMENTADO SIGNIFICATIVAMENTE
+    topMargin: '25vh', // 25% del viewport height (era 10vh)
     // Margen desde la parte inferior
-    bottomMargin: '10vh',
+    bottomMargin: '15vh', // 15% del viewport height
     // Ancho máximo del modal
     maxWidth: '400px',
     // Altura máxima del modal
-    maxHeight: '80vh',
+    maxHeight: '60vh', // Reducido de 80vh a 60vh
     // Z-index para asegurar que esté por encima de todo
     zIndex: 9999,
     // Animación de entrada

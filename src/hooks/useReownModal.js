@@ -11,13 +11,14 @@ export const useReownModal = () => {
       const modal = document.querySelector('[data-reown-modal]');
       if (modal) {
         modal.style.position = 'fixed';
-        modal.style.top = '50%';
+        modal.style.top = '60%'; // Cambiado de 50% a 60% para bajar el modal
         modal.style.left = '50%';
         modal.style.transform = 'translate(-50%, -50%)';
         modal.style.zIndex = '9999';
         modal.style.maxWidth = '400px';
-        modal.style.maxHeight = '80vh';
+        modal.style.maxHeight = '60vh'; // Reducido de 80vh a 60vh
         modal.style.margin = '0';
+        modal.style.paddingTop = '20px'; // Agregar padding superior
       }
 
       // Aplicar estilos al backdrop
@@ -32,6 +33,12 @@ export const useReownModal = () => {
         backdrop.style.backdropFilter = 'blur(8px)';
         backdrop.style.zIndex = '9998';
       }
+
+      // Aplicar estilos al contenedor del modal
+      const modalContainer = document.querySelector('[data-reown-modal-container]');
+      if (modalContainer) {
+        modalContainer.style.marginTop = '80px'; // Agregar margen superior
+      }
     }, 100);
 
     open();
@@ -43,13 +50,20 @@ export const useReownModal = () => {
       const modal = document.querySelector('[data-reown-modal]');
       if (modal) {
         modal.style.position = 'fixed';
-        modal.style.top = '50%';
+        modal.style.top = '60%'; // Cambiado de 50% a 60%
         modal.style.left = '50%';
         modal.style.transform = 'translate(-50%, -50%)';
         modal.style.zIndex = '9999';
         modal.style.maxWidth = '400px';
-        modal.style.maxHeight = '80vh';
+        modal.style.maxHeight = '60vh'; // Reducido de 80vh a 60vh
         modal.style.margin = '0';
+        modal.style.paddingTop = '20px'; // Agregar padding superior
+      }
+
+      // Aplicar estilos al contenedor del modal
+      const modalContainer = document.querySelector('[data-reown-modal-container]');
+      if (modalContainer) {
+        modalContainer.style.marginTop = '80px'; // Agregar margen superior
       }
     };
 
