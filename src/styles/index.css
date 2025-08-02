@@ -62,20 +62,19 @@ body {
 }
 
 @keyframes neuralGradientShift {
-  0% { background-position: 0% 50%; }
+  0%, 100% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
 }
 
 @keyframes neuralScan {
   0% { transform: translateX(-100%); opacity: 0; }
-  50% { opacity: 1; }
+  50% { transform: translateX(0); opacity: 1; }
   100% { transform: translateX(100%); opacity: 0; }
 }
 
 @keyframes particleFloat {
-  0% { background-position: 0 0; }
-  100% { background-position: 150px 150px; }
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
 }
 
 /* Estilos Base */
@@ -95,9 +94,8 @@ body {
 }
 
 .neural-container:hover {
-  border: var(--neural-border-hover);
-  box-shadow: var(--neural-glow-blue);
-  transform: translateY(-2px);
+  /* transform: translateY(-2px); */ /* QUITADA - Causaba problemas */
+  box-shadow: var(--neural-glow-intense);
 }
 
 /* Utilidades */
@@ -145,8 +143,8 @@ body {
 }
 
 .neural-button:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--neural-glow-blue);
+  /* transform: translateY(-2px); */ /* QUITADA - Causaba problemas */
+  box-shadow: var(--neural-glow-intense);
 }
 
 /* Neural Input Styles */
@@ -211,7 +209,7 @@ body {
 }
 
 .neural-loading {
-  animation: neural-pulse 1.5s ease-in-out infinite;
+  /* animation: neural-pulse 1.5s ease-in-out infinite; */ /* QUITADA - Causaba problemas */
 }
 
 /* Neural Scrollbar */
@@ -239,7 +237,7 @@ body {
   border: 3px solid rgba(255, 255, 255, 0.1);
   border-radius: 50%;
   border-top-color: #667eea;
-  animation: spin 1s ease-in-out infinite;
+  /* animation: spin 1s ease-in-out infinite; */ /* QUITADA - Causaba problemas */
 }
 
 @keyframes spin {
