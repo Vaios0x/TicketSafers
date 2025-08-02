@@ -21,11 +21,7 @@ html, body {
 
 /* Contenedores principales */
 .neural-app,
-.neural-container,
-.neural-navbar,
-.navbar-container,
-.neural-nav,
-.nav-links {
+.neural-container {
   overflow-x: hidden !important;
   max-width: 100vw;
   contain: layout;

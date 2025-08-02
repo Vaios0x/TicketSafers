@@ -163,7 +163,9 @@ const WalletConnect = () => {
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
           display: 'flex',
           alignItems: 'center',
-          gap: '12px'
+          gap: '12px',
+          width: '100%',
+          boxSizing: 'border-box'
         }}
       >
         <div style={{
@@ -175,7 +177,8 @@ const WalletConnect = () => {
           alignItems: 'center',
           justifyContent: 'center',
           color: 'white',
-          fontSize: '18px'
+          fontSize: '18px',
+          flexShrink: 0
         }}>
           <FaUser />
         </div>
@@ -212,7 +215,7 @@ const WalletConnect = () => {
           </div>
         </div>
         
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
           {/* Selector de red */}
           <div style={{ position: 'relative' }} className="network-selector">
             <button 
@@ -446,7 +449,9 @@ const WalletConnect = () => {
         boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)',
         backdropFilter: 'blur(10px)',
         opacity: isConnecting ? 0.7 : 1,
-        cursor: isConnecting ? 'not-allowed' : 'pointer'
+        cursor: isConnecting ? 'not-allowed' : 'pointer',
+        width: '100%',
+        justifyContent: 'center'
       }}
       whileHover={{ 
         scale: 1.02,

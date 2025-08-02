@@ -125,11 +125,14 @@ const NeuralMenu = () => {
     if (isMobileMenuOpen) {
       setActiveSubmenu(null);
     }
+    // Agregar/remover clase al body para prevenir scroll
+    document.body.classList.toggle('menu-open', !isMobileMenuOpen);
   };
 
   const handleOverlayClick = () => {
     setIsMobileMenuOpen(false);
     setActiveSubmenu(null);
+    document.body.classList.remove('menu-open');
   };
 
   const renderMenuItem = (item) => {
@@ -202,6 +205,7 @@ const NeuralMenu = () => {
                   setActiveItem(subItem.path);
                   setActiveSubmenu(null);
                   setIsMobileMenuOpen(false);
+                  document.body.classList.remove('menu-open');
                 }}
                 onMouseEnter={(e) => {
                   e.target.style.backgroundColor = 'rgba(102, 126, 234, 0.2)';
@@ -236,6 +240,7 @@ const NeuralMenu = () => {
           onClick={() => {
             setActiveItem(item.path);
             setIsMobileMenuOpen(false);
+            document.body.classList.remove('menu-open');
           }}
         >
           <span className="nav-icon">{item.icon}</span>
@@ -286,7 +291,9 @@ const NeuralMenu = () => {
             <div className="nav-links">
               {menuItems.map(renderMenuItem)}
             </div>
-            <WalletConnect />
+            <div className="wallet-connect-container">
+              <WalletConnect />
+            </div>
           </nav>
         </div>
       </div>
