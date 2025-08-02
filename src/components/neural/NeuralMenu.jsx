@@ -112,43 +112,45 @@ const NeuralMenu = () => {
     };
   }, []);
 
-  // Control de overflow horizontal cuando el menú móvil está abierto
+  // Control de overflow horizontal y estado del body
   useEffect(() => {
     if (isMobileMenuOpen) {
-      // Agregar clase CSS al body
-      document.body.classList.add('menu-open');
-      // Prevenir scroll horizontal y vertical en el body
+      // Prevenir scroll horizontal y vertical cuando el menú está abierto
       document.body.style.overflow = 'hidden';
       document.body.style.overflowX = 'hidden';
       document.body.style.overflowY = 'hidden';
-      document.body.style.position = 'fixed';
-      document.body.style.width = '100%';
-      document.body.style.top = `-${window.scrollY}px`;
+      document.body.classList.add('menu-open');
+      
+      // Forzar el ancho del viewport para prevenir overflow
+      const viewport = document.querySelector('meta[name="viewport"]');
+      if (viewport) {
+        viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+      }
     } else {
-      // Remover clase CSS del body
-      document.body.classList.remove('menu-open');
-      // Restaurar el estado normal del body
-      const scrollY = document.body.style.top;
+      // Restaurar scroll normal cuando el menú se cierra
       document.body.style.overflow = '';
       document.body.style.overflowX = '';
       document.body.style.overflowY = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
-      document.body.style.top = '';
-      if (scrollY) {
-        window.scrollTo(0, parseInt(scrollY || '0') * -1);
+      document.body.classList.remove('menu-open');
+      
+      // Restaurar viewport normal
+      const viewport = document.querySelector('meta[name="viewport"]');
+      if (viewport) {
+        viewport.setAttribute('content', 'width=device-width, initial-scale=1.0');
       }
     }
 
-    // Cleanup function para limpiar el estado cuando el componente se desmonta
+    // Cleanup cuando el componente se desmonta
     return () => {
-      document.body.classList.remove('menu-open');
       document.body.style.overflow = '';
       document.body.style.overflowX = '';
       document.body.style.overflowY = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
-      document.body.style.top = '';
+      document.body.classList.remove('menu-open');
+      
+      const viewport = document.querySelector('meta[name="viewport"]');
+      if (viewport) {
+        viewport.setAttribute('content', 'width=device-width, initial-scale=1.0');
+      }
     };
   }, [isMobileMenuOpen]);
 

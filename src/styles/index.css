@@ -1,5 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+/* Importar componentes personalizados de RainbowKit */
 @import url('./wallet-connect.css');
+
+/* Importar fix para overflow horizontal en móviles */
+@import url('./mobile-overflow-fix.css');
 
 * {
   margin: 0;

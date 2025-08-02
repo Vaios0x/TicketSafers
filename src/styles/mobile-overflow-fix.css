@@ -1,0 +1,237 @@
+/* ============================================
+   MOBILE OVERFLOW FIX - TICKETSAFER
+   ============================================ */
+
+/* Prevenir overflow horizontal en todas las pantallas */
+html, body {
+  overflow-x: hidden !important;
+  max-width: 100vw !important;
+  position: relative;
+}
+
+/* Asegurar que todos los elementos usen border-box */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* Contenedor principal */
+.neural-navbar {
+  max-width: 100vw;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Menú móvil - Prevenir overflow */
+@media (max-width: 768px) {
+  /* Forzar viewport */
+  html {
+    overflow-x: hidden !important;
+    width: 100vw;
+  }
+
+  body {
+    overflow-x: hidden !important;
+    width: 100vw;
+    max-width: 100vw;
+  }
+
+  /* Menú móvil */
+  .neural-nav {
+    width: 280px;
+    max-width: 85vw;
+    overflow-x: hidden !important;
+    overflow-y: auto;
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    z-index: 1000;
+    box-sizing: border-box;
+  }
+
+  /* Cuando el menú está activo */
+  .neural-nav.active {
+    display: flex;
+    transform: translateX(0);
+    transition: transform 0.3s ease;
+  }
+
+  /* Contenedor de links */
+  .nav-links {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
+    padding: 0 0.5rem;
+  }
+
+  /* Links individuales */
+  .nav-link,
+  .submenu-trigger {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    box-sizing: border-box;
+    padding: 0.75rem 1rem;
+  }
+
+  /* Texto de los links */
+  .nav-text,
+  .submenu-text {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Iconos */
+  .nav-icon,
+  .submenu-icon {
+    flex-shrink: 0;
+    min-width: 1.1rem;
+    margin-right: 0.75rem;
+  }
+
+  /* Submenús */
+  .submenu {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
+    padding-left: 2.5rem;
+  }
+
+  .submenu-link {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    box-sizing: border-box;
+    padding: 0.75rem 1rem;
+  }
+
+  /* Overlay */
+  .menu-overlay {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 999;
+  }
+
+  /* Estado del body cuando el menú está abierto */
+  body.menu-open {
+    overflow: hidden !important;
+    overflow-x: hidden !important;
+    overflow-y: hidden !important;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+  }
+
+  /* Elementos del menú */
+  .menu-item {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+
+  /* Wallet button */
+  .neural-nav .wallet-btn {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin: 1rem auto;
+  }
+}
+
+/* Pantallas muy pequeñas */
+@media (max-width: 480px) {
+  .neural-nav {
+    width: 100vw;
+    max-width: 100vw;
+    right: 0;
+    left: 0;
+  }
+
+  .nav-links {
+    padding: 0 1rem;
+  }
+
+  .nav-link,
+  .submenu-trigger {
+    font-size: 0.9rem;
+    padding: 0.75rem 0.75rem;
+  }
+
+  .submenu {
+    padding-left: 2rem;
+  }
+
+  .submenu-link {
+    font-size: 0.85rem;
+    padding: 0.75rem 0.75rem;
+  }
+
+  /* Logo responsivo */
+  .neural-logo {
+    min-width: auto;
+    max-width: 60vw;
+  }
+
+  .logo-text {
+    font-size: 1.2rem;
+  }
+}
+
+/* Prevenir zoom en iOS */
+@media screen and (max-width: 768px) {
+  html {
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+  }
+}
+
+/* Asegurar que el viewport esté correctamente configurado */
+@viewport {
+  width: device-width;
+  initial-scale: 1.0;
+  maximum-scale: 1.0;
+  user-scalable: no;
+}
+
+/* Prevenir que elementos se salgan del viewport */
+.neural-navbar,
+.neural-nav,
+.nav-links,
+.nav-link,
+.submenu,
+.submenu-link {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+/* Asegurar que el texto se ajuste correctamente */
+.nav-text,
+.submenu-text {
+  word-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
+}
+
+/* Prevenir que los iconos causen overflow */
+.nav-icon,
+.submenu-icon {
+  flex-shrink: 0;
+  min-width: 1.1rem;
+  max-width: 1.1rem;
+} 
