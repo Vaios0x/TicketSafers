@@ -1,26 +1,42 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { FaWallet, FaUser, FaSignOutAlt, FaCopy, FaExternalLinkAlt, FaNetworkWired } from 'react-icons/fa';
-import { useAccount, useDisconnect, useBalance } from 'wagmi';
-import { getNetworkInfo } from '../../config/testnet-config';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FaWallet, FaUser, FaSignOutAlt, FaCopy, FaExternalLinkAlt, FaNetworkWired, FaChevronDown, FaExchangeAlt } from 'react-icons/fa';
+import { useAccount, useDisconnect, useBalance, useSwitchChain } from 'wagmi';
+import { getNetworkInfo, TESTNET_CONFIG } from '../../config/testnet-config';
 import { useReownModal } from '../../hooks/useReownModal';
 import { applyAllModalStyles } from '../../utils/modalPositionFix';
 
 const WalletConnect = () => {
   const { address, isConnected, chain } = useAccount();
   const { disconnect } = useDisconnect();
+  const { switchChain } = useSwitchChain();
   const { data: balance } = useBalance({
     address,
   });
   const { open } = useReownModal();
   const [isConnecting, setIsConnecting] = useState(false);
   const [connectionError, setConnectionError] = useState(null);
+  const [showChainSelector, setShowChainSelector] = useState(false);
 
   // Aplicar estilos del modal cuando el componente se monta
   useEffect(() => {
     const cleanup = applyAllModalStyles();
     return cleanup;
   }, []);
+
+  // Cerrar dropdown cuando se hace clic fuera
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showChainSelector && !event.target.closest('.chain-selector')) {
+        setShowChainSelector(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showChainSelector]);
 
   // Función para manejar la conexión con reintentos
   const handleConnect = async () => {
@@ -46,6 +62,16 @@ const WalletConnect = () => {
       setConnectionError('Error al conectar. Intenta de nuevo.');
     } finally {
       setIsConnecting(false);
+    }
+  };
+
+  // Función para cambiar de red
+  const handleChainSwitch = async (chainId) => {
+    try {
+      await switchChain({ chainId });
+      setShowChainSelector(false);
+    } catch (error) {
+      console.error('Error al cambiar de red:', error);
     }
   };
 
@@ -113,7 +139,8 @@ const WalletConnect = () => {
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
           display: 'flex',
           alignItems: 'center',
-          gap: '12px'
+          gap: '12px',
+          position: 'relative'
         }}
       >
         <div style={{
@@ -163,6 +190,127 @@ const WalletConnect = () => {
         </div>
         
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {/* Selector de Chain */}
+          <div style={{ position: 'relative' }} className="chain-selector">
+            <button 
+              onClick={() => setShowChainSelector(!showChainSelector)}
+              style={{
+                width: '32px',
+                height: '32px',
+                background: 'rgba(255, 255, 255, 0.1)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                borderRadius: '8px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#ffffff',
+                cursor: 'pointer',
+                fontSize: '12px',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.background = 'rgba(255, 255, 255, 0.2)';
+                e.target.style.color = '#3b82f6';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.background = 'rgba(255, 255, 255, 0.1)';
+                e.target.style.color = '#ffffff';
+              }}
+              title="Cambiar red"
+              className="chain-selector-btn"
+            >
+              <FaExchangeAlt />
+            </button>
+            
+            {/* Dropdown de Chains */}
+            <AnimatePresence>
+              {showChainSelector && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9, y: -10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.9, y: -10 }}
+                  transition={{ duration: 0.2 }}
+                  style={{
+                    position: 'absolute',
+                    top: '100%',
+                    right: 0,
+                    marginTop: '8px',
+                    background: 'rgba(15, 23, 42, 0.95)',
+                    border: '1px solid rgba(59, 130, 246, 0.2)',
+                    borderRadius: '12px',
+                    backdropFilter: 'blur(20px)',
+                    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+                    zIndex: 1000,
+                    minWidth: '200px',
+                    overflow: 'hidden'
+                  }}
+                  className="chain-selector-dropdown"
+                >
+                  <div style={{
+                    padding: '8px 0',
+                    maxHeight: '300px',
+                    overflowY: 'auto'
+                  }}
+                  className="chain-list"
+                  >
+                    {TESTNET_CONFIG.supportedNetworks.map((network) => (
+                      <button
+                        key={network.id}
+                        onClick={() => handleChainSwitch(network.id)}
+                        style={{
+                          width: '100%',
+                          padding: '12px 16px',
+                          background: 'transparent',
+                          border: 'none',
+                          color: chain?.id === network.id ? '#3b82f6' : '#ffffff',
+                          fontSize: '13px',
+                          textAlign: 'left',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '12px',
+                          transition: 'all 0.2s ease',
+                          borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.target.style.background = 'rgba(59, 130, 246, 0.1)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.target.style.background = 'transparent';
+                        }}
+                        className={`chain-option ${chain?.id === network.id ? 'active' : ''}`}
+                      >
+                        <span style={{
+                          width: '8px',
+                          height: '8px',
+                          background: network.color,
+                          borderRadius: '50%',
+                          flexShrink: 0
+                        }}
+                        className="chain-indicator"
+                        ></span>
+                        <span style={{ flex: 1 }}>
+                          {network.shortName}
+                        </span>
+                        {chain?.id === network.id && (
+                          <span style={{
+                            fontSize: '10px',
+                            color: '#3b82f6',
+                            fontWeight: 'bold'
+                          }}
+                          className="chain-current-label"
+                          >
+                            ACTUAL
+                          </span>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+          
           <button 
             onClick={copyAddress}
             style={{
