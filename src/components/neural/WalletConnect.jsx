@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaWallet, FaUser, FaSignOutAlt, FaCopy, FaExternalLinkAlt, FaNetworkWired, FaChevronDown, FaExchangeAlt } from 'react-icons/fa';
 import { useAccount, useDisconnect, useBalance, useSwitchChain } from 'wagmi';
-import { getNetworkInfo, TESTNET_CONFIG } from '../../config/testnet-config';
 import { useReownModal } from '../../hooks/useReownModal';
 import { applyAllModalStyles } from '../../utils/modalPositionFix';
-import './WalletConnect.css';
+import { TESTNET_CONFIG, getNetworkInfo } from '../../config/testnet-config';
+import { FaExchangeAlt, FaCopy, FaExternalLinkAlt, FaWallet, FaUser, FaSignOutAlt } from 'react-icons/fa';
+import '../../styles/wallet-connect.css';
 
 // Hook para detectar el tamaño de pantalla
 const useWindowSize = () => {
@@ -237,6 +237,7 @@ const WalletConnect = () => {
           }}>
             {formatAddress(address)}
           </div>
+          
           <div style={{
             display: 'flex',
             alignItems: 'center',
