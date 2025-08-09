@@ -71,7 +71,7 @@ const EventSearch = ({ onSearch, initialFilters = {} }) => {
   };
 
   return (
-    <div className="event-search-container">
+    <div className="event-search-container scroll-smooth">
       <div className="event-search-header">
         <FaCompass className="header-icon" aria-hidden="true" />
         <h1 className="neon-hero-title">Explorar Eventos</h1>
@@ -81,14 +81,15 @@ const EventSearch = ({ onSearch, initialFilters = {} }) => {
       {/* Barra de búsqueda principal */}
       <div className="main-search-container">
         <div className="search-wrapper">
-          <div className="main-search-input">
-            <FaSearch className="search-icon" />
+          <div className="main-search-input rounded-xl">
+            <FaSearch className="search-icon pointer-events-none" />
             <input
               type="text"
               placeholder="Buscar eventos, artistas, lugares..."
               value={filters.query}
               onChange={(e) => handleFilterChange('search', e.target.value)}
               aria-label="Buscar eventos"
+              className="font-sans text-base placeholder:text-slate-400 caret-cyan-300 bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-1 focus:outline-2 focus:outline-sky-500 focus:outline-offset-2 transition-colors duration-200 w-full"
             />
           </div>
         </div>
@@ -106,6 +107,7 @@ const EventSearch = ({ onSearch, initialFilters = {} }) => {
               value={filters.location}
               onChange={(e) => handleFilterChange('location', e.target.value)}
               aria-label="Seleccionar ubicación"
+              className="appearance-none cursor-pointer bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm outline-1 focus:outline-2 focus:outline-indigo-500 focus:outline-offset-2 transition-colors duration-200 accent-indigo-500"
             >
               {locations.map(location => (
                 <option key={location.id} value={location.id}>
@@ -125,6 +127,7 @@ const EventSearch = ({ onSearch, initialFilters = {} }) => {
               value={filters.date}
               onChange={(e) => handleFilterChange('date', e.target.value)}
               aria-label="Seleccionar fecha"
+              className="appearance-none bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm outline-1 focus:outline-2 focus:outline-purple-500 focus:outline-offset-2 transition-colors duration-200 accent-purple-500"
             />
           </div>
         </div>
@@ -136,13 +139,13 @@ const EventSearch = ({ onSearch, initialFilters = {} }) => {
           {categories.map((category) => (
             <button
               key={category.id}
-              className={`category-button ${filters.category === category.id ? 'active' : ''}`}
+              className={`category-button ${filters.category === category.id ? 'active' : ''} cursor-pointer select-none transition-transform duration-150 active:scale-[0.98]`}
               onClick={() => handleFilterChange('category', category.id)}
               aria-label={`Categoría ${category.label}`}
               title={category.description}
             >
-              <category.icon className="category-icon" aria-hidden="true" />
-              <span className="category-label">{category.label}</span>
+              <category.icon className="category-icon fill-current" aria-hidden="true" />
+              <span className="category-label font-sans">{category.label}</span>
             </button>
           ))}
         </div>

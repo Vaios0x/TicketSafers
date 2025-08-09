@@ -70,14 +70,14 @@ const EventCard = ({ event, onClick }) => {
 
   return (
     <motion.div 
-      className="event-card"
+      className="event-card rounded-2xl overflow-hidden shadow-lg shadow-slate-900/30 hover:shadow-xl hover:shadow-slate-900/40 transition-shadow duration-300"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
       whileHover={{ y: -5 }}
     >
       <div className="event-image-container">
-        <img src={event.image || DEFAULT_IMAGE} alt={event.title} className="event-image" />
+        <img src={event.image || DEFAULT_IMAGE} alt={event.title} className="event-image object-cover opacity-95 group-hover:opacity-100 transition-opacity duration-300" />
         <div className="image-overlay" />
         
         <div className="event-badges">
@@ -133,8 +133,12 @@ const EventCard = ({ event, onClick }) => {
 
       <div className="event-content">
         <div className="title-section">
-          <h3 className="event-title">{event.title}</h3>
-          <p className="event-subtitle">{event.description}</p>
+          <h3 className="event-title font-sans text-base sm:text-lg md:text-xl font-bold tracking-tight line-clamp-2">
+            {event.title}
+          </h3>
+          <p className="event-subtitle font-sans text-slate-400 text-sm line-clamp-2">
+            {event.description}
+          </p>
         </div>
 
         <div className="event-info-compact">
@@ -144,14 +148,14 @@ const EventCard = ({ event, onClick }) => {
               data-tooltip={`Evento: ${formatDate(event.date)}`}
             >
             <FaCalendarAlt className="info-icon" />
-              <span className="info-text">{formatDate(event.date)}</span>
+              <span className="info-text text-sm">{formatDate(event.date)}</span>
             </div>
             <div 
               className="info-item location-info"
               data-tooltip={`Ubicación: ${event.location}`}
             >
             <FaMapMarkerAlt className="info-icon" />
-              <span className="info-text location-truncate">{event.location}</span>
+              <span className="info-text location-truncate text-sm">{event.location}</span>
               <div className={`chain-indicator ${event.chain}`}></div>
             </div>
           </div>
@@ -163,7 +167,7 @@ const EventCard = ({ event, onClick }) => {
             >
               <FaUsers className="info-icon" />
               <div className="availability-content">
-                <span className="info-text">
+                <span className="info-text text-sm">
                   {event.availableTickets}/{event.totalTickets} disponibles
                 </span>
                 <span className="availability-status" style={{ color: getAvailabilityColor(event.availableTickets, event.totalTickets) }}>
@@ -185,7 +189,7 @@ const EventCard = ({ event, onClick }) => {
                     {event.auctionCurrency === 'ETH' && <FaEthereum />}
                     {event.auctionCurrency === 'MATIC' && <SiPolygon />}
                   </span>
-                  <span className="price-amount">{formatPrice(event.currentBid, event.auctionCurrency)}</span>
+                  <span className="price-amount text-base font-semibold">{formatPrice(event.currentBid, event.auctionCurrency)}</span>
                 </div>
               </div>
               <div className="auction-time">Termina en {event.auctionTimeLeft}</div>
@@ -199,7 +203,7 @@ const EventCard = ({ event, onClick }) => {
                     {event.resaleCurrency === 'ETH' && <FaEthereum />}
                     {event.resaleCurrency === 'MATIC' && <SiPolygon />}
                   </span>
-                  <span className="price-amount">{formatPrice(event.resalePrice, event.resaleCurrency)}</span>
+                  <span className="price-amount text-base font-semibold">{formatPrice(event.resalePrice, event.resaleCurrency)}</span>
                 </div>
               </div>
             </div>
@@ -212,7 +216,7 @@ const EventCard = ({ event, onClick }) => {
                     {event.currency === 'ETH' && <FaEthereum />}
                     {event.currency === 'MATIC' && <SiPolygon />}
                   </span>
-                  <span className="price-amount">{formatPrice(event.price, event.currency)}</span>
+                  <span className="price-amount text-base font-semibold">{formatPrice(event.price, event.currency)}</span>
                 </div>
               </div>
             </div>
@@ -220,7 +224,7 @@ const EventCard = ({ event, onClick }) => {
         </div>
 
         <motion.button
-          className="buy-button" 
+          className="buy-button font-sans text-sm font-bold tracking-wide" 
           onClick={() => onClick(event)}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}

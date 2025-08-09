@@ -265,7 +265,7 @@ const NeuralMenu = () => {
       <div className={`menu-overlay ${isMobileMenuOpen ? 'active' : ''}`} onClick={handleOverlayClick}></div>
       <div className={`neural-navbar ${isScrolled ? 'scrolled' : ''}`}>
         <div className="navbar-container">
-          <Link to="/" className="neural-logo" onClick={() => setActiveItem('/')}>
+          <Link to="/" className="neural-logo focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500" onClick={() => setActiveItem('/')}>
             <div className="logo-icon">
               <div className="logo-ring"></div>
               <div className="logo-ring"></div>
@@ -275,9 +275,10 @@ const NeuralMenu = () => {
           </Link>
 
           <button 
-            className={`menu-btn ${isMobileMenuOpen ? 'active' : ''}`} 
+            className={`menu-btn ${isMobileMenuOpen ? 'active' : ''} focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500`} 
             onClick={toggleMobileMenu}
             aria-label="Toggle menu"
+            aria-expanded={isMobileMenuOpen}
           >
             <span></span>
           </button>

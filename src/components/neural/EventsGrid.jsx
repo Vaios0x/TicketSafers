@@ -105,20 +105,20 @@ const EventsGrid = ({ searchTerm = '', filters = {}, maxEvents = null, enablePag
   };
 
   return (
-    <div className="events-grid-container" ref={eventsGridRef}>
+    <div className="events-grid-container px-4 md:px-6 lg:px-8" ref={eventsGridRef}>
       {isLoading ? (
-        <div className="events-loading">
+        <div className="events-loading flex flex-col items-center justify-center py-16 text-center gap-3">
           <div className="loading-spinner"></div>
-          <p>Cargando eventos...</p>
+          <p className="text-sm text-slate-300">Cargando eventos...</p>
         </div>
       ) : filteredEvents.length === 0 ? (
-        <div className="no-events-message">
-          <h3>No se encontraron eventos</h3>
-          <p>Intenta ajustar los filtros de búsqueda</p>
+        <div className="no-events-message text-center py-16 space-y-2">
+          <h3 className="text-lg font-semibold">No se encontraron eventos</h3>
+          <p className="text-slate-300">Intenta ajustar los filtros de búsqueda</p>
         </div>
       ) : (
         <>
-          <div className="events-grid">
+          <div className="events-grid grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {currentEvents.map((event) => (
               <EventCard
                 key={event.id}
@@ -129,26 +129,27 @@ const EventsGrid = ({ searchTerm = '', filters = {}, maxEvents = null, enablePag
           </div>
           
           {enablePagination && totalPages > 1 && (
-            <div className="pagination-container">
-              <div className="pagination-info">
+            <div className="pagination-container mt-8 flex flex-col items-center gap-4">
+              <div className="pagination-info text-sm text-slate-300">
                 Mostrando {startIndex + 1}-{Math.min(endIndex, filteredEvents.length)} de {filteredEvents.length} eventos
               </div>
-              <div className="pagination-controls">
+              <div className="pagination-controls flex flex-wrap items-center gap-2">
                 <button 
-                  className="pagination-button"
+                  className="pagination-button px-3 py-2"
                   onClick={() => handlePageChange(1)}
                   disabled={currentPage === 1}
                 >
                   Primera
                 </button>
                 <button
-                  className="pagination-button"
+                  className="pagination-button px-3 py-2"
                   onClick={() => handlePageChange(currentPage - 1)}
                   disabled={currentPage === 1}
                 >
                   Anterior
                 </button>
-                <div className="pagination-numbers">
+                <div className="pagination-numbers flex gap-2"
+                >
                   {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                     let pageNum;
                     if (totalPages <= 5) {
@@ -163,7 +164,7 @@ const EventsGrid = ({ searchTerm = '', filters = {}, maxEvents = null, enablePag
                     return (
                       <button
                         key={pageNum}
-                        className={`pagination-number ${currentPage === pageNum ? 'active' : ''}`}
+                        className={`pagination-number ${currentPage === pageNum ? 'active' : ''} px-3 py-2`}
                         onClick={() => handlePageChange(pageNum)}
                       >
                         {pageNum}
@@ -172,14 +173,14 @@ const EventsGrid = ({ searchTerm = '', filters = {}, maxEvents = null, enablePag
                   })}
                 </div>
                 <button 
-                  className="pagination-button"
+                  className="pagination-button px-3 py-2"
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={currentPage === totalPages}
                 >
                   Siguiente
                 </button>
                 <button
-                  className="pagination-button"
+                  className="pagination-button px-3 py-2"
                   onClick={() => handlePageChange(totalPages)}
                   disabled={currentPage === totalPages}
                 >

@@ -29,11 +29,12 @@ const ScrollToTopButton = () => {
     <>
       {isVisible && (
         <button 
-          className="scroll-to-top" 
+          className="scroll-to-top focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500"
           onClick={scrollToTop}
           aria-label="Volver al inicio"
+          title="Volver al inicio"
         >
-          <FaArrowUp />
+          <FaArrowUp className="pointer-events-none" />
           <span className="visually-hidden">Volver al inicio</span>
         </button>
       )}

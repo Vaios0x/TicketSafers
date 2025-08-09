@@ -499,7 +499,7 @@ const TicketModal = ({ isOpen, onClose, event }) => {
 
   const renderDetailsStep = () => (
     <motion.div 
-      className="modal-content-section"
+      className="modal-content-section will-change-transform"
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -20 }}
@@ -561,7 +561,7 @@ const TicketModal = ({ isOpen, onClose, event }) => {
           <span className="quantity-label">Cantidad:</span>
           <div className="quantity-controls">
             <button 
-              className="quantity-btn"
+              className="quantity-btn cursor-pointer transition active:scale-95 focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
               onClick={() => setSelectedQuantity(Math.max(1, selectedQuantity - 1))}
               disabled={selectedQuantity <= 1}
             >
@@ -569,7 +569,7 @@ const TicketModal = ({ isOpen, onClose, event }) => {
             </button>
             <span className="quantity-display">{selectedQuantity}</span>
             <button 
-              className="quantity-btn"
+              className="quantity-btn cursor-pointer transition active:scale-95 focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
               onClick={() => setSelectedQuantity(Math.min(10, selectedQuantity + 1))}
               disabled={selectedQuantity >= 10}
             >
@@ -585,7 +585,7 @@ const TicketModal = ({ isOpen, onClose, event }) => {
             {paymentOptions.map(opt => (
               <button
                 key={opt.key}
-                className={`payment-tab ${paymentMethod === opt.key ? 'active' : ''}`}
+                className={`payment-tab ${paymentMethod === opt.key ? 'active' : ''} cursor-pointer transition active:scale-[0.98] focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500`}
                 onClick={() => setPaymentMethod(opt.key)}
               >
                 {opt.icon}
@@ -603,7 +603,7 @@ const TicketModal = ({ isOpen, onClose, event }) => {
               {blockchainOptions.map((chain) => (
                 <button
                   key={chain.id}
-                  className={`blockchain-option ${selectedBlockchain === chain.id ? 'selected' : ''}`}
+                  className={`blockchain-option ${selectedBlockchain === chain.id ? 'selected' : ''} cursor-pointer transition focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500`}
                   onClick={() => setSelectedBlockchain(chain.id)}
                   style={{ borderColor: selectedBlockchain === chain.id ? chain.color : 'transparent' }}
                 >
@@ -679,7 +679,7 @@ const TicketModal = ({ isOpen, onClose, event }) => {
               </div>
             </div>
             {/* Botón de pago destacado (simulado) */}
-            <button className="btn-primary card-pay-btn">
+            <button className="btn-primary card-pay-btn focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500">
               <FaCreditCard style={{marginRight:8}}/> Pagar con tarjeta
             </button>
           </div>
@@ -700,7 +700,7 @@ const TicketModal = ({ isOpen, onClose, event }) => {
               <li><strong>Monto:</strong> <span className="spei-mono">${getTotalPrice().toFixed(2)} MXN</span></li>
             </ul>
             <p className="spei-instructions">Realiza una transferencia desde tu banca móvil o portal bancario.<br/>Una vez realizado el pago, haz clic en el botón de abajo.</p>
-            <button className="btn-primary spei-pay-btn" onClick={() => setCurrentStep('checkout')}>
+            <button className="btn-primary spei-pay-btn focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500" onClick={() => setCurrentStep('checkout')}>
               <FaUniversity style={{marginRight: 8}}/> Ya realicé mi pago
             </button>
             <div className="spei-wait-message">
@@ -714,7 +714,7 @@ const TicketModal = ({ isOpen, onClose, event }) => {
         {paymentMethod === 'dimo' && (
           <div className="dimo-box">
             <h4><FaQrcode style={{marginRight: 8}}/> Paga con Dimo</h4>
-            <a href="#" className="btn-primary dimo-pay-btn" style={{marginBottom: '1rem'}}>
+            <a href="#" className="btn-primary dimo-pay-btn focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500" style={{marginBottom: '1rem'}}>
               <FaQrcode style={{marginRight: 8}} /> Ir a Dimo
             </a>
             <p className="dimo-instructions">
@@ -741,7 +741,7 @@ const TicketModal = ({ isOpen, onClose, event }) => {
               Acude a cualquier tienda OXXO o 7-Eleven y proporciona la referencia y el monto al cajero.<br/>
               Conserva tu comprobante. Una vez realizado el pago, haz clic en el botón de abajo.
             </p>
-            <button className="btn-primary oxxo-pay-btn" onClick={() => setCurrentStep('checkout')}>
+            <button className="btn-primary oxxo-pay-btn focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500" onClick={() => setCurrentStep('checkout')}>
               <FaStore style={{marginRight: 8}}/> Ya pagué en OXXO/7-Eleven
             </button>
             <div className="oxxo-wait-message">
@@ -755,7 +755,7 @@ const TicketModal = ({ isOpen, onClose, event }) => {
         {paymentMethod === 'mercadopago' && (
           <div className="mp-box">
             <h4><SiMercadopago style={{marginRight: 8, color:'#009ee3'}}/> Mercado Pago</h4>
-            <a href="#" className="btn-primary mp-pay-btn" style={{marginBottom: '1rem', background: 'linear-gradient(90deg, #009ee3 0%, #00d4c4 100%)', color:'#fff'}}>
+            <a href="#" className="btn-primary mp-pay-btn focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500" style={{marginBottom: '1rem', background: 'linear-gradient(90deg, #009ee3 0%, #00d4c4 100%)', color:'#fff'}}>
               <SiMercadopago style={{marginRight: 8}} /> Ir a Mercado Pago
             </a>
             <p className="mp-instructions">
@@ -776,7 +776,7 @@ const TicketModal = ({ isOpen, onClose, event }) => {
               <SiKlarna style={{height:'1.5em',marginRight:8,color:'#00e084'}}/>
               Kueski Pay
             </h4>
-            <a href="#" className="btn-primary kueski-pay-btn" style={{marginBottom: '1rem', background: 'linear-gradient(90deg, #00e084 0%, #00b383 100%)', color:'#fff'}}>
+            <a href="#" className="btn-primary kueski-pay-btn focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500" style={{marginBottom: '1rem', background: 'linear-gradient(90deg, #00e084 0%, #00b383 100%)', color:'#fff'}}>
               <SiKlarna style={{height:'1.3em',marginRight:8,color:'#00e084'}}/> Pagar con Kueski Pay
             </a>
             <p className="kueski-instructions">
@@ -827,11 +827,11 @@ const TicketModal = ({ isOpen, onClose, event }) => {
 
       {/* Action Buttons */}
       <div className="modal-actions">
-        <button className="btn-secondary" onClick={onClose}>
+        <button className="btn-secondary focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500" onClick={onClose}>
           Cancelar
         </button>
         <button 
-          className="btn-primary"
+          className="btn-primary focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500"
           onClick={() => setCurrentStep('checkout')}
         >
           <FaShoppingCart />
@@ -900,7 +900,7 @@ const TicketModal = ({ isOpen, onClose, event }) => {
         <h3 className="error-title">Error en la Transacción</h3>
         <p className="error-message">{errorMessage}</p>
         <button 
-          className="btn-primary error-retry"
+          className="btn-primary error-retry focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500"
           onClick={() => {
             setShowError(false);
             setErrorMessage('');
@@ -1100,13 +1100,13 @@ const TicketModal = ({ isOpen, onClose, event }) => {
       {/* Action Buttons */}
       <div className="modal-actions">
         <button 
-          className="btn-secondary" 
+          className="btn-secondary focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500" 
           onClick={() => setCurrentStep('details')}
         >
           Volver
         </button>
         <button 
-          className="btn-primary purchase-btn"
+          className="btn-primary purchase-btn focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500"
           onClick={handlePurchase}
           disabled={isProcessing || (paymentMethod === 'card' && !isCardDataValid())}
         >
@@ -1174,10 +1174,10 @@ const TicketModal = ({ isOpen, onClose, event }) => {
       </div>
 
       <div className="modal-actions">
-        <button className="btn-secondary" onClick={handleViewTicket}>
+        <button className="btn-secondary focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500" onClick={handleViewTicket}>
           Ver mi Ticket NFT
         </button>
-        <button className="btn-primary" onClick={onClose}>
+        <button className="btn-primary focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500" onClick={onClose}>
           Cerrar
         </button>
       </div>
@@ -1279,13 +1279,13 @@ const TicketModal = ({ isOpen, onClose, event }) => {
       </div>
 
       <div className="ticket-actions">
-        <button className="btn-secondary" onClick={handleViewTicket}>
+        <button className="btn-secondary focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500" onClick={handleViewTicket}>
           <FaShoppingCart /> Comprar Otro Ticket
         </button>
-        <button className="btn-primary" onClick={handleDownloadTicket}>
+        <button className="btn-primary focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500" onClick={handleDownloadTicket}>
           <FaDownload /> Descargar Ticket
         </button>
-        <button className="btn-primary" onClick={handleShareTicket}>
+        <button className="btn-primary focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500" onClick={handleShareTicket}>
           <FaShareAlt /> Compartir Ticket
         </button>
       </div>
@@ -1296,7 +1296,7 @@ const TicketModal = ({ isOpen, onClose, event }) => {
     <AnimatePresence>
       {isOpen && (
         <motion.div 
-          className="ticket-modal-backdrop"
+          className="ticket-modal-backdrop backdrop-blur-sm md:backdrop-blur-md"
           variants={backdropVariants}
           initial="hidden"
           animate="visible"
@@ -1316,7 +1316,7 @@ const TicketModal = ({ isOpen, onClose, event }) => {
           }}
         >
           <motion.div 
-            className="ticket-modal"
+            className="ticket-modal rounded-2xl border border-white/10 bg-slate-800/95 shadow-2xl"
             variants={modalVariants}
             initial="hidden"
             animate="visible"
@@ -1341,7 +1341,7 @@ const TicketModal = ({ isOpen, onClose, event }) => {
                 {currentStep === 'confirmation' && 'Confirmación'}
                 {currentStep === 'ticket' && 'Tu Ticket NFT'}
               </div>
-              <button className="modal-close" onClick={onClose}>
+              <button className="modal-close focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500" onClick={onClose}>
                 <FaTimes />
               </button>
             </div>

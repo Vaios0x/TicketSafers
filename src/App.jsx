@@ -498,7 +498,7 @@ const criticalStyles = `
 
 function App() {
   return (
-    <div className="neural-app">
+    <div className="neural-app font-sans antialiased selection:bg-indigo-500/20 selection:text-white">
       <style dangerouslySetInnerHTML={{ __html: criticalStyles }} />
       <NeuralMenu />
       <Routes>
