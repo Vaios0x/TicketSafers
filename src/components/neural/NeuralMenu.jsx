@@ -112,15 +112,15 @@ const NeuralMenu = () => {
   }, []);
 
   useEffect(() => {
-    // Prevenir scroll cuando el menú móvil está abierto
+    // Evitar desplazamiento lateral sin ocultar el scrollbar vertical (previene el "salto" de layout)
     if (isMobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.classList.add('menu-open');
     } else {
-      document.body.style.overflow = 'unset';
+      document.body.classList.remove('menu-open');
     }
 
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.classList.remove('menu-open');
     };
   }, [isMobileMenuOpen]);
 
