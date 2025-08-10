@@ -81,6 +81,12 @@
   will-change: transform;
 }
 
+/* Accesibilidad: focus-visible de respaldo */
+.neural-button:focus-visible {
+  outline: 2px solid #6366f1; /* indigo-500 */
+  outline-offset: 2px;
+}
+
 .neural-button.primary {
   background: var(--neural-gradient-ticket);
   color: white;

@@ -314,6 +314,15 @@
   transition: transform 0.3s ease;
 }
 
+/* Accesibilidad: focus-visible para tabs y filtros */
+.tab-button:focus-visible,
+.filter-select:focus-visible,
+.cta-button:focus-visible,
+.action-button:focus-visible {
+  outline: 2px solid #6366f1; /* indigo-500 */
+  outline-offset: 2px;
+}
+
 .marketplace-card:hover .card-image img {
   transform: scale(1.1);
 }
