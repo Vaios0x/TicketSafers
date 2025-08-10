@@ -1083,7 +1083,7 @@ const TicketModal = ({ isOpen, onClose, event }) => {
 
       {/* Terms and Conditions */}
       <div className="terms-section">
-        <div className="terms-item">
+            <div className="terms-item">
           <FaInfoCircle className="terms-icon" />
           <span>Los tickets son NFTs únicos y verificables en blockchain</span>
         </div>
@@ -1095,6 +1095,10 @@ const TicketModal = ({ isOpen, onClose, event }) => {
           <FaCheckCircle className="terms-icon" />
           <span>Tickets transferibles y revendibles</span>
         </div>
+            <div className="terms-item">
+              <FaInfoCircle className="terms-icon" />
+              <span className="text-amber-200">Demo experimental: no procesamos pagos reales ni custodiamos fondos. Solo fines educativos.</span>
+            </div>
       </div>
 
       {/* Action Buttons */}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Routes, Route } from 'react-router-dom'
 import NeuralMenu from './components/neural/NeuralMenu'
 import NeuralHome from './components/neural/NeuralHome'
@@ -20,8 +20,8 @@ import PolygonPage from './components/neural/PolygonPage'
 import ArbitrumPage from './components/neural/ArbitrumPage'
 import OptimismPage from './components/neural/OptimismPage'
 import NeuralFooter from './components/neural/NeuralFooter'
-import DisclaimerBanner from './components/common/DisclaimerBanner'
 import ScrollToTopButton from './components/common/ScrollToTopButton'
+import ComplianceBanner from './components/common/ComplianceBanner'
 
 // Importación de estilos
 import './styles/index.css'
@@ -501,8 +501,7 @@ function App() {
   return (
     <div className="neural-app font-sans antialiased selection:bg-indigo-500/20 selection:text-white">
       <style dangerouslySetInnerHTML={{ __html: criticalStyles }} />
-      {/* Banner superior SIEMPRE visible arriba del header cuando estás en el tope */}
-      <DisclaimerBanner position="top" />
+      <ComplianceBanner />
       <NeuralMenu />
       <Routes>
         <Route path="/" element={<NeuralHome />} />
@@ -525,10 +524,7 @@ function App() {
         <Route path="/optimism" element={<OptimismPage />} />
       </Routes>
       <NeuralFooter />
-      {/* Aviso inferior */}
-      <div className="z-[60]">
-        <DisclaimerBanner position="bottom" />
-      </div>
+      <ComplianceBanner />
       <ScrollToTopButton />
     </div>
   )
