@@ -20,6 +20,7 @@ import PolygonPage from './components/neural/PolygonPage'
 import ArbitrumPage from './components/neural/ArbitrumPage'
 import OptimismPage from './components/neural/OptimismPage'
 import NeuralFooter from './components/neural/NeuralFooter'
+import DisclaimerBanner from './components/common/DisclaimerBanner'
 import ScrollToTopButton from './components/common/ScrollToTopButton'
 
 // Importación de estilos
@@ -500,6 +501,8 @@ function App() {
   return (
     <div className="neural-app font-sans antialiased selection:bg-indigo-500/20 selection:text-white">
       <style dangerouslySetInnerHTML={{ __html: criticalStyles }} />
+      {/* Aviso superior */}
+      <DisclaimerBanner position="top" />
       <NeuralMenu />
       <Routes>
         <Route path="/" element={<NeuralHome />} />
@@ -522,6 +525,8 @@ function App() {
         <Route path="/optimism" element={<OptimismPage />} />
       </Routes>
       <NeuralFooter />
+      {/* Aviso inferior */}
+      <DisclaimerBanner position="bottom" />
       <ScrollToTopButton />
     </div>
   )
