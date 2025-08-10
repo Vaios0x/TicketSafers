@@ -501,28 +501,9 @@ function App() {
   return (
     <div className="neural-app font-sans antialiased selection:bg-indigo-500/20 selection:text-white">
       <style dangerouslySetInnerHTML={{ __html: criticalStyles }} />
-      {/* Banner superior: visible solo al estar en el tope */}
-      {(() => {
-        const [showTopBanner, setShowTopBanner] = useState(false)
-        useEffect(() => {
-          const update = () => setShowTopBanner(window.scrollY <= 4)
-          update()
-          window.addEventListener('scroll', update, { passive: true })
-          return () => window.removeEventListener('scroll', update)
-        }, [])
-        return (
-          <>
-            {showTopBanner && (
-              <div className="fixed top-0 left-0 right-0 z-[100]">
-                <DisclaimerBanner position="top" />
-              </div>
-            )}
-            <div className={showTopBanner ? 'mt-[42px]' : ''}>
-              <NeuralMenu />
-            </div>
-          </>
-        )
-      })()}
+      {/* Banner superior SIEMPRE visible arriba del header cuando estás en el tope */}
+      <DisclaimerBanner position="top" />
+      <NeuralMenu />
       <Routes>
         <Route path="/" element={<NeuralHome />} />
         <Route path="/perfil" element={<ProfilePage />} />
