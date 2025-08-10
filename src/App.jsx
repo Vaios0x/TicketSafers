@@ -501,8 +501,10 @@ function App() {
   return (
     <div className="neural-app font-sans antialiased selection:bg-indigo-500/20 selection:text-white">
       <style dangerouslySetInnerHTML={{ __html: criticalStyles }} />
-      {/* Aviso superior */}
-      <DisclaimerBanner position="top" />
+      {/* Aviso superior: sólo visible cuando se está en el tope */}
+      <div className="sticky top-0 z-[60]">
+        <DisclaimerBanner position="top" />
+      </div>
       <NeuralMenu />
       <Routes>
         <Route path="/" element={<NeuralHome />} />
@@ -526,7 +528,9 @@ function App() {
       </Routes>
       <NeuralFooter />
       {/* Aviso inferior */}
-      <DisclaimerBanner position="bottom" />
+      <div className="z-[60]">
+        <DisclaimerBanner position="bottom" />
+      </div>
       <ScrollToTopButton />
     </div>
   )
