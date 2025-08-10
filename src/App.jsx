@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import NeuralMenu from './components/neural/NeuralMenu'
 import NeuralHome from './components/neural/NeuralHome'
@@ -501,11 +501,28 @@ function App() {
   return (
     <div className="neural-app font-sans antialiased selection:bg-indigo-500/20 selection:text-white">
       <style dangerouslySetInnerHTML={{ __html: criticalStyles }} />
-      {/* Aviso superior: sólo visible cuando se está en el tope */}
-      <div className="sticky top-0 z-[60]">
-        <DisclaimerBanner position="top" />
-      </div>
-      <NeuralMenu />
+      {/* Banner superior: visible solo al estar en el tope */}
+      {(() => {
+        const [showTopBanner, setShowTopBanner] = useState(false)
+        useEffect(() => {
+          const update = () => setShowTopBanner(window.scrollY <= 4)
+          update()
+          window.addEventListener('scroll', update, { passive: true })
+          return () => window.removeEventListener('scroll', update)
+        }, [])
+        return (
+          <>
+            {showTopBanner && (
+              <div className="fixed top-0 left-0 right-0 z-[100]">
+                <DisclaimerBanner position="top" />
+              </div>
+            )}
+            <div className={showTopBanner ? 'mt-[42px]' : ''}>
+              <NeuralMenu />
+            </div>
+          </>
+        )
+      })()}
       <Routes>
         <Route path="/" element={<NeuralHome />} />
         <Route path="/perfil" element={<ProfilePage />} />
