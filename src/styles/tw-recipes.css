@@ -6,11 +6,11 @@
 }
 
 .btn-primary {
-  @apply btn text-white bg-gradient-to-r from-[var(--color-brand)] to-[var(--color-brand-2)] hover:shadow-[var(--shadow-glass)] hover:-translate-y-0.5;
+  @apply inline-flex items-center justify-center gap-2 font-semibold rounded-xl transition-all duration-200 text-white bg-gradient-to-r from-[var(--color-brand)] to-[var(--color-brand-2)] hover:shadow-[var(--shadow-glass)] hover:-translate-y-0.5;
 }
 
 .btn-secondary {
-  @apply btn text-white bg-white/10 border border-white/20 backdrop-blur hover:bg-white/15;
+  @apply inline-flex items-center justify-center gap-2 font-semibold rounded-xl transition-all duration-200 text-white bg-white/10 border border-white/20 backdrop-blur hover:bg-white/15;
 }
 
 /* Tarjetas con glassmorphism */

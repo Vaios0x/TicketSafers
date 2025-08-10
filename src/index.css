@@ -1,7 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
-/* Recetas utilitarias basadas en Tailwind */
-@import './styles/tw-recipes.css';
 @import './styles/event-titles-override.css';
 @import './styles/event-card.css';
 @import './styles/events-page.css';
@@ -67,6 +65,9 @@ button:focus-visible {
   --radius-card: 1.25rem;
   --shadow-glass: 0 8px 25px rgba(102, 126, 234, 0.4);
 }
+
+/* Recetas utilitarias basadas en Tailwind (deben ir tras @theme y tailwind) */
+@import './styles/tw-recipes.css';
 
 /* Animaciones Neural */
 @keyframes neuralPulse {
