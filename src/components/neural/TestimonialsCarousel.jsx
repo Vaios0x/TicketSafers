@@ -121,7 +121,7 @@ const TestimonialsCarousel = ({ testimonials = [] }) => {
           {testimonials.map((_, index) => (
             <motion.button
               key={index}
-              className={`dot ${index === currentIndex ? 'active' : ''} focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500`}
+              className={`dot ${index === currentIndex ? 'active' : ''} focus-ring`}
               onClick={() => handleDotClick(index)}
               whileHover={{ scale: 1.2 }}
               whileTap={{ scale: 0.9 }}

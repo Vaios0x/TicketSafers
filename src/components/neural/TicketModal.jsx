@@ -827,11 +827,11 @@ const TicketModal = ({ isOpen, onClose, event }) => {
 
       {/* Action Buttons */}
       <div className="modal-actions">
-        <button className="btn-secondary focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500" onClick={onClose}>
+        <button className="btn-secondary focus-ring" onClick={onClose}>
           Cancelar
         </button>
         <button 
-          className="btn-primary focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500"
+          className="btn-primary focus-ring"
           onClick={() => setCurrentStep('checkout')}
         >
           <FaShoppingCart />
@@ -998,7 +998,7 @@ const TicketModal = ({ isOpen, onClose, event }) => {
                       placeholder="1234 5678 9012 3456"
                       value={cardData.cardNumber}
                       onChange={(e) => handleCardInputChange('cardNumber', e.target.value)}
-                      className="card-input"
+                      className="card-input input-base"
                     />
                     <div className="card-type-icons">
                       <SiVisa className="card-type-icon" />
@@ -1015,7 +1015,7 @@ const TicketModal = ({ isOpen, onClose, event }) => {
                       placeholder="MM/YY"
                       value={cardData.expiryDate}
                       onChange={(e) => handleCardInputChange('expiryDate', e.target.value)}
-                      className="card-input"
+                      className="card-input input-base"
                     />
                   </div>
                   <div className="input-field">
@@ -1025,7 +1025,7 @@ const TicketModal = ({ isOpen, onClose, event }) => {
                       placeholder="123"
                       value={cardData.cvv}
                       onChange={(e) => handleCardInputChange('cvv', e.target.value)}
-                      className="card-input"
+                      className="card-input input-base"
                     />
                   </div>
                 </div>
@@ -1037,7 +1037,7 @@ const TicketModal = ({ isOpen, onClose, event }) => {
                     placeholder="Juan Pérez"
                     value={cardData.cardHolder}
                     onChange={(e) => handleCardInputChange('cardHolder', e.target.value)}
-                    className="card-input"
+                    className="card-input input-base"
                   />
                 </div>
               </div>
@@ -1057,7 +1057,7 @@ const TicketModal = ({ isOpen, onClose, event }) => {
                     placeholder="tu@email.com"
                     value={cardData.email}
                     onChange={(e) => handleCardInputChange('email', e.target.value)}
-                    className="card-input"
+                    className="card-input input-base"
                   />
                 </div>
                 <div className="input-field">
@@ -1067,7 +1067,7 @@ const TicketModal = ({ isOpen, onClose, event }) => {
                     placeholder="1234567890"
                     value={cardData.phone}
                     onChange={(e) => handleCardInputChange('phone', e.target.value)}
-                    className="card-input"
+                    className="card-input input-base"
                   />
                 </div>
               </div>
@@ -1100,13 +1100,13 @@ const TicketModal = ({ isOpen, onClose, event }) => {
       {/* Action Buttons */}
       <div className="modal-actions">
         <button 
-          className="btn-secondary focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500" 
+          className="btn-secondary focus-ring" 
           onClick={() => setCurrentStep('details')}
         >
           Volver
         </button>
         <button 
-          className="btn-primary purchase-btn focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500"
+          className="btn-primary purchase-btn focus-ring"
           onClick={handlePurchase}
           disabled={isProcessing || (paymentMethod === 'card' && !isCardDataValid())}
         >

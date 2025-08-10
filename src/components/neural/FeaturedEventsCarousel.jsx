@@ -102,13 +102,13 @@ const FeaturedEventsCarousel = ({ events = [] }) => {
         </AnimatePresence>
 
         <button
-          className="carousel-button prev focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500"
+          className="carousel-button prev focus-ring"
           onClick={() => paginate(-1)}
         >
           <FaChevronLeft />
         </button>
         <button
-          className="carousel-button next focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500"
+          className="carousel-button next focus-ring"
           onClick={() => paginate(1)}
         >
           <FaChevronRight />
@@ -118,7 +118,7 @@ const FeaturedEventsCarousel = ({ events = [] }) => {
           {events.map((_, index) => (
             <button
               key={index}
-              className={`dot ${index === currentIndex ? 'active' : ''} focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500`}
+              className={`dot ${index === currentIndex ? 'active' : ''} focus-ring`}
               onClick={() => {
                 setDirection(index > currentIndex ? 1 : -1);
                 setCurrentIndex(index);

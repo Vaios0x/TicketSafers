@@ -1,0 +1,36 @@
+/* Tailwind Recipes: utilidades componibles */
+
+/* Botones */
+.btn {
+  @apply inline-flex items-center justify-center gap-2 font-semibold rounded-xl transition-all duration-200;
+}
+
+.btn-primary {
+  @apply btn text-white bg-gradient-to-r from-[var(--color-brand)] to-[var(--color-brand-2)] hover:shadow-[var(--shadow-glass)] hover:-translate-y-0.5;
+}
+
+.btn-secondary {
+  @apply btn text-white bg-white/10 border border-white/20 backdrop-blur hover:bg-white/15;
+}
+
+/* Tarjetas con glassmorphism */
+.glass-card {
+  @apply bg-[var(--color-surface)] backdrop-blur-xl border border-[var(--color-border)] rounded-[var(--radius-card)];
+}
+
+/* Badges */
+.badge {
+  @apply inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-full;
+}
+
+/* Accesibilidad */
+.focus-ring {
+  @apply focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900;
+}
+
+/* Inputs */
+.input-base {
+  @apply w-full rounded-xl bg-white/5 border border-white/10 px-4 py-2 text-white placeholder-white/40 focus-visible:ring-2 focus-visible:ring-indigo-500 outline-none;
+}
+
+

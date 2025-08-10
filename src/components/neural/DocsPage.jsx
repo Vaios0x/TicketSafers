@@ -666,6 +666,31 @@ async function verifyTicket(ticketId, eventId) {
             role="main"
             aria-label="Contenido principal"
           >
+            {/* Sección adicional: UI / Tailwind */}
+            {activeSection === 'introduction' && (
+              <div className="docs-section">
+                <h2>UI / Tailwind</h2>
+                <p>
+                  Este proyecto usa Tailwind v4 con <code>@tailwindcss/vite</code> y
+                  utilidades componibles. Tokens claves están definidos en <code>@theme</code> dentro de <code>src/index.css</code>,
+                  y recetas en <code>src/styles/tw-recipes.css</code> como <code>.btn</code>, <code>.btn-primary</code>, <code>.glass-card</code> y <code>.badge</code>.
+                </p>
+                <div className="feature-grid">
+                  <div className="feature-card">
+                    <h3>Accesibilidad</h3>
+                    <p>Usa <code>focus-ring</code> en elementos interactivos y tamaños táctiles mínimos.</p>
+                  </div>
+                  <div className="feature-card">
+                    <h3>Layout</h3>
+                    <p>Prefiere utilidades para grid/flex y breakpoints en lugar de media queries manuales.</p>
+                  </div>
+                  <div className="feature-card">
+                    <h3>Estilos</h3>
+                    <p>Gradientes y sombras con tokens: <code>from-[var(--color-brand)]</code>, <code>rounded-[var(--radius-card)]</code>.</p>
+                  </div>
+                </div>
+              </div>
+            )}
             {renderMainContent()}
           </motion.main>
         </div>

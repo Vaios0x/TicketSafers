@@ -111,7 +111,7 @@ const NeuralNavbar = () => {
 
   return (
     <motion.nav 
-      className={`neural-navbar ${isScrolled ? 'scrolled' : ''} backdrop-blur supports-[backdrop-filter]:bg-slate-900/70`}
+      className={`neural-navbar ${isScrolled ? 'scrolled' : ''} sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-slate-900/70`}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.6 }}
@@ -145,7 +145,7 @@ const NeuralNavbar = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
             >
-              <a href={item.path} className="neural-item-button focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500">
+              <a href={item.path} className="neural-item-button focus-ring">
                 <span className="item-label">{item.title}</span>
                 <div className="neural-glow-indicator"></div>
               </a>
@@ -156,7 +156,7 @@ const NeuralNavbar = () => {
         {/* Profile Menu */}
         <div className="profile-menu-container">
           <motion.button
-            className="profile-menu-trigger focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500"
+            className="profile-menu-trigger focus-ring"
             onClick={handleProfileClick}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -238,7 +238,7 @@ const NeuralNavbar = () => {
                 </div>
 
                 <div className="dropdown-footer">
-                  <button className="dropdown-item logout-btn focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500" onClick={handleLogout}>
+                  <button className="dropdown-item logout-btn focus-ring" onClick={handleLogout}>
                     <FaSignOutAlt />
                     <span>Cerrar Sesión</span>
                   </button>
