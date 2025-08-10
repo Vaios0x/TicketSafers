@@ -1254,3 +1254,13 @@ html, body {
     font-size: 0.8rem;
   }
 } 
+
+/* Accesibilidad: focus-visible de respaldo para elementos interactivos */
+.neural-item-button:focus-visible,
+.profile-menu-trigger:focus-visible,
+.dropdown-item:focus-visible,
+.logout-btn:focus-visible,
+.menu-btn:focus-visible {
+  outline: 2px solid #6366f1; /* indigo-500 */
+  outline-offset: 2px;
+}
