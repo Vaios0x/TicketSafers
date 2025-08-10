@@ -85,7 +85,7 @@ const RealTimeStats = () => {
         transition={{ duration: 0.6 }}
       >
         <FaChartLine />
-        <h2>Estadísticas en Tiempo Real</h2>
+        <h2 className="leading-tight">Estadísticas en Tiempo Real</h2>
       </motion.div>
 
       <div className="stats-grid">

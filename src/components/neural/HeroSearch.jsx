@@ -195,21 +195,21 @@ const HeroSearch = ({ onSearch: _onSearch, onFilterChange: _onFilterChange }) =>
                   setShowSuggestions(true);
                 }}
                 onKeyPress={handleKeyPress}
-                className="search-input-premium"
+                className="search-input-premium focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500"
               />
             </div>
             
             {/* Action Buttons */}
             <div className="search-actions-premium">
               <button 
-                className="action-btn voice-btn"
+                className="action-btn voice-btn focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500"
                 onClick={() => setShowVoiceSearch(true)}
                 title="Búsqueda por voz"
               >
                 <FaMicrophone />
               </button>
               <button 
-                className="action-btn camera-btn"
+                className="action-btn camera-btn focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500"
                 onClick={() => {}}
                 title="Búsqueda por imagen"
               >
@@ -237,7 +237,7 @@ const HeroSearch = ({ onSearch: _onSearch, onFilterChange: _onFilterChange }) =>
               <select 
                 value={selectedLocation}
                 onChange={(e) => setSelectedLocation(e.target.value)}
-                className="filter-select-premium"
+                className="filter-select-premium focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500"
               >
                 <option value="">Ubicación</option>
                 {locations.map(location => (
@@ -254,12 +254,12 @@ const HeroSearch = ({ onSearch: _onSearch, onFilterChange: _onFilterChange }) =>
                 type="date"
                 value={selectedDate}
                 onChange={(e) => setSelectedDate(e.target.value)}
-                className="filter-select-premium"
+                className="filter-select-premium focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500"
               />
             </div>
 
             <motion.button
-              className="search-btn-premium"
+              className="search-btn-premium focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500"
               onClick={handleSearch}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}

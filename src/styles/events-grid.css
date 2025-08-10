@@ -620,6 +620,7 @@ div[class*="event"]:hover .event-title-premium {
   max-width: 1800px;
   margin: 0 auto;
   padding: 24px;
+  scroll-margin-top: 90px; /* para evitar que la navbar tape el grid al hacer scroll a anclas */
 }
 
 .events-grid {
@@ -627,6 +628,7 @@ div[class*="event"]:hover .event-title-premium {
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 24px;
   margin-bottom: 32px;
+  will-change: transform; /* optimiza animaciones de hover/entrada */
 }
 
 /* Loading State */

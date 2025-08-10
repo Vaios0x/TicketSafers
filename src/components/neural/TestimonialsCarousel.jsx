@@ -51,7 +51,7 @@ const TestimonialsCarousel = ({ testimonials = [] }) => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        <h2>Lo que dicen nuestros usuarios</h2>
+        <h2 className="leading-tight">Lo que dicen nuestros usuarios</h2>
         <p>Experiencias reales de la comunidad TicketSafer</p>
       </motion.div>
 
@@ -121,7 +121,7 @@ const TestimonialsCarousel = ({ testimonials = [] }) => {
           {testimonials.map((_, index) => (
             <motion.button
               key={index}
-              className={`dot ${index === currentIndex ? 'active' : ''}`}
+              className={`dot ${index === currentIndex ? 'active' : ''} focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500`}
               onClick={() => handleDotClick(index)}
               whileHover={{ scale: 1.2 }}
               whileTap={{ scale: 0.9 }}

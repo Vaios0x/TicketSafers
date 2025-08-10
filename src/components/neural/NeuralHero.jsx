@@ -109,7 +109,7 @@ const NeuralHero = () => {
       
       <div className="neural-hero-content">
         <motion.h1 
-          className="neural-hero-title"
+          className="neural-hero-title leading-tight text-balance"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
@@ -118,7 +118,7 @@ const NeuralHero = () => {
         </motion.h1>
 
         <motion.p 
-          className="neural-hero-subtitle"
+          className="neural-hero-subtitle text-pretty"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
