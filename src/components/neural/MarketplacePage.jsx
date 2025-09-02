@@ -219,6 +219,7 @@ const MarketplacePage = () => {
                         {item.chain === 'ethereum' && <FaEthereum />}
                         {item.chain === 'polygon' && '⬣'}
                         {item.chain === 'arbitrum' && '◉'}
+                        {item.chain === 'base' && '⬣'}
                         {item.chain}
                       </span>
                     </div>

@@ -368,7 +368,8 @@ const CreateEventPage = ({ isEditing = false, eventToEdit = null }) => {
     { id: 'ethereum', name: 'Ethereum', color: '#627EEA', currency: 'ETH' },
     { id: 'polygon', name: 'Polygon', color: '#8247E5', currency: 'MATIC' },
     { id: 'arbitrum', name: 'Arbitrum', color: '#28A0F0', currency: 'ETH' },
-    { id: 'optimism', name: 'Optimism', color: '#FF0420', currency: 'ETH' }
+    { id: 'optimism', name: 'Optimism', color: '#FF0420', currency: 'ETH' },
+    { id: 'base', name: 'Base', color: '#0052FF', currency: 'ETH' }
   ];
 
   const renderStepContent = () => {

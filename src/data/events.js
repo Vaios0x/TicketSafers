@@ -2203,7 +2203,8 @@ export const supportedChains = [
   "ethereum",
   "polygon",
   "arbitrum",
-  "optimism"
+  "optimism",
+  "base"
 ];
 
 // ... rest of existing code ... 

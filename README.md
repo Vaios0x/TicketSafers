@@ -8,7 +8,7 @@
 [![Framer Motion](https://img.shields.io/badge/Framer_Motion-12.18.1-0055FF?style=for-the-badge&logo=framer)](https://www.framer.com/motion/)
 [![RainbowKit](https://img.shields.io/badge/RainbowKit-2.2.7-FF4785?style=for-the-badge)](https://www.rainbowkit.com/)
 
-> **La primera plataforma multichain de tickets NFT con soporte para Ethereum, Polygon, Arbitrum y Optimism**
+> **La primera plataforma multichain de tickets NFT con soporte para Ethereum, Polygon, Arbitrum, Optimism y Base**
 
 ## ✨ Características Principales
 
@@ -29,7 +29,7 @@
 ### 🔗 **Web3 Integration**
 - **RainbowKit** para conexión de wallets
 - **Wagmi** para interacciones blockchain
-- **Soporte Multichain**: Ethereum, Polygon, Arbitrum, Optimism
+- **Soporte Multichain**: Ethereum, Polygon, Arbitrum, Optimism, Base
 - **React Query** para gestión de estado y cache
 - **TypeScript** para type safety completo
 
