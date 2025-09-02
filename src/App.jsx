@@ -19,6 +19,7 @@ import EthereumPage from './components/neural/EthereumPage'
 import PolygonPage from './components/neural/PolygonPage'
 import ArbitrumPage from './components/neural/ArbitrumPage'
 import OptimismPage from './components/neural/OptimismPage'
+import BasePage from './components/neural/BasePage'
 import NeuralFooter from './components/neural/NeuralFooter'
 import ScrollToTopButton from './components/common/ScrollToTopButton'
 import ComplianceBanner from './components/common/ComplianceBanner'
@@ -522,6 +523,7 @@ function App() {
         <Route path="/polygon" element={<PolygonPage />} />
         <Route path="/arbitrum" element={<ArbitrumPage />} />
         <Route path="/optimism" element={<OptimismPage />} />
+        <Route path="/base" element={<BasePage />} />
       </Routes>
       <NeuralFooter />
       <ComplianceBanner />

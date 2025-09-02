@@ -58,9 +58,9 @@ const NeuralAbout = () => {
 
   const stats = [
     {
-      value: "4",
+      value: "5",
       label: "Blockchains Integradas",
-      description: "Ethereum, Arbitrum, Optimism y Polygon"
+      description: "Ethereum, Arbitrum, Optimism, Polygon y Base"
     },
     {
       value: "10,000+",

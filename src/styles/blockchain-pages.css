@@ -78,6 +78,24 @@
   pointer-events: none;
 }
 
+/* Base Page */
+.blockchain-page.base {
+  background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 30%, #0052FF 70%, #0039CC 100%);
+}
+
+.blockchain-page.base::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 20%, rgba(0, 82, 255, 0.2) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(0, 64, 200, 0.2) 0%, transparent 50%);
+  pointer-events: none;
+}
+
 .blockchain-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -129,6 +147,12 @@
   color: #ef4444;
 }
 
+.blockchain-page.base .blockchain-logo {
+  background: linear-gradient(135deg, rgba(0, 82, 255, 0.2), rgba(0, 64, 200, 0.2));
+  border-color: #0052FF;
+  color: #0052FF;
+}
+
 .blockchain-title {
   font-size: 4rem;
   font-weight: 800;
@@ -160,6 +184,13 @@
 
 .blockchain-page.optimism .blockchain-title {
   background: linear-gradient(135deg, #ef4444, #dc2626, #f87171);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.blockchain-page.base .blockchain-title {
+  background: linear-gradient(135deg, #0052FF, #0039CC, #4C82FF);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -206,6 +237,10 @@
   border-color: rgba(239, 68, 68, 0.3);
 }
 
+.blockchain-page.base .blockchain-stat {
+  border-color: rgba(0, 82, 255, 0.3);
+}
+
 .blockchain-stat:hover {
   transform: translateY(-5px);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
@@ -231,6 +266,10 @@
 
 .blockchain-page.optimism .blockchain-stat-value {
   color: #ef4444;
+}
+
+.blockchain-page.base .blockchain-stat-value {
+  color: #0052FF;
 }
 
 .blockchain-stat-label {
@@ -270,6 +309,10 @@
 
 .blockchain-page.optimism .blockchain-feature {
   border-color: rgba(239, 68, 68, 0.2);
+}
+
+.blockchain-page.base .blockchain-feature {
+  border-color: rgba(0, 82, 255, 0.2);
 }
 
 .blockchain-feature:hover {

@@ -46,11 +46,19 @@
   filter: drop-shadow(0 2px 4px rgba(255, 4, 32, 0.3));
 }
 
+/* BASE */
+.base-icon {
+  color: #0052FF !important;
+  font-size: 18px;
+  filter: drop-shadow(0 2px 4px rgba(0, 82, 255, 0.3));
+}
+
 /* HOVER EFFECTS */
 .chain-icon-wrapper:hover .blockchain-icon,
 .chain-icon-wrapper:hover .ethereum-icon,
 .chain-icon-wrapper:hover .polygon-icon,
-.chain-icon-wrapper:hover .optimism-icon {
+.chain-icon-wrapper:hover .optimism-icon,
+.chain-icon-wrapper:hover .base-icon {
   transform: scale(1.1);
   filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.3));
 }
@@ -71,7 +79,8 @@
 /* ICONOS EN MÉTODOS DE PAGO */
 .payment-icons .ethereum-icon,
 .payment-icons .polygon-icon,
-.payment-icons .optimism-icon {
+.payment-icons .optimism-icon,
+.payment-icons .base-icon {
   font-size: 20px;
 }
 
@@ -85,7 +94,8 @@
 @media (max-width: 768px) {
   .ethereum-icon,
   .polygon-icon,
-  .optimism-icon {
+  .optimism-icon,
+  .base-icon {
     font-size: 16px;
   }
   
@@ -97,7 +107,8 @@
   
   .payment-icons .ethereum-icon,
   .payment-icons .polygon-icon,
-  .payment-icons .optimism-icon {
+  .payment-icons .optimism-icon,
+  .payment-icons .base-icon {
     font-size: 18px;
   }
   
@@ -266,6 +277,14 @@
     0 0 20px rgba(130, 71, 229, 0.3);
 }
 
+.blockchain-icon.base:hover {
+  background: rgba(0, 82, 255, 0.15);
+  border-color: rgba(0, 82, 255, 0.3);
+  box-shadow: 
+    0 10px 30px rgba(0, 82, 255, 0.2),
+    0 0 20px rgba(0, 82, 255, 0.3);
+}
+
 /* Efectos de neón sutiles para los iconos */
 .blockchain-icon.ethereum:hover .blockchain-icon-svg {
   filter: drop-shadow(0 0 15px rgba(98, 126, 234, 0.6));
@@ -281,6 +300,10 @@
 
 .blockchain-icon.polygon:hover .blockchain-icon-svg {
   filter: drop-shadow(0 0 15px rgba(130, 71, 229, 0.6));
+}
+
+.blockchain-icon.base:hover .blockchain-icon-svg {
+  filter: drop-shadow(0 0 15px rgba(0, 82, 255, 0.6));
 }
 
 /* Responsive */
@@ -348,6 +371,7 @@
 .blockchain-icon:nth-child(2) { animation-delay: 0.2s; }
 .blockchain-icon:nth-child(3) { animation-delay: 0.3s; }
 .blockchain-icon:nth-child(4) { animation-delay: 0.4s; }
+.blockchain-icon:nth-child(5) { animation-delay: 0.5s; }
 
 @keyframes slideInUp {
   to {

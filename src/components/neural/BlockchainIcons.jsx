@@ -62,6 +62,22 @@ const BlockchainIcons = () => {
           <path d="M176 152L144 168V200L176 216L208 200V168L176 152Z" fill="white"/>
         </svg>
       )
+    },
+    {
+      name: 'Base',
+      className: 'base',
+      chainFilter: 'base',
+      icon: (
+        <svg className="blockchain-icon-svg" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="256" height="256" rx="128" fill="#0052FF"/>
+          <path d="M128 64L96 80V112L128 128L160 112V80L128 64Z" fill="white"/>
+          <path d="M128 96L112 104V120L128 128L144 120V104L128 96Z" fill="#0052FF"/>
+          <path d="M128 112L120 116V124L128 128L136 124V116L128 112Z" fill="white"/>
+          <path d="M96 144L64 160V192L96 208L128 192V160L96 144Z" fill="white"/>
+          <path d="M160 144L128 160V192L160 208L192 192V160L160 144Z" fill="white"/>
+          <circle cx="128" cy="128" r="16" fill="#0052FF" opacity="0.8"/>
+        </svg>
+      )
     }
   ];
 

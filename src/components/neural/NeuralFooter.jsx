@@ -36,7 +36,8 @@ const NeuralFooter = () => {
         { name: "Ethereum", href: "/ethereum", icon: "Ξ" },
         { name: "Polygon", href: "/polygon", icon: "⬣" },
         { name: "Arbitrum", href: "/arbitrum", icon: "◉" },
-        { name: "Optimism", href: "/optimism", icon: "🔴" }
+        { name: "Optimism", href: "/optimism", icon: "🔴" },
+        { name: "Base", href: "/base", icon: "⬣" }
       ]
     },
     {
