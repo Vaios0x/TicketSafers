@@ -128,6 +128,14 @@ const TicketModal = ({ isOpen, onClose, event }) => {
       color: '#627eea'
     },
     { 
+      id: 'BASE', 
+      name: 'Base', 
+      icon: '⬣', 
+      price: event.cryptoPrices?.BASE || '0.83 ETH',
+      gasEstimate: '~$0.05 gas',
+      color: '#0052FF'
+    },
+    { 
       id: 'MATIC', 
       name: 'Polygon', 
       icon: <SiPolygon />, 
@@ -150,14 +158,6 @@ const TicketModal = ({ isOpen, onClose, event }) => {
       price: event.cryptoPrices?.OP || '0.82 ETH',
       gasEstimate: '~$2 gas',
       color: '#ff0420'
-    },
-    { 
-      id: 'BASE', 
-      name: 'Base', 
-      icon: '⬣', 
-      price: event.cryptoPrices?.BASE || '0.83 ETH',
-      gasEstimate: '~$0.05 gas',
-      color: '#0052FF'
     }
   ];
 
